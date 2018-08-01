@@ -3,9 +3,10 @@ package com.redislabs.lettusearch;
 import static org.junit.Assert.assertEquals;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.redislabs.lettusearch.index.Document;
@@ -24,32 +25,41 @@ import io.lettuce.core.dynamic.output.OutputRegistryCommandOutputFactoryResolver
 public class IndexCommandsTest {
 
 	private final static String INDEX = "testIndex";
+	private RedisCommandFactory factory;
+	private RedisClient client;
+	private StatefulRedisConnection<String, String> connection;
 
-	@Test
-	public void testSuggestions() {
-		String key = "artists";
-		RedisClient client = RedisClient.create("redis://localhost:6379");
-		RedisCommandFactory factory = new RedisCommandFactory(client.connect());
-		SuggestionCommands indexCommands = factory.getCommands(SuggestionCommands.class);
-		indexCommands.add(key, "Herbie Hancock", 1.0);
-		indexCommands.add(key, "Herbie Mann", 1.0);
-		indexCommands.add(key, "DJ Herbie", 1.0);
-		List<String> suggestions = indexCommands.getFuzzy(key, "Hor");
-		for (String suggestion : suggestions) {
-			System.out.println(suggestion);
-		}
-		assertEquals(3, (long) indexCommands.length(key));
-		indexCommands.delete(key, "DJ Herbie");
-		assertEquals(2, (long) indexCommands.length(key));
+	@Before
+	public void setup() {
+		client = RedisClient.create("redis://localhost:6379");
+		connection = client.connect();
+		factory = new RedisCommandFactory(connection);
+		OutputRegistry outputRegistry = new OutputRegistry();
+		outputRegistry.register(SearchResultsOutput.class, SearchResultsOutput::new);
+		outputRegistry.register(SearchResultsNoContentOutput.class, SearchResultsNoContentOutput::new);
+		factory.setCommandOutputFactoryResolver(new OutputRegistryCommandOutputFactoryResolver(outputRegistry));
+		connection.sync().flushall();
+	}
+
+	@After
+	public void teardown() {
 		client.shutdown();
 	}
 
 	@Test
+	public void testSuggestions() {
+		String key = "artists";
+		SuggestionCommands indexCommands = factory.getCommands(SuggestionCommands.class);
+		indexCommands.add(key, "Herbie Hancock", 1.0);
+		indexCommands.add(key, "Herbie Mann", 1.0);
+		indexCommands.add(key, "DJ Herbie", 1.0);
+		assertEquals(3, (long) indexCommands.length(key));
+		indexCommands.delete(key, "DJ Herbie");
+		assertEquals(2, (long) indexCommands.length(key));
+	}
+
+	@Test
 	public void testCreate() {
-		RedisClient client = RedisClient.create("redis://localhost:6379");
-		StatefulRedisConnection<String, String> connection = client.connect();
-		connection.sync().flushall();
-		RedisCommandFactory factory = new RedisCommandFactory(connection);
 		IndexCommands commands = factory.getCommands(IndexCommands.class);
 		Schema schema = Schema.builder().field(new TextField("field1")).field(new TextField("field2")).build();
 		commands.create("testIndex", schema);
@@ -57,19 +67,10 @@ public class IndexCommandsTest {
 		doc1.put("field1", "value1");
 		doc1.put("field2", "value2");
 		commands.add("testIndex", Document.builder().id("doc1").fields(doc1).build());
-		client.shutdown();
 	}
 
 	@Test
 	public void testSearch() {
-		RedisClient client = RedisClient.create("redis://localhost:6379");
-		StatefulRedisConnection<String, String> connection = client.connect();
-		connection.sync().flushall();
-		RedisCommandFactory factory = new RedisCommandFactory(connection);
-		OutputRegistry outputRegistry = new OutputRegistry();
-		outputRegistry.register(SearchResultsOutput.class, SearchResultsOutput::new);
-		outputRegistry.register(SearchResultsNoContentOutput.class, SearchResultsNoContentOutput::new);
-		factory.setCommandOutputFactoryResolver(new OutputRegistryCommandOutputFactoryResolver(outputRegistry));
 		IndexCommands commands = factory.getCommands(IndexCommands.class);
 		Schema schema = Schema.builder().field(new TextField("field1")).field(new TextField("field2")).build();
 		commands.create("testIndex", schema);
@@ -96,7 +97,6 @@ public class IndexCommandsTest {
 		assertEquals("doc2", resultsNoContent.getResults().get(0).getDocumentId());
 		assertEquals("doc1", resultsNoContent.getResults().get(1).getDocumentId());
 		assertEquals(0.2, resultsNoContent.getResults().get(0).getScore(), 0);
-		client.shutdown();
 	}
 
 }
