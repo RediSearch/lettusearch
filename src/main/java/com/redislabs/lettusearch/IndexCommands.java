@@ -1,7 +1,8 @@
 package com.redislabs.lettusearch;
 
 import com.redislabs.lettusearch.index.Document;
-import com.redislabs.lettusearch.index.Schema;
+import com.redislabs.lettusearch.index.SearchResults;
+import com.redislabs.lettusearch.index.SearchResultsNoContent;
 
 import io.lettuce.core.dynamic.Commands;
 import io.lettuce.core.dynamic.annotation.Command;
@@ -31,4 +32,23 @@ public interface IndexCommands extends Commands {
 
 //	@Command("FT.ALTER :index SCHEMA ADD :field")
 //	boolean alter(@Param("index") String index, @Param("field") Field field);
+
+	/*
+	 * FT.SEARCH {index} {query} [NOCONTENT] [VERBATIM] [NOSTOPWORDS] [WITHSCORES]
+	 * [WITHPAYLOADS] [WITHSORTKEYS] [FILTER {numeric_field} {min} {max}] ...
+	 * [GEOFILTER {geo_field} {lon} {lat} {raius} m|km|mi|ft] [INKEYS {num} {key}
+	 * ... ] [INFIELDS {num} {field} ... ] [RETURN {num} {field} ... ] [SUMMARIZE
+	 * [FIELDS {num} {field} ... ] [FRAGS {num}] [LEN {fragsize}] [SEPARATOR
+	 * {separator}]] [HIGHLIGHT [FIELDS {num} {field} ... ] [TAGS {open} {close}]]
+	 * [SLOP {slop}] [INORDER] [LANGUAGE {language}] [EXPANDER {expander}] [SCORER
+	 * {scorer}] [PAYLOAD {payload}] [SORTBY {field} [ASC|DESC]] [LIMIT offset num]
+	 */
+	@Command("FT.SEARCH :index :query WITHSCORES :options")
+	<K, V> SearchResults<K, V> search(@Param("index") String index, @Param("query") String query,
+			@Param("options") SearchOptions options);
+
+	@Command("FT.SEARCH :index :query NOCONTENT WITHSCORES :options")
+	<K, V> SearchResultsNoContent<K, V> searchNoContent(@Param("index") String index, @Param("query") String query,
+			@Param("options") SearchOptions options);
+
 }

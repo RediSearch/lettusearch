@@ -1,4 +1,4 @@
-package com.redislabs.lettusearch.index;
+package com.redislabs.lettusearch;
 
 import static com.redislabs.lettusearch.index.CommandKeyword.MAXTEXTFIELDS;
 import static com.redislabs.lettusearch.index.CommandKeyword.NOFIELDS;
@@ -9,6 +9,8 @@ import static com.redislabs.lettusearch.index.CommandKeyword.SCHEMA;
 import static com.redislabs.lettusearch.index.CommandKeyword.STOPWORDS;
 
 import java.util.List;
+
+import com.redislabs.lettusearch.index.Field;
 
 import io.lettuce.core.CompositeArgument;
 import io.lettuce.core.protocol.CommandArgs;
