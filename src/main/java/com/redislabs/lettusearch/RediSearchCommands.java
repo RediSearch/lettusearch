@@ -1,6 +1,10 @@
 package com.redislabs.lettusearch;
 
+import java.util.List;
+
 import com.redislabs.lettusearch.index.Document;
+import com.redislabs.lettusearch.index.Schema;
+import com.redislabs.lettusearch.index.SearchOptions;
 import com.redislabs.lettusearch.index.SearchResults;
 import com.redislabs.lettusearch.index.SearchResultsNoContent;
 
@@ -8,7 +12,22 @@ import io.lettuce.core.dynamic.Commands;
 import io.lettuce.core.dynamic.annotation.Command;
 import io.lettuce.core.dynamic.annotation.Param;
 
-public interface IndexCommands extends Commands {
+public interface RediSearchCommands<K, V> extends Commands {
+
+	@Command("FT.SUGADD ?0 ?1 ?2")
+	Long add(String key, String string, double score);
+
+	@Command("FT.SUGGET ?0 ?1")
+	List<String> get(String key, String prefix);
+
+	@Command("FT.SUGGET ?0 ?1 FUZZY")
+	List<String> getFuzzy(String key, String prefix);
+
+	@Command("FT.SUGDEL ?0 ?1")
+	Long delete(String key, String string);
+
+	@Command("FT.SUGLEN ?0")
+	Long length(String key);
 
 	@Command("FT.CREATE")
 	boolean create(String index, Schema schema);
@@ -33,22 +52,11 @@ public interface IndexCommands extends Commands {
 //	@Command("FT.ALTER :index SCHEMA ADD :field")
 //	boolean alter(@Param("index") String index, @Param("field") Field field);
 
-	/*
-	 * FT.SEARCH {index} {query} [NOCONTENT] [VERBATIM] [NOSTOPWORDS] [WITHSCORES]
-	 * [WITHPAYLOADS] [WITHSORTKEYS] [FILTER {numeric_field} {min} {max}] ...
-	 * [GEOFILTER {geo_field} {lon} {lat} {raius} m|km|mi|ft] [INKEYS {num} {key}
-	 * ... ] [INFIELDS {num} {field} ... ] [RETURN {num} {field} ... ] [SUMMARIZE
-	 * [FIELDS {num} {field} ... ] [FRAGS {num}] [LEN {fragsize}] [SEPARATOR
-	 * {separator}]] [HIGHLIGHT [FIELDS {num} {field} ... ] [TAGS {open} {close}]]
-	 * [SLOP {slop}] [INORDER] [LANGUAGE {language}] [EXPANDER {expander}] [SCORER
-	 * {scorer}] [PAYLOAD {payload}] [SORTBY {field} [ASC|DESC]] [LIMIT offset num]
-	 */
 	@Command("FT.SEARCH :index :query WITHSCORES :options")
-	<K, V> SearchResults<K, V> search(@Param("index") String index, @Param("query") String query,
+	SearchResults<K, V> search(@Param("index") String index, @Param("query") String query,
 			@Param("options") SearchOptions options);
 
 	@Command("FT.SEARCH :index :query NOCONTENT WITHSCORES :options")
-	<K, V> SearchResultsNoContent<K, V> searchNoContent(@Param("index") String index, @Param("query") String query,
+	SearchResultsNoContent<K, V> searchNoContent(@Param("index") String index, @Param("query") String query,
 			@Param("options") SearchOptions options);
-
 }

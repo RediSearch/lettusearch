@@ -1,4 +1,4 @@
-package com.redislabs.lettusearch;
+package com.redislabs.lettusearch.index;
 
 import static com.redislabs.lettusearch.index.CommandKeyword.NOSTOPWORDS;
 import static com.redislabs.lettusearch.index.CommandKeyword.VERBATIM;
