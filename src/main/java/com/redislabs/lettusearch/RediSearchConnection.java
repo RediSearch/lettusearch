@@ -17,7 +17,7 @@ public class RediSearchConnection<K, V> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public RediSearchCommands<K, V> search() {
+	public RediSearchCommands<K, V> sync() {
 		RedisCommandFactory factory = new RedisCommandFactory(connection);
 		OutputRegistry outputRegistry = new OutputRegistry();
 		outputRegistry.register(SearchResultsOutput.class, SearchResultsOutput::new);

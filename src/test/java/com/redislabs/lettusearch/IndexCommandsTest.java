@@ -35,18 +35,18 @@ public class IndexCommandsTest {
 	@Test
 	public void testSuggestions() {
 		String key = "artists";
-		RediSearchCommands<String, String> indexCommands = connection.search();
-		indexCommands.add(key, "Herbie Hancock", 1.0);
-		indexCommands.add(key, "Herbie Mann", 1.0);
-		indexCommands.add(key, "DJ Herbie", 1.0);
-		assertEquals(3, (long) indexCommands.length(key));
-		indexCommands.delete(key, "DJ Herbie");
-		assertEquals(2, (long) indexCommands.length(key));
+		RediSearchCommands<String, String> indexCommands = connection.sync();
+		indexCommands.suggestionAdd(key, "Herbie Hancock", 1.0);
+		indexCommands.suggestionAdd(key, "Herbie Mann", 1.0);
+		indexCommands.suggestionAdd(key, "DJ Herbie", 1.0);
+		assertEquals(3, (long) indexCommands.suggestionLength(key));
+		indexCommands.suggestionDelete(key, "DJ Herbie");
+		assertEquals(2, (long) indexCommands.suggestionLength(key));
 	}
 
 	@Test
 	public void testCreate() {
-		RediSearchCommands<String, String> commands = connection.search();
+		RediSearchCommands<String, String> commands = connection.sync();
 		Schema schema = Schema.builder().field(new TextField("field1")).field(new TextField("field2")).build();
 		commands.create("testIndex", schema);
 		Map<String, Object> doc1 = new LinkedHashMap<>();
@@ -57,7 +57,7 @@ public class IndexCommandsTest {
 
 	@Test
 	public void testSearch() {
-		RediSearchCommands<String, String> commands = connection.search();
+		RediSearchCommands<String, String> commands = connection.sync();
 		Schema schema = Schema.builder().field(new TextField("field1")).field(new TextField("field2")).build();
 		commands.create("testIndex", schema);
 		Map<String, Object> doc1 = new LinkedHashMap<>();

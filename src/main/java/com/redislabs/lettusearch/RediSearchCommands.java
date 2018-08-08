@@ -14,23 +14,14 @@ import io.lettuce.core.dynamic.annotation.Param;
 
 public interface RediSearchCommands<K, V> extends Commands {
 
-	@Command("FT.SUGADD ?0 ?1 ?2")
-	Long add(String key, String string, double score);
-
-	@Command("FT.SUGGET ?0 ?1")
-	List<String> get(String key, String prefix);
-
-	@Command("FT.SUGGET ?0 ?1 FUZZY")
-	List<String> getFuzzy(String key, String prefix);
-
-	@Command("FT.SUGDEL ?0 ?1")
-	Long delete(String key, String string);
-
-	@Command("FT.SUGLEN ?0")
-	Long length(String key);
-
 	@Command("FT.CREATE")
 	boolean create(String index, Schema schema);
+
+	@Command("FT.DROP ?0")
+	boolean drop(String index);
+
+	@Command("FT.DROP ?0 KEEPDOCS")
+	boolean dropKeepDocs(String index);
 
 	@Command("FT.ADD")
 	boolean add(String index, Document document);
@@ -59,4 +50,19 @@ public interface RediSearchCommands<K, V> extends Commands {
 	@Command("FT.SEARCH :index :query NOCONTENT WITHSCORES :options")
 	SearchResultsNoContent<K, V> searchNoContent(@Param("index") String index, @Param("query") String query,
 			@Param("options") SearchOptions options);
+
+	@Command("FT.SUGADD ?0 ?1 ?2")
+	Long suggestionAdd(String key, String string, double score);
+
+	@Command("FT.SUGGET ?0 ?1")
+	List<String> suggestionGet(String key, String prefix);
+
+	@Command("FT.SUGGET ?0 ?1 FUZZY")
+	List<String> suggestionGetFuzzy(String key, String prefix);
+
+	@Command("FT.SUGDEL ?0 ?1")
+	Long suggestionDelete(String key, String string);
+
+	@Command("FT.SUGLEN ?0")
+	Long suggestionLength(String key);
 }
