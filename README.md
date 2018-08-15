@@ -4,6 +4,11 @@
 ## Architecture
 LettuSearch implements RediSearch commands using the [Redis Command Interface abstraction](https://lettuce.io/core/5.0.1.RELEASE/reference/#redis-command-interfaces) provided by Lettuce.
 
+## Building
+```
+mvn clean install
+```
+
 ## Usage
 ```java
 RediSearchConnection<String, String> conn = RediSearchClient.create("redis://localhost").connect();
