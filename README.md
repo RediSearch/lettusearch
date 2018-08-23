@@ -12,5 +12,5 @@ mvn clean install
 ## Usage
 ```java
 RediSearchConnection<String, String> conn = RediSearchClient.create("redis://localhost").connect();
-RediSearchCommands<String, String> commands = conn.search();
+RediSearchCommands<String, String> commands = conn.sync();
 ```
