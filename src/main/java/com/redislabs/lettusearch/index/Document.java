@@ -19,16 +19,16 @@ import lombok.Data;
 @Builder
 public class Document implements CompositeArgument {
 
-	String id;
+	private String id;
 	@Builder.Default
-	double score = 1;
-	boolean noSave;
-	boolean replace;
-	boolean replacePartial;
-	String language;
-	String payload;
-	String ifCondition;
-	Map<String, Object> fields;
+	private double score = 1;
+	private boolean noSave;
+	private boolean replace;
+	private boolean replacePartial;
+	private String language;
+	private String payload;
+	private String ifCondition;
+	private Map<String, String> fields;
 
 	@SuppressWarnings("unchecked")
 	public <K, V> void build(CommandArgs<K, V> args) {

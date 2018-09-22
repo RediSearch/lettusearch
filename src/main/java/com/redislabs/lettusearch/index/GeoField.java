@@ -3,6 +3,7 @@ package com.redislabs.lettusearch.index;
 import static com.redislabs.lettusearch.index.CommandKeyword.GEO;
 
 import io.lettuce.core.protocol.CommandArgs;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,8 +11,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class GeoField extends Field {
 
-	public GeoField(String name) {
-		super(name);
+	@Builder
+	public GeoField(String name, boolean sortable, boolean noindex) {
+		super(name, sortable, noindex);
 	}
 
 	@Override

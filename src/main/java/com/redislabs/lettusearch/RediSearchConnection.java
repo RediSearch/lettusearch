@@ -30,4 +30,8 @@ public class RediSearchConnection<K, V> {
 		return connection;
 	}
 
+	public void close() {
+		connection.close();
+	}
+
 }

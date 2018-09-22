@@ -1,12 +1,14 @@
 package com.redislabs.lettusearch;
 
 import java.util.List;
+import java.util.Map;
 
 import com.redislabs.lettusearch.index.Document;
 import com.redislabs.lettusearch.index.Schema;
 import com.redislabs.lettusearch.index.SearchOptions;
 import com.redislabs.lettusearch.index.SearchResults;
 import com.redislabs.lettusearch.index.SearchResultsNoContent;
+import com.redislabs.lettusearch.suggest.SuggestionOptions;
 
 import io.lettuce.core.dynamic.Commands;
 import io.lettuce.core.dynamic.annotation.Command;
@@ -54,11 +56,21 @@ public interface RediSearchCommands<K, V> extends Commands {
 	@Command("FT.SUGADD ?0 ?1 ?2")
 	Long suggestionAdd(String key, String string, double score);
 
-	@Command("FT.SUGGET ?0 ?1")
-	List<String> suggestionGet(String key, String prefix);
+	@Command("FT.SUGADD ?0 ?1 ?2 PAYLOAD ?3")
+	Long suggestionAddPayload(String key, String string, double score, String payload);
 
-	@Command("FT.SUGGET ?0 ?1 FUZZY")
-	List<String> suggestionGetFuzzy(String key, String prefix);
+	@Command("FT.SUGADD ?0 ?1 ?2 INCR")
+	Long suggestionAddIncr(String key, String string, double score);
+
+	@Command("FT.SUGADD ?0 ?1 ?2 INCR PAYLOAD ?3")
+	Long suggestionAddIncrPayload(String key, String string, double score, String payload);
+
+	@Command("FT.SUGGET ?0 ?1 :options")
+	List<String> suggestionGet(String key, String prefix, @Param("options") SuggestionOptions options);
+
+	@Command("FT.SUGGET ?0 ?1 WITHPAYLOADS :options")
+	Map<String, String> suggestionGetWithPayloads(String key, String prefix,
+			@Param("options") SuggestionOptions options);
 
 	@Command("FT.SUGDEL ?0 ?1")
 	Long suggestionDelete(String key, String string);

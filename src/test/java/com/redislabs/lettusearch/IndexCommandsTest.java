@@ -19,17 +19,20 @@ import com.redislabs.lettusearch.index.TextField;
 public class IndexCommandsTest {
 
 	private final static String INDEX = "testIndex";
+	private RediSearchClient client;
 	private RediSearchConnection<String, String> connection;
 
 	@Before
 	public void setup() {
-		connection = RediSearchClient.create("redis://localhost").connect();
+		client = RediSearchClient.create("redis://localhost");
+		connection = client.connect();
 		connection.getRedisConnection().sync().flushall();
 	}
 
 	@After
 	public void teardown() {
 		connection.getRedisConnection().close();
+		client.shutdown();
 	}
 
 	@Test
@@ -47,9 +50,10 @@ public class IndexCommandsTest {
 	@Test
 	public void testCreate() {
 		RediSearchCommands<String, String> commands = connection.sync();
-		Schema schema = Schema.builder().field(new TextField("field1")).field(new TextField("field2")).build();
+		Schema schema = Schema.builder().field(TextField.builder().name("field1").build())
+				.field(TextField.builder().name("field2").build()).build();
 		commands.create("testIndex", schema);
-		Map<String, Object> doc1 = new LinkedHashMap<>();
+		Map<String, String> doc1 = new LinkedHashMap<>();
 		doc1.put("field1", "value1");
 		doc1.put("field2", "value2");
 		commands.add("testIndex", Document.builder().id("doc1").fields(doc1).build());
@@ -58,12 +62,13 @@ public class IndexCommandsTest {
 	@Test
 	public void testSearch() {
 		RediSearchCommands<String, String> commands = connection.sync();
-		Schema schema = Schema.builder().field(new TextField("field1")).field(new TextField("field2")).build();
+		Schema schema = Schema.builder().field(TextField.builder().name("field1").build())
+				.field(TextField.builder().name("field2").build()).build();
 		commands.create("testIndex", schema);
-		Map<String, Object> doc1 = new LinkedHashMap<>();
+		Map<String, String> doc1 = new LinkedHashMap<>();
 		doc1.put("field1", "this is doc1 value 1");
 		doc1.put("field2", "this is doc1 value 2");
-		Map<String, Object> doc2 = new LinkedHashMap<>();
+		Map<String, String> doc2 = new LinkedHashMap<>();
 		doc2.put("field1", "this is doc2 value 1");
 		doc2.put("field2", "this is doc2 value 2");
 		commands.add(INDEX, Document.builder().id("doc1").fields(doc1).build());

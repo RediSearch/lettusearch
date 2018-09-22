@@ -20,15 +20,15 @@ import lombok.Singular;
 @Builder
 public class Schema implements CompositeArgument {
 
-	boolean maxTextFields;
-	boolean noOffsets;
-	boolean noHL;
-	boolean noFields;
-	boolean noFreqs;
+	private boolean maxTextFields;
+	private boolean noOffsets;
+	private boolean noHL;
+	private boolean noFields;
+	private boolean noFreqs;
 	@Singular
-	List<String> stopWords;
+	private List<String> stopWords;
 	@Singular
-	List<Field> fields;
+	private List<Field> fields;
 
 	@Override
 	public <K, V> void build(CommandArgs<K, V> args) {
@@ -55,4 +55,5 @@ public class Schema implements CompositeArgument {
 		args.add(SCHEMA);
 		fields.forEach(field -> field.build(args));
 	}
+
 }
