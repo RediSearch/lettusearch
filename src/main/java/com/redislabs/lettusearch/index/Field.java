@@ -5,14 +5,14 @@ import static com.redislabs.lettusearch.index.CommandKeyword.SORTABLE;
 
 import io.lettuce.core.CompositeArgument;
 import io.lettuce.core.protocol.CommandArgs;
-import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@AllArgsConstructor
+@Data
 public class Field implements CompositeArgument {
 
-	String name;
-	boolean sortable;
-	boolean noIndex;
+	private String name;
+	private boolean sortable;
+	private boolean noIndex;
 
 	@Override
 	public <K, V> void build(CommandArgs<K, V> args) {

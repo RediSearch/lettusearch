@@ -5,7 +5,6 @@ import static com.redislabs.lettusearch.index.CommandKeyword.TEXT;
 import static com.redislabs.lettusearch.index.CommandKeyword.WEIGHT;
 
 import io.lettuce.core.protocol.CommandArgs;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,15 +12,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class TextField extends Field {
 
-	Double weight;
-	boolean noStem;
-
-	@Builder
-	public TextField(String name, boolean sortable, boolean noindex, Double weight, boolean noStem) {
-		super(name, sortable, noindex);
-		this.weight = weight;
-		this.noStem = noStem;
-	}
+	private Double weight;
+	private boolean noStem;
 
 	@Override
 	protected <K, V> void buildField(CommandArgs<K, V> args) {

@@ -50,8 +50,11 @@ public class IndexCommandsTest {
 	@Test
 	public void testCreate() {
 		RediSearchCommands<String, String> commands = connection.sync();
-		Schema schema = Schema.builder().field(TextField.builder().name("field1").build())
-				.field(TextField.builder().name("field2").build()).build();
+		TextField field1 = new TextField();
+		field1.setName("field1");
+		TextField field2 = new TextField();
+		field2.setName("field2");
+		Schema schema = Schema.builder().field(field1).field(field2).build();
 		commands.create("testIndex", schema);
 		Map<String, String> doc1 = new LinkedHashMap<>();
 		doc1.put("field1", "value1");
@@ -62,8 +65,11 @@ public class IndexCommandsTest {
 	@Test
 	public void testSearch() {
 		RediSearchCommands<String, String> commands = connection.sync();
-		Schema schema = Schema.builder().field(TextField.builder().name("field1").build())
-				.field(TextField.builder().name("field2").build()).build();
+		TextField field1 = new TextField();
+		field1.setName("field1");
+		TextField field2 = new TextField();
+		field2.setName("field2");
+		Schema schema = Schema.builder().field(field1).field(field2).build();
 		commands.create("testIndex", schema);
 		Map<String, String> doc1 = new LinkedHashMap<>();
 		doc1.put("field1", "this is doc1 value 1");
