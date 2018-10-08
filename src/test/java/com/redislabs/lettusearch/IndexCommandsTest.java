@@ -16,29 +16,32 @@ import com.redislabs.lettusearch.index.SearchResults;
 import com.redislabs.lettusearch.index.SearchResultsNoContent;
 import com.redislabs.lettusearch.index.TextField;
 
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.api.StatefulRedisConnection;
+
 public class IndexCommandsTest {
 
 	private final static String INDEX = "testIndex";
+	private RedisClient redisClient;
 	private RediSearchClient client;
-	private RediSearchConnection<String, String> connection;
 
 	@Before
 	public void setup() {
-		client = RediSearchClient.create("redis://localhost");
-		connection = client.connect();
-		connection.getRedisConnection().sync().flushall();
+		redisClient = RedisClient.create("redis://localhost");
+		StatefulRedisConnection<String, String> connection = redisClient.connect();
+		connection.sync().flushall();
+		client = new RediSearchClient(connection);
 	}
 
 	@After
 	public void teardown() {
-		connection.getRedisConnection().close();
-		client.shutdown();
+		redisClient.shutdown();
 	}
 
 	@Test
 	public void testSuggestions() {
 		String key = "artists";
-		RediSearchCommands<String, String> indexCommands = connection.sync();
+		RediSearchCommands indexCommands = client.getCommands();
 		indexCommands.suggestionAdd(key, "Herbie Hancock", 1.0);
 		indexCommands.suggestionAdd(key, "Herbie Mann", 1.0);
 		indexCommands.suggestionAdd(key, "DJ Herbie", 1.0);
@@ -49,7 +52,7 @@ public class IndexCommandsTest {
 
 	@Test
 	public void testCreate() {
-		RediSearchCommands<String, String> commands = connection.sync();
+		RediSearchCommands commands = client.getCommands();
 		TextField field1 = new TextField();
 		field1.setName("field1");
 		TextField field2 = new TextField();
@@ -64,7 +67,7 @@ public class IndexCommandsTest {
 
 	@Test
 	public void testSearch() {
-		RediSearchCommands<String, String> commands = connection.sync();
+		RediSearchCommands commands = client.getCommands();
 		TextField field1 = new TextField();
 		field1.setName("field1");
 		TextField field2 = new TextField();

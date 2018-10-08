@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.redislabs.lettusearch.index.Document;
+import com.redislabs.lettusearch.index.Field;
 import com.redislabs.lettusearch.index.Schema;
 import com.redislabs.lettusearch.index.SearchOptions;
 import com.redislabs.lettusearch.index.SearchResults;
@@ -14,7 +15,7 @@ import io.lettuce.core.dynamic.Commands;
 import io.lettuce.core.dynamic.annotation.Command;
 import io.lettuce.core.dynamic.annotation.Param;
 
-public interface RediSearchCommands<K, V> extends Commands {
+public interface RediSearchCommands extends Commands {
 
 	@Command("FT.CREATE")
 	boolean create(String index, Schema schema);
@@ -42,15 +43,15 @@ public interface RediSearchCommands<K, V> extends Commands {
 	boolean addHashReplace(@Param("index") String index, @Param("docId") String docId, @Param("score") double score,
 			@Param("language") String language);
 
-//	@Command("FT.ALTER :index SCHEMA ADD :field")
-//	boolean alter(@Param("index") String index, @Param("field") Field field);
+	@Command("FT.ALTER :index SCHEMA ADD :field")
+	boolean alter(@Param("index") String index, @Param("field") Field field);
 
 	@Command("FT.SEARCH :index :query WITHSCORES :options")
-	SearchResults<K, V> search(@Param("index") String index, @Param("query") String query,
+	<K, V> SearchResults<K, V> search(@Param("index") String index, @Param("query") String query,
 			@Param("options") SearchOptions options);
 
 	@Command("FT.SEARCH :index :query NOCONTENT WITHSCORES :options")
-	SearchResultsNoContent<K, V> searchNoContent(@Param("index") String index, @Param("query") String query,
+	<K, V> SearchResultsNoContent<K, V> searchNoContent(@Param("index") String index, @Param("query") String query,
 			@Param("options") SearchOptions options);
 
 	@Command("FT.SUGADD ?0 ?1 ?2")
