@@ -1,4 +1,4 @@
-package com.redislabs.lettusearch.index;
+package com.redislabs.lettusearch.api;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

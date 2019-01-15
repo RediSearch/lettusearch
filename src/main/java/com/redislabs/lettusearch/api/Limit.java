@@ -1,4 +1,4 @@
-package com.redislabs.lettusearch.index;
+package com.redislabs.lettusearch.api;
 
 import io.lettuce.core.CompositeArgument;
 import io.lettuce.core.protocol.CommandArgs;

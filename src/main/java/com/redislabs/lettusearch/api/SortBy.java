@@ -1,7 +1,7 @@
-package com.redislabs.lettusearch.index;
+package com.redislabs.lettusearch.api;
 
-import static com.redislabs.lettusearch.index.CommandKeyword.ASC;
-import static com.redislabs.lettusearch.index.CommandKeyword.DESC;
+import static com.redislabs.lettusearch.api.CommandKeyword.ASC;
+import static com.redislabs.lettusearch.api.CommandKeyword.DESC;
 
 import io.lettuce.core.CompositeArgument;
 import io.lettuce.core.protocol.CommandArgs;

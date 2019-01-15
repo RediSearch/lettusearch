@@ -1,4 +1,4 @@
-package com.redislabs.lettusearch.index;
+package com.redislabs.lettusearch.api;
 
 public class SearchResultsNoContent<K, V> extends AbstractSearchResults<K, V> {
 

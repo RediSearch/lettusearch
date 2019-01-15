@@ -1,4 +1,4 @@
-package com.redislabs.lettusearch.index;
+package com.redislabs.lettusearch.api;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

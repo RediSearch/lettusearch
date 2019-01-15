@@ -1,9 +1,9 @@
-package com.redislabs.lettusearch.index;
+package com.redislabs.lettusearch.api;
 
-import static com.redislabs.lettusearch.index.CommandKeyword.NOSTOPWORDS;
-import static com.redislabs.lettusearch.index.CommandKeyword.VERBATIM;
-import static com.redislabs.lettusearch.index.CommandKeyword.SORTBY;
-import static com.redislabs.lettusearch.index.CommandKeyword.LIMIT;
+import static com.redislabs.lettusearch.api.CommandKeyword.LIMIT;
+import static com.redislabs.lettusearch.api.CommandKeyword.NOSTOPWORDS;
+import static com.redislabs.lettusearch.api.CommandKeyword.SORTBY;
+import static com.redislabs.lettusearch.api.CommandKeyword.VERBATIM;
 
 import io.lettuce.core.CompositeArgument;
 import io.lettuce.core.protocol.CommandArgs;
