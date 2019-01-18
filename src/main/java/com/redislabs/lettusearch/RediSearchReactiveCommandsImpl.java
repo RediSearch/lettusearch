@@ -1,6 +1,8 @@
 package com.redislabs.lettusearch;
 
-import com.redislabs.lettusearch.search.Document;
+import java.util.Map;
+
+import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
@@ -25,8 +27,8 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<String> add(String index, Document document) {
-		return createMono(() -> commandBuilder.add(index, document));
+	public Mono<String> add(String index, K docId, Map<K, V> fields, Double score, AddOptions document) {
+		return createMono(() -> commandBuilder.add(index, docId, fields, score, document));
 	}
 
 	@Override

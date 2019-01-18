@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.redislabs.lettusearch.search.Document;
+import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
@@ -47,8 +47,8 @@ public class IndexCommandsTest {
 		Map<String, String> fields2 = new HashMap<>();
 		fields2.put("field1", "this is doc 2 value 1");
 		fields2.put("field2", "this is doc 2 value 2");
-		commands.add(INDEX, Document.builder().id(String.valueOf("doc1")).score(1).fields(fields1).build());
-		commands.add(INDEX, Document.builder().id(String.valueOf("doc2")).score(1).fields(fields2).build());
+		commands.add(INDEX, "doc1", fields1, 1d, AddOptions.builder().build());
+		commands.add(INDEX, "doc2", fields2, 1d, AddOptions.builder().build());
 		connection.close();
 	}
 

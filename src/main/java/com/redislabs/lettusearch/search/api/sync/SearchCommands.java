@@ -1,6 +1,8 @@
 package com.redislabs.lettusearch.search.api.sync;
 
-import com.redislabs.lettusearch.search.Document;
+import java.util.Map;
+
+import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
@@ -17,7 +19,7 @@ import io.lettuce.core.api.sync.RedisCommands;
  */
 public interface SearchCommands<K, V> extends RedisCommands<K, V> {
 
-	String add(String index, Document document);
+	String add(String index, K docId, Map<K, V> fields, Double score, AddOptions document);
 
 	String create(String index, Schema schema);
 

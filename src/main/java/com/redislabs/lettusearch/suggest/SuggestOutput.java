@@ -20,6 +20,9 @@ public class SuggestOutput<K, V> extends CommandOutput<K, V, List<SuggestResult<
 
 	@Override
 	public void set(ByteBuffer bytes) {
+		if (bytes == null) {
+			return;
+		}
 		if (current == null) {
 			current = new SuggestResult<>();
 			current.setString(codec.decodeValue(bytes));

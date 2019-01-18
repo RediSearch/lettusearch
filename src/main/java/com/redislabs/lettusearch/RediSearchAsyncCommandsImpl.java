@@ -1,8 +1,9 @@
 package com.redislabs.lettusearch;
 
 import java.util.List;
+import java.util.Map;
 
-import com.redislabs.lettusearch.search.Document;
+import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
@@ -29,10 +30,10 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	public StatefulRediSearchConnection<K, V> getStatefulConnection() {
 		return (StatefulRediSearchConnection<K, V>) super.getStatefulConnection();
 	}
-
+	
 	@Override
-	public RedisFuture<String> add(String index, Document document) {
-		return dispatch(commandBuilder.add(index, document));
+	public RedisFuture<String> add(String index, K docId, Map<K, V> fields, Double score, AddOptions options) {
+		return dispatch(commandBuilder.add(index, docId, fields, score, options));
 	}
 
 	@Override

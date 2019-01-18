@@ -8,18 +8,19 @@ import static com.redislabs.lettusearch.CommandType.SUGADD;
 import static com.redislabs.lettusearch.CommandType.SUGGET;
 
 import java.util.List;
+import java.util.Map;
 
-import com.redislabs.lettusearch.search.Document;
+import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchNoContentOutput;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchOutput;
 import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestOutput;
 import com.redislabs.lettusearch.suggest.SuggestResult;
-import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.LettuceAssert;
@@ -45,12 +46,21 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		super(codec);
 	}
 
-	public Command<K, V, String> add(String index, Document document) {
+	public Command<K, V, String> add(String index, K docId, Map<K, V> fields, Double score, AddOptions options) {
 		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
-		LettuceAssert.notEmpty(index, "index " + MUST_NOT_BE_EMPTY);
-		LettuceAssert.notNull(document, "document " + MUST_NOT_BE_NULL);
-		CommandArgs<K, V> args = new RediSearchCommandArgs<>(codec).add(index);
-		document.build(args);
+		LettuceAssert.notNull(docId, "docId " + MUST_NOT_BE_NULL);
+		LettuceAssert.isTrue(!fields.isEmpty(), "fields " + MUST_NOT_BE_EMPTY);
+		LettuceAssert.notNull(score, "score " + MUST_NOT_BE_NULL);
+		CommandArgs<K, V> args = new RediSearchCommandArgs<>(codec);
+		args.add(index);
+		args.addKey(docId);
+		args.add(score);
+		options.build(args);
+		args.add(CommandKeyword.FIELDS);
+		fields.forEach((k, v) -> {
+			args.addKey(k);
+			args.addValue(v);
+		});
 		return createCommand(ADD, new StatusOutput<>(codec), args);
 	}
 
