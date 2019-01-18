@@ -7,9 +7,9 @@ import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
-import com.redislabs.lettusearch.suggest.GetOptions;
+import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
-import com.redislabs.lettusearch.suggest.Suggestion;
+import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 
 import io.lettuce.core.RedisAsyncCommandsImpl;
 import io.lettuce.core.RedisFuture;
@@ -51,13 +51,13 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
-	public RedisFuture<Long> add(String key, Suggestion suggestion) {
-		return dispatch(commandBuilder.add(key, suggestion));
+	public RedisFuture<Long> sugadd(K key, V string, SuggestAddOptions options) {
+		return dispatch(commandBuilder.sugadd(key, string, options));
 	}
 
 	@Override
-	public RedisFuture<List<SuggestResult<V>>> get(K key, V prefix, GetOptions options) {
-		return dispatch(commandBuilder.get(key, prefix, options));
+	public RedisFuture<List<SuggestResult<V>>> sugget(K key, V prefix, SuggestGetOptions options) {
+		return dispatch(commandBuilder.sugget(key, prefix, options));
 	}
 
 }

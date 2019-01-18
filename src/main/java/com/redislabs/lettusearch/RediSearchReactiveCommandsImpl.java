@@ -5,9 +5,9 @@ import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
-import com.redislabs.lettusearch.suggest.GetOptions;
+import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
-import com.redislabs.lettusearch.suggest.Suggestion;
+import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 
 import io.lettuce.core.RedisReactiveCommandsImpl;
 import io.lettuce.core.codec.RedisCodec;
@@ -45,13 +45,13 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<Long> add(String key, Suggestion suggestion) {
-		return createMono(() -> commandBuilder.add(key, suggestion));
+	public Mono<Long> sugadd(K key, V string, SuggestAddOptions options) {
+		return createMono(() -> commandBuilder.sugadd(key, string, options));
 	}
 
 	@Override
-	public Flux<SuggestResult<V>> get(K key, V prefix, GetOptions options) {
-		return createDissolvingFlux(() -> commandBuilder.get(key, prefix, options));
+	public Flux<SuggestResult<V>> sugget(K key, V prefix, SuggestGetOptions options) {
+		return createDissolvingFlux(() -> commandBuilder.sugget(key, prefix, options));
 	}
 
 	@Override

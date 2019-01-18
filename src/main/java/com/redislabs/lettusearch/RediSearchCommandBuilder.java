@@ -16,10 +16,10 @@ import com.redislabs.lettusearch.search.SearchNoContentOutput;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchOutput;
 import com.redislabs.lettusearch.search.SearchResults;
-import com.redislabs.lettusearch.suggest.GetOptions;
+import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestOutput;
 import com.redislabs.lettusearch.suggest.SuggestResult;
-import com.redislabs.lettusearch.suggest.Suggestion;
+import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.LettuceAssert;
@@ -85,15 +85,17 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		return new SearchOutput<>(codec, options);
 	}
 
-	public Command<K, V, Long> add(String key, Suggestion suggestion) {
+	public Command<K, V, Long> sugadd(K key, V string, SuggestAddOptions options) {
 		LettuceAssert.notNull(key, "key " + MUST_NOT_BE_NULL);
-		LettuceAssert.notNull(suggestion, "suggestion " + MUST_NOT_BE_NULL);
-		CommandArgs<K, V> args = new RediSearchCommandArgs<>(codec).add(key);
-		suggestion.build(args);
+		LettuceAssert.notNull(string, "string " + MUST_NOT_BE_NULL);
+		CommandArgs<K, V> args = new RediSearchCommandArgs<>(codec).addKey(key).addValue(string);
+		if (options != null) {
+			options.build(args);
+		}
 		return createCommand(SUGADD, new IntegerOutput<>(codec), args);
 	}
 
-	public Command<K, V, List<SuggestResult<V>>> get(K key, V prefix, GetOptions options) {
+	public Command<K, V, List<SuggestResult<V>>> sugget(K key, V prefix, SuggestGetOptions options) {
 		LettuceAssert.notNull(key, "key " + MUST_NOT_BE_NULL);
 		LettuceAssert.notNull(prefix, "prefix " + MUST_NOT_BE_NULL);
 		CommandArgs<K, V> args = new RediSearchCommandArgs<>(codec).addKey(key).addValue(prefix);

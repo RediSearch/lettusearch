@@ -2,9 +2,9 @@ package com.redislabs.lettusearch.suggest.api.sync;
 
 import java.util.List;
 
-import com.redislabs.lettusearch.suggest.GetOptions;
+import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
-import com.redislabs.lettusearch.suggest.Suggestion;
+import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 
 import io.lettuce.core.api.sync.RedisCommands;
 
@@ -17,8 +17,8 @@ import io.lettuce.core.api.sync.RedisCommands;
  */
 public interface SuggestCommands<K, V> extends RedisCommands<K, V> {
 
-	Long add(String key, Suggestion suggestion);
+	Long sugadd(K key, V string, SuggestAddOptions options);
 
-	List<SuggestResult<V>> get(K key, V prefix, GetOptions options);
+	List<SuggestResult<V>> sugget(K key, V prefix, SuggestGetOptions options);
 
 }

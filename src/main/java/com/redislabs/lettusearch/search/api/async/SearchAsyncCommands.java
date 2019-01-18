@@ -1,6 +1,5 @@
 package com.redislabs.lettusearch.search.api.async;
 
-import com.redislabs.lettusearch.StatefulRediSearchConnection;
 import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
@@ -11,8 +10,6 @@ import io.lettuce.core.RedisFuture;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 
 public interface SearchAsyncCommands<K, V> extends RedisAsyncCommands<K, V> {
-
-	StatefulRediSearchConnection<K, V> getStatefulConnection();
 
 	RedisFuture<String> add(String index, Document document);
 

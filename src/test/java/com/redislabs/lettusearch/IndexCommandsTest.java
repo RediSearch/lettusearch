@@ -14,9 +14,9 @@ import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.api.sync.SearchCommands;
-import com.redislabs.lettusearch.suggest.GetOptions;
+import com.redislabs.lettusearch.suggest.SuggestAddOptions;
+import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
-import com.redislabs.lettusearch.suggest.Suggestion;
 import com.redislabs.lettusearch.suggest.api.sync.SuggestCommands;
 
 public class IndexCommandsTest {
@@ -59,11 +59,11 @@ public class IndexCommandsTest {
 		SuggestCommands<String, String> commands = connection.sync();
 		String hancock = "Herbie Hancock";
 		String mann = "Herbie Mann";
-		commands.add(key, Suggestion.builder().string(hancock).build());
-		commands.add(key, Suggestion.builder().string(mann).build());
-		commands.add(key, Suggestion.builder().string("DJ Herbie").build());
-		List<SuggestResult<String>> results = commands.get(key, "Herb",
-				GetOptions.builder().withScores(true).withPayloads(true).build());
+		commands.sugadd(key, hancock, SuggestAddOptions.builder().build());
+		commands.sugadd(key, mann, SuggestAddOptions.builder().build());
+		commands.sugadd(key, "DJ Herbie", SuggestAddOptions.builder().build());
+		List<SuggestResult<String>> results = commands.sugget(key, "Herb",
+				SuggestGetOptions.builder().withScores(true).withPayloads(true).build());
 		Assert.assertEquals(2, results.size());
 		Assert.assertTrue(results.stream().anyMatch(result -> hancock.equals(result.getString())));
 		Assert.assertTrue(results.stream().anyMatch(result -> mann.equals(result.getString())));

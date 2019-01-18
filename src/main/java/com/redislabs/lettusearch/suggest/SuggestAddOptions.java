@@ -11,12 +11,11 @@ import lombok.Data;
 
 @Data
 @Builder
-public class Suggestion implements CompositeArgument {
+public class SuggestAddOptions implements CompositeArgument {
 
 	static final String MUST_NOT_BE_NULL = "must not be null";
 	static final String MUST_NOT_BE_EMPTY = "must not be empty";
 
-	private String string;
 	@Builder.Default
 	private Double score = 1d;
 	private boolean increment;
@@ -24,9 +23,7 @@ public class Suggestion implements CompositeArgument {
 
 	@Override
 	public <K, V> void build(CommandArgs<K, V> args) {
-		LettuceAssert.notNull(string, "string " + MUST_NOT_BE_NULL);
 		LettuceAssert.notNull(score, "score " + MUST_NOT_BE_NULL);
-		args.add(string);
 		args.add(score);
 		if (increment) {
 			args.add(INCR);

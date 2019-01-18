@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class GetOptions implements CompositeArgument {
+public class SuggestGetOptions implements CompositeArgument {
 
 	private boolean fuzzy;
 	private boolean withScores;
