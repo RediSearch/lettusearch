@@ -62,7 +62,8 @@ public class IndexCommandsTest {
 		commands.add(key, Suggestion.builder().string(hancock).build());
 		commands.add(key, Suggestion.builder().string(mann).build());
 		commands.add(key, Suggestion.builder().string("DJ Herbie").build());
-		List<SuggestResult<String>> results = commands.get(key, "Herb", GetOptions.builder().build());
+		List<SuggestResult<String>> results = commands.get(key, "Herb",
+				GetOptions.builder().withScores(true).withPayloads(true).build());
 		Assert.assertEquals(2, results.size());
 		Assert.assertTrue(results.stream().anyMatch(result -> hancock.equals(result.getString())));
 		Assert.assertTrue(results.stream().anyMatch(result -> mann.equals(result.getString())));

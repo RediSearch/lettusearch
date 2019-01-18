@@ -35,7 +35,9 @@ public class SuggestOutput<K, V> extends CommandOutput<K, V, List<SuggestResult<
 				}
 			} else {
 				if (current.getPayload() == null && options.isWithPayloads()) {
-					current.setPayload(codec.decodeValue(bytes));
+					if (bytes != null) {
+						current.setPayload(codec.decodeValue(bytes));
+					}
 					current = null;
 				}
 			}
