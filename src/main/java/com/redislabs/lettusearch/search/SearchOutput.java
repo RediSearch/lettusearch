@@ -27,11 +27,15 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 	public void set(ByteBuffer bytes) {
 		if (current == null) {
 			current = new SearchResult<>();
-			current.setDocumentId(codec.decodeKey(bytes));
+			if (bytes != null) {
+				current.setDocumentId(codec.decodeKey(bytes));
+			}
 			output.getResults().add(current);
 		} else {
 			if (options.isWithScores() && current.getScore() == null) {
-				current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
+				if (bytes != null) {
+					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
+				}
 			} else {
 				nested.set(bytes);
 			}

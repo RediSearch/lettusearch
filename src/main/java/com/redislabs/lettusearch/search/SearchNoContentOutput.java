@@ -20,14 +20,18 @@ public class SearchNoContentOutput<K, V> extends CommandOutput<K, V, SearchResul
 	public void set(ByteBuffer bytes) {
 		if (current == null) {
 			current = new SearchResult<>();
-			current.setDocumentId(codec.decodeKey(bytes));
+			if (bytes != null) {
+				current.setDocumentId(codec.decodeKey(bytes));
+			}
 			output.getResults().add(current);
 			if (!options.isWithScores()) {
 				current = null;
 			}
 		} else {
 			if (options.isWithScores()) {
-				current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
+				if (bytes != null) {
+					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
+				}
 			}
 			current = null;
 		}

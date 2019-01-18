@@ -20,19 +20,20 @@ public class SuggestOutput<K, V> extends CommandOutput<K, V, List<SuggestResult<
 
 	@Override
 	public void set(ByteBuffer bytes) {
-		if (bytes == null) {
-			return;
-		}
 		if (current == null) {
 			current = new SuggestResult<>();
-			current.setString(codec.decodeValue(bytes));
+			if (bytes != null) {
+				current.setString(codec.decodeValue(bytes));
+			}
 			output.add(current);
 			if (!options.isWithScores() && !options.isWithPayloads()) {
 				current = null;
 			}
 		} else {
 			if (current.getScore() == null && options.isWithScores()) {
-				current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
+				if (bytes != null) {
+					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
+				}
 				if (!options.isWithPayloads()) {
 					current = null;
 				}
