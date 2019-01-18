@@ -1,18 +1,3 @@
-/*
- * Copyright 2011-2018 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.redislabs.lettusearch;
 
 import static io.lettuce.core.LettuceStrings.isEmpty;
@@ -97,32 +82,32 @@ public class RediSearchClient extends AbstractRedisClient {
 		return new RediSearchClient(clientResources, redisURI);
 	}
 
-	public StatefulSearchConnection<String, String> connect() {
+	public StatefulRediSearchConnection<String, String> connect() {
 		return connect(newStringStringCodec());
 	}
 
-	public <K, V> StatefulSearchConnection<K, V> connect(RedisCodec<K, V> codec) {
+	public <K, V> StatefulRediSearchConnection<K, V> connect(RedisCodec<K, V> codec) {
 
 		checkForRedisURI();
 
 		return getConnection(connectStandaloneAsync(codec, this.redisURI, timeout));
 	}
 
-	public StatefulSearchConnection<String, String> connect(RedisURI redisURI) {
+	public StatefulRediSearchConnection<String, String> connect(RedisURI redisURI) {
 
 		assertNotNull(redisURI);
 
 		return getConnection(connectStandaloneAsync(newStringStringCodec(), redisURI, redisURI.getTimeout()));
 	}
 
-	public <K, V> StatefulSearchConnection<K, V> connect(RedisCodec<K, V> codec, RedisURI redisURI) {
+	public <K, V> StatefulRediSearchConnection<K, V> connect(RedisCodec<K, V> codec, RedisURI redisURI) {
 
 		assertNotNull(redisURI);
 
 		return getConnection(connectStandaloneAsync(codec, redisURI, redisURI.getTimeout()));
 	}
 
-	public <K, V> ConnectionFuture<StatefulSearchConnection<K, V>> connectAsync(RedisCodec<K, V> codec,
+	public <K, V> ConnectionFuture<StatefulRediSearchConnection<K, V>> connectAsync(RedisCodec<K, V> codec,
 			RedisURI redisURI) {
 
 		assertNotNull(redisURI);
@@ -130,7 +115,7 @@ public class RediSearchClient extends AbstractRedisClient {
 		return transformAsyncConnectionException(connectStandaloneAsync(codec, redisURI, redisURI.getTimeout()));
 	}
 
-	private <K, V> ConnectionFuture<StatefulSearchConnection<K, V>> connectStandaloneAsync(RedisCodec<K, V> codec,
+	private <K, V> ConnectionFuture<StatefulRediSearchConnection<K, V>> connectStandaloneAsync(RedisCodec<K, V> codec,
 			RedisURI redisURI, Duration timeout) {
 
 		assertNotNull(codec);
@@ -145,8 +130,8 @@ public class RediSearchClient extends AbstractRedisClient {
 			writer = new CommandExpiryWriter(writer, clientOptions, clientResources);
 		}
 
-		StatefulSearchConnectionImpl<K, V> connection = newStatefulRedisConnection(writer, codec, timeout);
-		ConnectionFuture<StatefulSearchConnection<K, V>> future = connectStatefulAsync(connection, codec, endpoint,
+		StatefulRediSearchConnectionImpl<K, V> connection = newStatefulRedisConnection(writer, codec, timeout);
+		ConnectionFuture<StatefulRediSearchConnection<K, V>> future = connectStatefulAsync(connection, codec, endpoint,
 				redisURI, () -> new CommandHandler(clientOptions, clientResources, endpoint));
 
 		future.whenComplete((channelHandler, throwable) -> {
@@ -160,7 +145,7 @@ public class RediSearchClient extends AbstractRedisClient {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <K, V, S> ConnectionFuture<S> connectStatefulAsync(StatefulSearchConnectionImpl<K, V> connection,
+	private <K, V, S> ConnectionFuture<S> connectStatefulAsync(StatefulRediSearchConnectionImpl<K, V> connection,
 			RedisCodec<K, V> codec, Endpoint endpoint, RedisURI redisURI,
 			Supplier<CommandHandler> commandHandlerSupplier) {
 
@@ -233,9 +218,9 @@ public class RediSearchClient extends AbstractRedisClient {
 		return clientResources;
 	}
 
-	protected <K, V> StatefulSearchConnectionImpl<K, V> newStatefulRedisConnection(RedisChannelWriter channelWriter,
+	protected <K, V> StatefulRediSearchConnectionImpl<K, V> newStatefulRedisConnection(RedisChannelWriter channelWriter,
 			RedisCodec<K, V> codec, Duration timeout) {
-		return new StatefulSearchConnectionImpl<>(channelWriter, codec, timeout);
+		return new StatefulRediSearchConnectionImpl<>(channelWriter, codec, timeout);
 	}
 
 	protected Mono<SocketAddress> getSocketAddress(RedisURI redisURI) {
