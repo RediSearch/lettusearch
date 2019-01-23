@@ -19,11 +19,11 @@ import io.lettuce.core.api.sync.RedisCommands;
  */
 public interface SearchCommands<K, V> extends RedisCommands<K, V> {
 
-	String add(String index, K docId, Map<K, V> fields, Double score, AddOptions document);
-
 	String create(String index, Schema schema);
 
 	String drop(String index, DropOptions options);
+
+	String add(String index, K docId, double score, Map<K, V> fields, AddOptions document);
 
 	SearchResults<K, V> search(String index, String query, SearchOptions options);
 

@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 
 public interface SuggestReactiveCommands<K, V> extends RedisReactiveCommands<K, V> {
 
-	Mono<Long> sugadd(K key, V string, SuggestAddOptions options);
+	Mono<Long> sugadd(K key, V string, double score, SuggestAddOptions options);
 
 	Flux<SuggestResult<V>> sugget(K key, V prefix, SuggestGetOptions options);
 

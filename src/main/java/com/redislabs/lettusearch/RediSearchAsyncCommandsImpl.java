@@ -30,10 +30,10 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	public StatefulRediSearchConnection<K, V> getStatefulConnection() {
 		return (StatefulRediSearchConnection<K, V>) super.getStatefulConnection();
 	}
-	
+
 	@Override
-	public RedisFuture<String> add(String index, K docId, Map<K, V> fields, Double score, AddOptions options) {
-		return dispatch(commandBuilder.add(index, docId, fields, score, options));
+	public RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options) {
+		return dispatch(commandBuilder.add(index, docId, score, fields, options));
 	}
 
 	@Override
@@ -52,8 +52,8 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
-	public RedisFuture<Long> sugadd(K key, V string, SuggestAddOptions options) {
-		return dispatch(commandBuilder.sugadd(key, string, options));
+	public RedisFuture<Long> sugadd(K key, V string, double score, SuggestAddOptions options) {
+		return dispatch(commandBuilder.sugadd(key, string, score, options));
 	}
 
 	@Override

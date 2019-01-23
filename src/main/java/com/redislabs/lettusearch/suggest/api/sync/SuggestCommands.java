@@ -17,7 +17,7 @@ import io.lettuce.core.api.sync.RedisCommands;
  */
 public interface SuggestCommands<K, V> extends RedisCommands<K, V> {
 
-	Long sugadd(K key, V string, SuggestAddOptions options);
+	Long sugadd(K key, V string, double score, SuggestAddOptions options);
 
 	List<SuggestResult<V>> sugget(K key, V prefix, SuggestGetOptions options);
 

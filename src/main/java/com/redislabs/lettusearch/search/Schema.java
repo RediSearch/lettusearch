@@ -1,8 +1,16 @@
 package com.redislabs.lettusearch.search;
 
-import static com.redislabs.lettusearch.CommandKeyword.*;
+import static com.redislabs.lettusearch.CommandKeyword.MAXTEXTFIELDS;
+import static com.redislabs.lettusearch.CommandKeyword.NOFIELDS;
+import static com.redislabs.lettusearch.CommandKeyword.NOFREQS;
+import static com.redislabs.lettusearch.CommandKeyword.NOHL;
+import static com.redislabs.lettusearch.CommandKeyword.NOOFFSETS;
+import static com.redislabs.lettusearch.CommandKeyword.SCHEMA;
+import static com.redislabs.lettusearch.CommandKeyword.STOPWORDS;
 
 import java.util.List;
+
+import com.redislabs.lettusearch.search.field.Field;
 
 import io.lettuce.core.CompositeArgument;
 import io.lettuce.core.internal.LettuceAssert;
@@ -26,21 +34,6 @@ public class Schema implements CompositeArgument {
 	private List<String> stopWords;
 	@Singular
 	private List<Field> fields;
-
-	public static class SchemaBuilder {
-
-		public SchemaBuilder textField(String name, boolean sortable) {
-			TextField field = new TextField(name);
-			field.setSortable(sortable);
-			return field(field);
-		}
-
-		public SchemaBuilder numericField(String name, boolean sortable) {
-			Field field = new Field(name, FieldType.Numeric);
-			field.setSortable(sortable);
-			return field(field);
-		}
-	}
 
 	@Override
 	public <K, V> void build(CommandArgs<K, V> args) {

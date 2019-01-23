@@ -46,11 +46,10 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		super(codec);
 	}
 
-	public Command<K, V, String> add(String index, K docId, Map<K, V> fields, Double score, AddOptions options) {
+	public Command<K, V, String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options) {
 		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
 		LettuceAssert.notNull(docId, "docId " + MUST_NOT_BE_NULL);
 		LettuceAssert.isTrue(!fields.isEmpty(), "fields " + MUST_NOT_BE_EMPTY);
-		LettuceAssert.notNull(score, "score " + MUST_NOT_BE_NULL);
 		CommandArgs<K, V> args = new RediSearchCommandArgs<>(codec);
 		args.add(index);
 		args.addKey(docId);
@@ -95,10 +94,10 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		return new SearchOutput<>(codec, options);
 	}
 
-	public Command<K, V, Long> sugadd(K key, V string, SuggestAddOptions options) {
+	public Command<K, V, Long> sugadd(K key, V string, double score, SuggestAddOptions options) {
 		LettuceAssert.notNull(key, "key " + MUST_NOT_BE_NULL);
 		LettuceAssert.notNull(string, "string " + MUST_NOT_BE_NULL);
-		CommandArgs<K, V> args = new RediSearchCommandArgs<>(codec).addKey(key).addValue(string);
+		CommandArgs<K, V> args = new RediSearchCommandArgs<>(codec).addKey(key).addValue(string).add(score);
 		if (options != null) {
 			options.build(args);
 		}

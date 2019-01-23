@@ -27,8 +27,8 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<String> add(String index, K docId, Map<K, V> fields, Double score, AddOptions document) {
-		return createMono(() -> commandBuilder.add(index, docId, fields, score, document));
+	public Mono<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options) {
+		return createMono(() -> commandBuilder.add(index, docId, score, fields, options));
 	}
 
 	@Override
@@ -47,8 +47,8 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<Long> sugadd(K key, V string, SuggestAddOptions options) {
-		return createMono(() -> commandBuilder.sugadd(key, string, options));
+	public Mono<Long> sugadd(K key, V string, double score, SuggestAddOptions options) {
+		return createMono(() -> commandBuilder.sugadd(key, string, score, options));
 	}
 
 	@Override

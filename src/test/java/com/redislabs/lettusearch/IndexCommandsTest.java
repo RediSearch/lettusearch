@@ -14,6 +14,8 @@ import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.api.sync.SearchCommands;
+import com.redislabs.lettusearch.search.field.Matcher;
+import com.redislabs.lettusearch.search.field.TextField;
 import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
@@ -39,16 +41,35 @@ public class IndexCommandsTest {
 	public void testAdd() {
 		StatefulRediSearchConnection<String, String> connection = client.connect();
 		SearchCommands<String, String> commands = connection.sync();
-		connection.sync().create("testIndex",
-				Schema.builder().textField("field1", false).textField("field2", true).build());
+		connection.sync().create("testIndex", Schema.builder().field(TextField.builder().name("field1").build())
+				.field(TextField.builder().name("field2").sortable(true).build()).build());
 		Map<String, String> fields1 = new HashMap<>();
 		fields1.put("field1", "this is doc 1 value 1");
 		fields1.put("field2", "this is doc 1 value 2");
 		Map<String, String> fields2 = new HashMap<>();
 		fields2.put("field1", "this is doc 2 value 1");
 		fields2.put("field2", "this is doc 2 value 2");
-		commands.add(INDEX, "doc1", fields1, 1d, AddOptions.builder().build());
-		commands.add(INDEX, "doc2", fields2, 1d, AddOptions.builder().build());
+		commands.add(INDEX, "doc1", 1, fields1, AddOptions.builder().build());
+		commands.add(INDEX, "doc2", 1, fields2, AddOptions.builder().build());
+		connection.close();
+	}
+
+	@Test
+	public void testPhoneticFields() {
+		String index = "traps";
+		StatefulRediSearchConnection<String, String> connection = client.connect();
+		SearchCommands<String, String> commands = connection.sync();
+		commands.create(index,
+				Schema.builder().field(TextField.builder().name("word").matcher(Matcher.English).build()).build());
+		Map<String, String> fields1 = new HashMap<>();
+		fields1.put("word", "kar");
+		Map<String, String> fields2 = new HashMap<>();
+		fields2.put("word", "car");
+		commands.add(index, "doc1", 1, fields1, AddOptions.builder().build());
+		commands.add(index, "doc2", 1, fields2, AddOptions.builder().build());
+		SearchResults<String, String> results = commands.search(index, "qar",
+				SearchOptions.builder().withScores(true).build());
+		Assert.assertEquals(2, results.getCount());
 		connection.close();
 	}
 
@@ -59,9 +80,9 @@ public class IndexCommandsTest {
 		SuggestCommands<String, String> commands = connection.sync();
 		String hancock = "Herbie Hancock";
 		String mann = "Herbie Mann";
-		commands.sugadd(key, hancock, SuggestAddOptions.builder().build());
-		commands.sugadd(key, mann, SuggestAddOptions.builder().build());
-		commands.sugadd(key, "DJ Herbie", SuggestAddOptions.builder().build());
+		commands.sugadd(key, hancock, 1, SuggestAddOptions.builder().build());
+		commands.sugadd(key, mann, 1, SuggestAddOptions.builder().build());
+		commands.sugadd(key, "DJ Herbie", 1, SuggestAddOptions.builder().build());
 		List<SuggestResult<String>> results = commands.sugget(key, "Herb",
 				SuggestGetOptions.builder().withScores(true).withPayloads(true).build());
 		Assert.assertEquals(2, results.size());

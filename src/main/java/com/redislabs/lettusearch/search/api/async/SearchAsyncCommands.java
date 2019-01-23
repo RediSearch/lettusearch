@@ -15,9 +15,9 @@ public interface SearchAsyncCommands<K, V> extends RedisAsyncCommands<K, V> {
 
 	RedisFuture<String> create(String index, Schema schema);
 
-	RedisFuture<String> add(String index, K docId, Map<K, V> fields, Double score, AddOptions document);
+	RedisFuture<String> drop(String index, DropOptions options);
+
+	RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions document);
 
 	RedisFuture<SearchResults<K, V>> search(String index, String query, SearchOptions options);
-
-	RedisFuture<String> drop(String index, DropOptions options);
 }
