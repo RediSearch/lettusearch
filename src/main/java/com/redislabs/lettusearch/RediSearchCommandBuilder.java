@@ -34,8 +34,6 @@ import io.lettuce.core.protocol.CommandArgs;
 /**
  * Dedicated pub/sub command builder to build pub/sub commands.
  *
- * @author Mark Paluch
- * @since 4.2
  */
 public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V> {
 
