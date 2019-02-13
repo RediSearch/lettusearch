@@ -9,6 +9,7 @@ import static com.redislabs.lettusearch.CommandType.SUGGET;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
@@ -47,6 +48,7 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 	public Command<K, V, String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options) {
 		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
 		LettuceAssert.notNull(docId, "docId " + MUST_NOT_BE_NULL);
+		LettuceAssert.notNull(fields, "fields " + MUST_NOT_BE_NULL);
 		LettuceAssert.isTrue(!fields.isEmpty(), "fields " + MUST_NOT_BE_EMPTY);
 		CommandArgs<K, V> args = new RediSearchCommandArgs<>(codec);
 		args.add(index);
@@ -54,10 +56,10 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		args.add(score);
 		options.build(args);
 		args.add(CommandKeyword.FIELDS);
-		fields.forEach((k, v) -> {
-			args.addKey(k);
-			args.addValue(v);
-		});
+		for (Entry<K, V> entry : fields.entrySet()) {
+			args.addKey(entry.getKey());
+			args.addValue(entry.getValue());
+		}
 		return createCommand(ADD, new StatusOutput<>(codec), args);
 	}
 
