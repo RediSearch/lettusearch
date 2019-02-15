@@ -7,7 +7,7 @@
 	<version>1.0.3-SNAPSHOT</version>
 	<name>LettuSearch</name>
 	<description>Java client for RediSearch based on Lettuce</description>
-	<url>https://github.com/Redislabs-Solution-Architects/lettusearch.git</url>
+	<url>https://github.com/RediSearch/lettusearch</url>
 	<developers>
 		<developer>
 			<id>jruaux</id>
@@ -29,9 +29,9 @@
 		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
 	</properties>
 	<scm>
-		<url>https://github.com/Redislabs-Solution-Architects/lettusearch.git</url>
-		<connection>scm:git:git://github.com/Redislabs-Solution-Architects/lettusearch.git</connection>
-		<developerConnection>scm:git:git@github.com:Redislabs-Solution-Architects/lettusearch.git</developerConnection>
+		<url>https://github.com/RediSearch/lettusearch.git</url>
+		<connection>scm:git:git://github.com/RediSearch/lettusearch.git</connection>
+		<developerConnection>scm:git:git@github.com:RediSearch/lettusearch.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 	<dependencies>
