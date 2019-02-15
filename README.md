@@ -1,5 +1,5 @@
 # LettuSearch
-[RediSearch](https://oss.redislabs.com/redisearch) client based on [Lettuce](https://lettuce.io)
+[RediSearch](https://redisearch.io) client based on [Lettuce](https://lettuce.io)
 
 ## Architecture
 LettuSearch implements RediSearch commands using the [Command abstraction](https://lettuce.io/core/5.0.1.RELEASE/reference/#_custom_commands) provided by Lettuce.
