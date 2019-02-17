@@ -1,9 +1,9 @@
 [![license](https://img.shields.io/github/license/RediSearch/lettusearch.svg)](https://github.com/RediSearch/lettusearch)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.redislabs/lettusearch/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.redislabs/lettusearch)
 [![Javadocs](https://www.javadoc.io/badge/com.redislabs/lettusearch.svg)](https://www.javadoc.io/doc/com.redislabs/lettusearch)
-<!--[![Codecov](https://codecov.io/gh/RediSearch/lettusearch/branch/master/graph/badge.svg)](https://codecov.io/gh/RediSearch/lettusearch)-->
-<!--[![CircleCI](https://circleci.com/gh/RediSearch/lettusearch/tree/master.svg?style=svg)](https://circleci.com/gh/RediSearch/lettusearch/tree/master)
-[![GitHub issues](https://img.shields.io/github/release/RediSearch/lettusearch.svg)](https://github.com/RediSearch/lettusearch/releases/latest)-->
+[![Codecov](https://codecov.io/gh/RediSearch/lettusearch/branch/master/graph/badge.svg)](https://codecov.io/gh/RediSearch/lettusearch)
+[![CircleCI](https://circleci.com/gh/RediSearch/lettusearch/tree/master.svg?style=svg)](https://circleci.com/gh/RediSearch/lettusearch/tree/master)
+[![GitHub issues](https://img.shields.io/github/release/RediSearch/lettusearch.svg)](https://github.com/RediSearch/lettusearch/releases/latest)
 
 # LettuSearch
 Java client for [RediSearch](https://redisearch.io) based on [Lettuce](https://lettuce.io)
