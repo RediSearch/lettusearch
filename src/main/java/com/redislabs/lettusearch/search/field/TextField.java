@@ -2,8 +2,8 @@ package com.redislabs.lettusearch.search.field;
 
 import static com.redislabs.lettusearch.CommandKeyword.NOSTEM;
 import static com.redislabs.lettusearch.CommandKeyword.PHONETIC;
-import static com.redislabs.lettusearch.CommandKeyword.WEIGHT;
 import static com.redislabs.lettusearch.CommandKeyword.TEXT;
+import static com.redislabs.lettusearch.CommandKeyword.WEIGHT;
 
 import io.lettuce.core.protocol.CommandArgs;
 import lombok.Builder;
@@ -22,6 +22,21 @@ public class TextField extends Field {
 		this.weight = weight;
 		this.noStem = noStem;
 		this.matcher = matcher;
+	}
+
+	public static enum Matcher {
+
+		English("dm:en"), French("dm:fr"), Portuguese("dm:pt"), Spanish("dm:es");
+
+		private String code;
+
+		Matcher(String code) {
+			this.code = code;
+		}
+
+		public String getCode() {
+			return code;
+		}
 	}
 
 	@Override
