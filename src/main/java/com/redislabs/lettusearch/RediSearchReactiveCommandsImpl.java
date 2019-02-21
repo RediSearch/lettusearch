@@ -2,14 +2,16 @@ package com.redislabs.lettusearch;
 
 import java.util.Map;
 
+import com.redislabs.lettusearch.aggregate.AggregateOptions;
+import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
-import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 
 import io.lettuce.core.RedisReactiveCommandsImpl;
 import io.lettuce.core.codec.RedisCodec;
@@ -44,6 +46,11 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	@Override
 	public Mono<SearchResults<K, V>> search(String index, String query, SearchOptions options) {
 		return createMono(() -> commandBuilder.search(index, query, options));
+	}
+
+	@Override
+	public Mono<AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options) {
+		return createMono(() -> commandBuilder.aggregate(index, query, options));
 	}
 
 	@Override

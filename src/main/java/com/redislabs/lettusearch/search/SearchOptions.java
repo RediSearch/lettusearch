@@ -50,7 +50,6 @@ public class SearchOptions implements CompositeArgument {
 			args.add(language);
 		}
 		if (limit != null) {
-			args.add(LIMIT);
 			limit.build(args);
 		}
 	}

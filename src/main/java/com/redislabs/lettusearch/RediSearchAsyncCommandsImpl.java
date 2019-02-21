@@ -3,14 +3,16 @@ package com.redislabs.lettusearch;
 import java.util.List;
 import java.util.Map;
 
+import com.redislabs.lettusearch.aggregate.AggregateOptions;
+import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
-import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 
 import io.lettuce.core.RedisAsyncCommandsImpl;
 import io.lettuce.core.RedisFuture;
@@ -49,6 +51,11 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	@Override
 	public RedisFuture<SearchResults<K, V>> search(String index, String query, SearchOptions options) {
 		return dispatch(commandBuilder.search(index, query, options));
+	}
+
+	@Override
+	public RedisFuture<AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options) {
+		return dispatch(commandBuilder.aggregate(index, query, options));
 	}
 
 	@Override

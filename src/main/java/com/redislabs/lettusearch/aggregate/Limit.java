@@ -1,21 +1,17 @@
-package com.redislabs.lettusearch.search;
+package com.redislabs.lettusearch.aggregate;
 
 import static com.redislabs.lettusearch.CommandKeyword.LIMIT;
 
-import io.lettuce.core.CompositeArgument;
 import io.lettuce.core.protocol.CommandArgs;
 import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Data;
 
 @Data
 @Builder
-public class Limit implements CompositeArgument {
+public class Limit implements Operation {
 
-	@Default
-	private long offset = 0;
-	@Default
-	private long num = 10;
+	private long offset;
+	private long num;
 
 	@Override
 	public <K, V> void build(CommandArgs<K, V> args) {

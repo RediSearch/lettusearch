@@ -4,6 +4,7 @@ import static com.redislabs.lettusearch.CommandType.ADD;
 import static com.redislabs.lettusearch.CommandType.CREATE;
 import static com.redislabs.lettusearch.CommandType.DROP;
 import static com.redislabs.lettusearch.CommandType.SEARCH;
+import static com.redislabs.lettusearch.CommandType.AGGREGATE;
 import static com.redislabs.lettusearch.CommandType.SUGADD;
 import static com.redislabs.lettusearch.CommandType.SUGGET;
 
@@ -11,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.redislabs.lettusearch.aggregate.AggregateOptions;
+import com.redislabs.lettusearch.aggregate.AggregateOutput;
+import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
@@ -92,6 +96,14 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 			return new SearchNoContentOutput<>(codec, options);
 		}
 		return new SearchOutput<>(codec, options);
+	}
+
+	public Command<K, V, AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options) {
+		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
+		LettuceAssert.notNull(query, "query " + MUST_NOT_BE_NULL);
+		CommandArgs<K, V> args = new RediSearchCommandArgs<>(codec).add(index).add(query);
+		options.build(args);
+		return createCommand(AGGREGATE, new AggregateOutput<>(codec), args);
 	}
 
 	public Command<K, V, Long> sugadd(K key, V string, double score, SuggestAddOptions options) {
