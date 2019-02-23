@@ -20,11 +20,10 @@ public class AggregateTest extends BaseTest {
 		assertEquals(1, results.getCount());
 		assertEquals(beers.size(), results.getResults().size());
 		for (int index = 0; index < beers.size(); index++) {
-			assertEquals(beers.get(index).get(FIELD_NAME).toLowerCase(),
-					results.getResults().get(index).get(FIELD_NAME));
+			assertEquals(beers.get(index).get(FIELD_NAME), results.getResults().get(index).get(FIELD_NAME));
 			String style = beers.get(index).get(FIELD_STYLE);
 			if (style != null) {
-				assertEquals(style.toLowerCase(), results.getResults().get(index).get(FIELD_STYLE));
+				assertEquals(style, results.getResults().get(index).get(FIELD_STYLE));
 			}
 		}
 	}
@@ -39,7 +38,7 @@ public class AggregateTest extends BaseTest {
 						.build())
 				.build());
 		assertEquals(100, results.getCount());
-		assertEquals(10, results.getResults().size());
+		assertEquals(100, results.getResults().size());
 	}
 
 }
