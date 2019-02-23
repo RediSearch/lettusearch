@@ -1,7 +1,7 @@
 package com.redislabs.lettusearch.aggregate;
 
-import io.lettuce.core.CompositeArgument;
+import com.redislabs.lettusearch.RediSearchArgument;
 
-public interface Operation extends CompositeArgument {
+public interface Operation extends RediSearchArgument {
 
 }

@@ -1,15 +1,23 @@
 package com.redislabs.lettusearch.search;
 
-import static com.redislabs.lettusearch.CommandKeyword.*;
+import static com.redislabs.lettusearch.CommandKeyword.LANGUAGE;
+import static com.redislabs.lettusearch.CommandKeyword.NOCONTENT;
+import static com.redislabs.lettusearch.CommandKeyword.NOSTOPWORDS;
+import static com.redislabs.lettusearch.CommandKeyword.SORTBY;
+import static com.redislabs.lettusearch.CommandKeyword.VERBATIM;
+import static com.redislabs.lettusearch.CommandKeyword.WITHPAYLOADS;
+import static com.redislabs.lettusearch.CommandKeyword.WITHSCORES;
+import static com.redislabs.lettusearch.CommandKeyword.WITHSORTKEYS;
 
-import io.lettuce.core.CompositeArgument;
-import io.lettuce.core.protocol.CommandArgs;
+import com.redislabs.lettusearch.RediSearchArgument;
+import com.redislabs.lettusearch.RediSearchCommandArgs;
+
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class SearchOptions implements CompositeArgument {
+public class SearchOptions implements RediSearchArgument {
 
 	private boolean noContent;
 	private boolean verbatim;
@@ -22,7 +30,7 @@ public class SearchOptions implements CompositeArgument {
 	private Limit limit;
 
 	@Override
-	public <K, V> void build(CommandArgs<K, V> args) {
+	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
 		if (noContent) {
 			args.add(NOCONTENT);
 		}

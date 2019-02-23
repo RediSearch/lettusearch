@@ -5,7 +5,8 @@ import static com.redislabs.lettusearch.CommandKeyword.SORTBY;
 
 import java.util.List;
 
-import io.lettuce.core.protocol.CommandArgs;
+import com.redislabs.lettusearch.RediSearchCommandArgs;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
@@ -19,7 +20,7 @@ public class Sort implements Operation {
 	private Long max;
 
 	@Override
-	public <K, V> void build(CommandArgs<K, V> args) {
+	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
 		args.add(SORTBY);
 		args.add(properties.size() * 2);
 		properties.forEach(property -> property.build(args));

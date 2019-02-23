@@ -7,14 +7,15 @@ import static com.redislabs.lettusearch.CommandKeyword.PARTIAL;
 import static com.redislabs.lettusearch.CommandKeyword.PAYLOAD;
 import static com.redislabs.lettusearch.CommandKeyword.REPLACE;
 
-import io.lettuce.core.CompositeArgument;
-import io.lettuce.core.protocol.CommandArgs;
+import com.redislabs.lettusearch.RediSearchArgument;
+import com.redislabs.lettusearch.RediSearchCommandArgs;
+
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class AddOptions implements CompositeArgument {
+public class AddOptions implements RediSearchArgument {
 
 	private boolean noSave;
 	private boolean replace;
@@ -24,7 +25,7 @@ public class AddOptions implements CompositeArgument {
 	private String ifCondition;
 
 	@Override
-	public <K, V> void build(CommandArgs<K, V> args) {
+	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
 		if (noSave) {
 			args.add(NOSAVE);
 		}

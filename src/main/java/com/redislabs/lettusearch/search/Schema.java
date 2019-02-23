@@ -10,18 +10,18 @@ import static com.redislabs.lettusearch.CommandKeyword.STOPWORDS;
 
 import java.util.List;
 
+import com.redislabs.lettusearch.RediSearchArgument;
+import com.redislabs.lettusearch.RediSearchCommandArgs;
 import com.redislabs.lettusearch.search.field.Field;
 
-import io.lettuce.core.CompositeArgument;
 import io.lettuce.core.internal.LettuceAssert;
-import io.lettuce.core.protocol.CommandArgs;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
 
 @Data
 @Builder
-public class Schema implements CompositeArgument {
+public class Schema implements RediSearchArgument {
 
 	static final String MUST_NOT_BE_EMPTY = "must not be empty";
 
@@ -36,7 +36,7 @@ public class Schema implements CompositeArgument {
 	private List<Field> fields;
 
 	@Override
-	public <K, V> void build(CommandArgs<K, V> args) {
+	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
 		if (maxTextFields) {
 			args.add(MAXTEXTFIELDS);
 		}

@@ -7,11 +7,9 @@ import org.junit.Test;
 import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.aggregate.Group;
-import com.redislabs.lettusearch.aggregate.Order;
-import com.redislabs.lettusearch.aggregate.Reduce;
 import com.redislabs.lettusearch.aggregate.Sort;
 import com.redislabs.lettusearch.aggregate.SortProperty;
-import com.redislabs.lettusearch.aggregate.reduce.Avg;
+import com.redislabs.lettusearch.aggregate.reducer.Avg;
 
 public class AggregateTest extends BaseTest {
 
@@ -35,10 +33,9 @@ public class AggregateTest extends BaseTest {
 	public void testAggregateGroup() {
 		AggregateResults<String, String> results = connection.sync().aggregate(INDEX, "*", AggregateOptions.builder()
 				.operation(Group.builder().property(FIELD_STYLE)
-						.reduce(Reduce.builder().function(Avg.builder().property(FIELD_ABV).build()).as(FIELD_ABV)
-								.build())
-						.build())
-				.operation(Sort.builder().property(SortProperty.builder().property(FIELD_ABV).order(Order.Desc).build())
+						.reduce(Avg.builder().property(FIELD_ABV).as(FIELD_ABV).build()).build())
+				.operation(Sort.builder()
+						.property(SortProperty.builder().property(FIELD_ABV).order(SortProperty.Order.Desc).build())
 						.build())
 				.build());
 		assertEquals(100, results.getCount());

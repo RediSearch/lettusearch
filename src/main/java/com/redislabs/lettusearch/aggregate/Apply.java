@@ -1,8 +1,10 @@
 package com.redislabs.lettusearch.aggregate;
 
-import static com.redislabs.lettusearch.CommandKeyword.*;
+import static com.redislabs.lettusearch.CommandKeyword.APPLY;
+import static com.redislabs.lettusearch.CommandKeyword.AS;
 
-import io.lettuce.core.protocol.CommandArgs;
+import com.redislabs.lettusearch.RediSearchCommandArgs;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,7 +16,7 @@ public class Apply implements Operation {
 	private String as;
 
 	@Override
-	public <K, V> void build(CommandArgs<K, V> args) {
+	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
 		args.add(APPLY);
 		args.add(expression);
 		args.add(AS);

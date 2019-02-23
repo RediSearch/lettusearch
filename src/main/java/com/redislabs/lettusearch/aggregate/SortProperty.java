@@ -3,25 +3,28 @@ package com.redislabs.lettusearch.aggregate;
 import static com.redislabs.lettusearch.CommandKeyword.ASC;
 import static com.redislabs.lettusearch.CommandKeyword.DESC;
 
-import io.lettuce.core.protocol.CommandArgs;
+import com.redislabs.lettusearch.RediSearchArgument;
+import com.redislabs.lettusearch.RediSearchCommandArgs;
+
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
 @Builder
-public class SortProperty extends PropertyArgument {
+public class SortProperty implements RediSearchArgument {
 
 	private String property;
 	@Default
 	private Order order = Order.Asc;
 
-	@Override
-	public <K, V> void build(CommandArgs<K, V> args) {
-		args.add(prefix(property));
+	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
+		args.addProperty(property);
 		args.add(order == Order.Asc ? ASC : DESC);
+	}
+
+	public static enum Order {
+		Asc, Desc
 	}
 
 }

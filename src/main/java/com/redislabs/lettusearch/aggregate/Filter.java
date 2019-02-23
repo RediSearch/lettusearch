@@ -1,15 +1,20 @@
 package com.redislabs.lettusearch.aggregate;
 
-import static com.redislabs.lettusearch.CommandKeyword.*;
+import static com.redislabs.lettusearch.CommandKeyword.FILTER;
 
-import io.lettuce.core.protocol.CommandArgs;
+import com.redislabs.lettusearch.RediSearchCommandArgs;
 
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
 public class Filter implements Operation {
 
 	private String expression;
 
 	@Override
-	public <K, V> void build(CommandArgs<K, V> args) {
+	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
 		args.add(FILTER);
 		args.add(expression);
 	}

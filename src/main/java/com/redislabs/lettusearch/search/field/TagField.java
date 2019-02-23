@@ -1,16 +1,17 @@
 package com.redislabs.lettusearch.search.field;
 
-import static com.redislabs.lettusearch.CommandKeyword.TAG;
 import static com.redislabs.lettusearch.CommandKeyword.SEPARATOR;
+import static com.redislabs.lettusearch.CommandKeyword.TAG;
 
-import io.lettuce.core.protocol.CommandArgs;
+import com.redislabs.lettusearch.RediSearchCommandArgs;
+
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 public class TagField extends Field {
 
-	private final String separator;
+	private String separator;
 
 	@Builder
 	public TagField(String name, boolean sortable, boolean noIndex, String separator) {
@@ -19,7 +20,7 @@ public class TagField extends Field {
 	}
 
 	@Override
-	protected <K, V> void buildField(CommandArgs<K, V> args) {
+	protected <K, V> void buildField(RediSearchCommandArgs<K, V> args) {
 		args.add(TAG);
 		if (separator != null) {
 			args.add(SEPARATOR);

@@ -2,7 +2,8 @@ package com.redislabs.lettusearch.search.field;
 
 import static com.redislabs.lettusearch.CommandKeyword.NUMERIC;
 
-import io.lettuce.core.protocol.CommandArgs;
+import com.redislabs.lettusearch.RediSearchCommandArgs;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,7 +16,7 @@ public class NumericField extends Field {
 	}
 
 	@Override
-	protected <K, V> void buildField(CommandArgs<K, V> args) {
+	protected <K, V> void buildField(RediSearchCommandArgs<K, V> args) {
 		args.add(NUMERIC);
 	}
 }

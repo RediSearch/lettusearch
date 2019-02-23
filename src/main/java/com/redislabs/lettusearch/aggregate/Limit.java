@@ -2,7 +2,8 @@ package com.redislabs.lettusearch.aggregate;
 
 import static com.redislabs.lettusearch.CommandKeyword.LIMIT;
 
-import io.lettuce.core.protocol.CommandArgs;
+import com.redislabs.lettusearch.RediSearchCommandArgs;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,7 +15,7 @@ public class Limit implements Operation {
 	private long num;
 
 	@Override
-	public <K, V> void build(CommandArgs<K, V> args) {
+	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
 		args.add(LIMIT);
 		args.add(offset);
 		args.add(num);

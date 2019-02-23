@@ -17,8 +17,8 @@ import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.Schema.SchemaBuilder;
 import com.redislabs.lettusearch.search.field.NumericField;
+import com.redislabs.lettusearch.search.field.PhoneticMatcher;
 import com.redislabs.lettusearch.search.field.TextField;
-import com.redislabs.lettusearch.search.field.TextField.Matcher;
 
 public class BaseTest {
 
@@ -46,7 +46,7 @@ public class BaseTest {
 		commands.flushall();
 		SchemaBuilder schema = Schema.builder();
 		schema.field(TextField.builder().name(FIELD_NAME).sortable(true).build());
-		schema.field(TextField.builder().name(FIELD_STYLE).matcher(Matcher.English).sortable(true).build());
+		schema.field(TextField.builder().name(FIELD_STYLE).matcher(PhoneticMatcher.English).sortable(true).build());
 		schema.field(NumericField.builder().name(FIELD_ABV).sortable(true).build());
 		schema.field(NumericField.builder().name(FIELD_OUNCES).sortable(true).build());
 		commands.create(INDEX, schema.build());

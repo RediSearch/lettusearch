@@ -1,15 +1,19 @@
 package com.redislabs.lettusearch.suggest;
 
-import static com.redislabs.lettusearch.CommandKeyword.*;
+import static com.redislabs.lettusearch.CommandKeyword.FUZZY;
+import static com.redislabs.lettusearch.CommandKeyword.MAX;
+import static com.redislabs.lettusearch.CommandKeyword.WITHPAYLOADS;
+import static com.redislabs.lettusearch.CommandKeyword.WITHSCORES;
 
-import io.lettuce.core.CompositeArgument;
-import io.lettuce.core.protocol.CommandArgs;
+import com.redislabs.lettusearch.RediSearchArgument;
+import com.redislabs.lettusearch.RediSearchCommandArgs;
+
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class SuggestGetOptions implements CompositeArgument {
+public class SuggestGetOptions implements RediSearchArgument {
 
 	private boolean fuzzy;
 	private boolean withScores;
@@ -17,7 +21,7 @@ public class SuggestGetOptions implements CompositeArgument {
 	private Long max;
 
 	@Override
-	public <K, V> void build(CommandArgs<K, V> args) {
+	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
 		if (fuzzy) {
 			args.add(FUZZY);
 		}
