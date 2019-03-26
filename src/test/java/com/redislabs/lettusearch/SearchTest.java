@@ -32,7 +32,6 @@ public class SearchTest extends BaseTest {
 	public void testGet() {
 		Map<String, String> map = connection.sync().get(INDEX, "1836");
 		Assert.assertEquals("Widmer Brothers Hefeweizen", map.get("name"));
-		System.out.println(map);
 	}
 
 	@Test
