@@ -23,8 +23,4 @@ public class SortProperty implements RediSearchArgument {
 		args.add(order == Order.Asc ? ASC : DESC);
 	}
 
-	public static enum Order {
-		Asc, Desc
-	}
-
 }

@@ -10,7 +10,4 @@ public class By {
 	private String property;
 	private Order order;
 
-	public static enum Order {
-		Asc, Desc
-	}
 }

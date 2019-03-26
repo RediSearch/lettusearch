@@ -7,7 +7,6 @@ import static com.redislabs.lettusearch.CommandKeyword.FIRST_VALUE;
 
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 import com.redislabs.lettusearch.aggregate.Reducer;
-import com.redislabs.lettusearch.aggregate.reducer.By.Order;
 
 import lombok.Builder;
 import lombok.Getter;
