@@ -68,4 +68,14 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 		return dispatch(commandBuilder.sugget(key, prefix, options));
 	}
 
+	@Override
+	public RedisFuture<Map<K, V>> get(String index, K docId) {
+		return dispatch(commandBuilder.get(index, docId));
+	}
+
+	@Override
+	public RedisFuture<Boolean> del(String index, K docId, boolean deleteDoc) {
+		return dispatch(commandBuilder.del(index, docId, deleteDoc));
+	}
+
 }

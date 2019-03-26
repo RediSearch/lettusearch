@@ -1,7 +1,5 @@
 package com.redislabs.lettusearch;
 
-import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,7 +7,7 @@ import com.redislabs.lettusearch.search.Limit;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 
-public class SearchTest extends BaseTest {
+public class SuggestionTest extends BaseTest {
 
 	@Test
 	public void testPhoneticFields() {
@@ -18,6 +16,24 @@ public class SearchTest extends BaseTest {
 		Assert.assertEquals(445, results.getCount());
 	}
 
+//	@Test
+//	public void testSuggestions() {
+//		String key = "artists";
+//		StatefulRediSearchConnection<String, String> connection = client.connect();
+//		SuggestCommands<String, String> commands = connection.sync();
+//		String hancock = "Herbie Hancock";
+//		String mann = "Herbie Mann";
+//		commands.sugadd(key, hancock, 1, SuggestAddOptions.builder().build());
+//		commands.sugadd(key, mann, 1, SuggestAddOptions.builder().build());
+//		commands.sugadd(key, "DJ Herbie", 1, SuggestAddOptions.builder().build());
+//		List<SuggestResult<String>> results = commands.sugget(key, "Herb",
+//				SuggestGetOptions.builder().withScores(true).withPayloads(true).build());
+//		Assert.assertEquals(2, results.size());
+//		Assert.assertTrue(results.stream().anyMatch(result -> hancock.equals(result.getString())));
+//		Assert.assertTrue(results.stream().anyMatch(result -> mann.equals(result.getString())));
+//	}
+//
+//
 	@Test
 	public void testSearchNoContent() {
 		SearchResults<String, String> results = connection.sync().search(INDEX, "Hefeweizen", SearchOptions.builder()
@@ -26,21 +42,6 @@ public class SearchTest extends BaseTest {
 		Assert.assertEquals(42, results.getResults().size());
 		Assert.assertEquals("1836", results.getResults().get(0).getDocumentId());
 		Assert.assertEquals(7.5, results.getResults().get(0).getScore(), 0.000001);
-	}
-
-	@Test
-	public void testGet() {
-		Map<String, String> map = connection.sync().get(INDEX, "1836");
-		Assert.assertEquals("Widmer Brothers Hefeweizen", map.get("name"));
-		System.out.println(map);
-	}
-
-	@Test
-	public void testDel() {
-		boolean deleted = connection.sync().del(INDEX, "1836", true);
-		Assert.assertTrue(deleted);
-		Map<String, String> map = connection.sync().get(INDEX, "1836");
-		Assert.assertNull(map);
 	}
 
 }

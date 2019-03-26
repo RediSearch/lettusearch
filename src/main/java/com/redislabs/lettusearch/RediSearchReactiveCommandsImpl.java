@@ -29,6 +29,11 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
+	public StatefulRediSearchConnection<K, V> getStatefulConnection() {
+		return (StatefulRediSearchConnection<K, V>) super.getStatefulConnection();
+	}
+
+	@Override
 	public Mono<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options) {
 		return createMono(() -> commandBuilder.add(index, docId, score, fields, options));
 	}
@@ -41,6 +46,16 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	@Override
 	public Mono<String> drop(String index, DropOptions options) {
 		return createMono(() -> commandBuilder.drop(index, options));
+	}
+
+	@Override
+	public Mono<Map<K, V>> get(String index, K docId) {
+		return createMono(() -> commandBuilder.get(index, docId));
+	}
+
+	@Override
+	public Mono<Boolean> del(String index, K docId, boolean deleteDoc) {
+		return createMono(() -> commandBuilder.del(index, docId, deleteDoc));
 	}
 
 	@Override
@@ -61,11 +76,6 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	@Override
 	public Flux<SuggestResult<V>> sugget(K key, V prefix, SuggestGetOptions options) {
 		return createDissolvingFlux(() -> commandBuilder.sugget(key, prefix, options));
-	}
-
-	@Override
-	public StatefulRediSearchConnection<K, V> getStatefulConnection() {
-		return (StatefulRediSearchConnection<K, V>) super.getStatefulConnection();
 	}
 
 }

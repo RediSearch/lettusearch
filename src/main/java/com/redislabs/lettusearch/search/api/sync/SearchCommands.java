@@ -2,6 +2,8 @@ package com.redislabs.lettusearch.search.api.sync;
 
 import java.util.Map;
 
+import com.redislabs.lettusearch.aggregate.AggregateOptions;
+import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
@@ -25,6 +27,12 @@ public interface SearchCommands<K, V> extends RedisCommands<K, V> {
 
 	String add(String index, K docId, double score, Map<K, V> fields, AddOptions document);
 
+	Map<K, V> get(String index, K docId);
+
+	boolean del(String index, K docId, boolean deleteDoc);
+
 	SearchResults<K, V> search(String index, String query, SearchOptions options);
+
+	AggregateResults<K, V> aggregate(String index, String query, AggregateOptions options);
 
 }

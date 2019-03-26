@@ -2,6 +2,8 @@ package com.redislabs.lettusearch.search.api.reactive;
 
 import java.util.Map;
 
+import com.redislabs.lettusearch.aggregate.AggregateOptions;
+import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
@@ -20,5 +22,11 @@ public interface SearchReactiveCommands<K, V> extends RedisReactiveCommands<K, V
 	Mono<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions document);
 
 	Mono<SearchResults<K, V>> search(String index, String query, SearchOptions options);
+
+	Mono<Map<K, V>> get(String index, K docId);
+
+	Mono<Boolean> del(String index, K docId, boolean deleteDoc);
+
+	Mono<AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options);
 
 }
