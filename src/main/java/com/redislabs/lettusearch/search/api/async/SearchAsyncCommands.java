@@ -1,5 +1,6 @@
 package com.redislabs.lettusearch.search.api.async;
 
+import java.util.List;
 import java.util.Map;
 
 import com.redislabs.lettusearch.aggregate.AggregateOptions;
@@ -9,6 +10,7 @@ import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.search.field.FieldOptions;
 
 import io.lettuce.core.RedisFuture;
 import io.lettuce.core.api.async.RedisAsyncCommands;
@@ -19,9 +21,13 @@ public interface SearchAsyncCommands<K, V> extends RedisAsyncCommands<K, V> {
 
 	RedisFuture<String> drop(String index, DropOptions options);
 
-	RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions document);
+	RedisFuture<String> alter(String index, K field, FieldOptions options);
+
+	RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options);
 
 	RedisFuture<Map<K, V>> get(String index, K docId);
+
+	RedisFuture<List<Object>> indexInfo(String index);
 
 	RedisFuture<Boolean> del(String index, K docId, boolean deleteDoc);
 

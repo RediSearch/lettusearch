@@ -7,6 +7,7 @@ import org.junit.Test;
 import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.aggregate.Group;
+import com.redislabs.lettusearch.aggregate.Limit;
 import com.redislabs.lettusearch.aggregate.Order;
 import com.redislabs.lettusearch.aggregate.Sort;
 import com.redislabs.lettusearch.aggregate.SortProperty;
@@ -37,9 +38,9 @@ public class AggregateTest extends BaseTest {
 						.reduce(Avg.builder().property(FIELD_ABV).as(FIELD_ABV).build()).build())
 				.operation(Sort.builder().property(SortProperty.builder().property(FIELD_ABV).order(Order.Desc).build())
 						.build())
-				.build());
+				.operation(Limit.builder().num(20).offset(0).build()).build());
 		assertEquals(100, results.getCount());
-		assertEquals(10, results.getResults().size());
+		assertEquals(20, results.getResults().size());
 	}
 
 }

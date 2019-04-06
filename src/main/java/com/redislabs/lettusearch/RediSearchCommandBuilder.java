@@ -1,15 +1,18 @@
 package com.redislabs.lettusearch;
 
+import static com.redislabs.lettusearch.CommandKeyword.DD;
+import static com.redislabs.lettusearch.CommandKeyword.SCHEMA;
 import static com.redislabs.lettusearch.CommandType.ADD;
 import static com.redislabs.lettusearch.CommandType.AGGREGATE;
+import static com.redislabs.lettusearch.CommandType.ALTER;
 import static com.redislabs.lettusearch.CommandType.CREATE;
+import static com.redislabs.lettusearch.CommandType.DEL;
 import static com.redislabs.lettusearch.CommandType.DROP;
 import static com.redislabs.lettusearch.CommandType.GET;
-import static com.redislabs.lettusearch.CommandType.DEL;
+import static com.redislabs.lettusearch.CommandType.INFO;
 import static com.redislabs.lettusearch.CommandType.SEARCH;
 import static com.redislabs.lettusearch.CommandType.SUGADD;
 import static com.redislabs.lettusearch.CommandType.SUGGET;
-import static com.redislabs.lettusearch.CommandKeyword.DD;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +28,7 @@ import com.redislabs.lettusearch.search.SearchNoContentOutput;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchOutput;
 import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.search.field.FieldOptions;
 import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestOutput;
@@ -36,6 +40,7 @@ import io.lettuce.core.output.BooleanOutput;
 import io.lettuce.core.output.CommandOutput;
 import io.lettuce.core.output.IntegerOutput;
 import io.lettuce.core.output.MapOutput;
+import io.lettuce.core.output.NestedMultiOutput;
 import io.lettuce.core.output.StatusOutput;
 import io.lettuce.core.protocol.BaseRedisCommandBuilder;
 import io.lettuce.core.protocol.Command;
@@ -54,9 +59,9 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		super(codec);
 	}
 
-	protected <T> Command<K, V, T> createCommand(CommandType type, CommandOutput<K, V, T> output,
-			CommandArgs<K, V> args) {
-		return new Command<K, V, T>(type, output, args);
+	protected <A, B, T> Command<A, B, T> createCommand(CommandType type, CommandOutput<A, B, T> output,
+			CommandArgs<A, B> args) {
+		return new Command<A, B, T>(type, output, args);
 	}
 
 	public Command<K, V, String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options) {
@@ -90,6 +95,22 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		RediSearchCommandArgs<K, V> args = createArgs(index);
 		options.build(args);
 		return createCommand(DROP, new StatusOutput<>(codec), args);
+	}
+
+	public Command<K, V, List<Object>> indexInfo(String index) {
+		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
+		RediSearchCommandArgs<K, V> args = createArgs(index);
+		return createCommand(INFO, new NestedMultiOutput<>(codec), args);
+	}
+
+	public Command<K, V, String> alter(String index, K field, FieldOptions options) {
+		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
+		RediSearchCommandArgs<K, V> args = createArgs(index);
+		args.add(SCHEMA);
+		args.add(com.redislabs.lettusearch.CommandKeyword.ADD);
+		args.addKey(field);
+		options.build(args);
+		return createCommand(ALTER, new StatusOutput<>(codec), args);
 	}
 
 	private RediSearchCommandArgs<K, V> createArgs(String index) {
@@ -155,6 +176,5 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 			args.add(DD);
 		}
 		return createCommand(DEL, new BooleanOutput<>(codec), args);
-
 	}
 }

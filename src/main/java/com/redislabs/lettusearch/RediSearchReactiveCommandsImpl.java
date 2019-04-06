@@ -1,5 +1,6 @@
 package com.redislabs.lettusearch;
 
+import java.util.List;
 import java.util.Map;
 
 import com.redislabs.lettusearch.aggregate.AggregateOptions;
@@ -9,6 +10,7 @@ import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.search.field.FieldOptions;
 import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
@@ -49,6 +51,11 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
+	public Mono<List<Object>> indexInfo(String index) {
+		return createMono(() -> commandBuilder.indexInfo(index));
+	}
+
+	@Override
 	public Mono<Map<K, V>> get(String index, K docId) {
 		return createMono(() -> commandBuilder.get(index, docId));
 	}
@@ -76,6 +83,11 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	@Override
 	public Flux<SuggestResult<V>> sugget(K key, V prefix, SuggestGetOptions options) {
 		return createDissolvingFlux(() -> commandBuilder.sugget(key, prefix, options));
+	}
+
+	@Override
+	public Mono<String> alter(String index, K field, FieldOptions options) {
+		return createMono(() -> commandBuilder.alter(index, field, options));
 	}
 
 }

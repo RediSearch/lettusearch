@@ -10,6 +10,7 @@ import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.search.field.FieldOptions;
 import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
@@ -49,6 +50,11 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
+	public RedisFuture<List<Object>> indexInfo(String index) {
+		return dispatch(commandBuilder.indexInfo(index));
+	}
+
+	@Override
 	public RedisFuture<SearchResults<K, V>> search(String index, String query, SearchOptions options) {
 		return dispatch(commandBuilder.search(index, query, options));
 	}
@@ -76,6 +82,11 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	@Override
 	public RedisFuture<Boolean> del(String index, K docId, boolean deleteDoc) {
 		return dispatch(commandBuilder.del(index, docId, deleteDoc));
+	}
+
+	@Override
+	public RedisFuture<String> alter(String index, K field, FieldOptions options) {
+		return dispatch(commandBuilder.alter(index, field, options));
 	}
 
 }

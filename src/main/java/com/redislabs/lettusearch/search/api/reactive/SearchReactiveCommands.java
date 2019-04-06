@@ -1,5 +1,6 @@
 package com.redislabs.lettusearch.search.api.reactive;
 
+import java.util.List;
 import java.util.Map;
 
 import com.redislabs.lettusearch.aggregate.AggregateOptions;
@@ -9,6 +10,7 @@ import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.search.field.FieldOptions;
 
 import io.lettuce.core.api.reactive.RedisReactiveCommands;
 import reactor.core.publisher.Mono;
@@ -19,7 +21,11 @@ public interface SearchReactiveCommands<K, V> extends RedisReactiveCommands<K, V
 
 	Mono<String> drop(String index, DropOptions options);
 
-	Mono<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions document);
+	Mono<List<Object>> indexInfo(String index);
+
+	Mono<String> alter(String index, K field, FieldOptions options);
+
+	Mono<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options);
 
 	Mono<SearchResults<K, V>> search(String index, String query, SearchOptions options);
 

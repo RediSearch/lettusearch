@@ -10,7 +10,7 @@ import io.lettuce.core.protocol.ProtocolKeyword;
  */
 public enum CommandType implements ProtocolKeyword {
 
-	ADD, CREATE, DROP, GET, DEL, SEARCH, SUGADD, SUGGET, AGGREGATE;
+	ADD, AGGREGATE, ALTER, CREATE, DEL, DROP, GET, INFO, SEARCH, SUGADD, SUGGET;
 
 	private final static String PREFIX = "FT.";
 
