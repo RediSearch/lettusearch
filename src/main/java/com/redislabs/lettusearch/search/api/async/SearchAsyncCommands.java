@@ -24,6 +24,8 @@ public interface SearchAsyncCommands<K, V> extends RedisAsyncCommands<K, V> {
 	RedisFuture<String> alter(String index, K field, FieldOptions options);
 
 	RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options);
+	
+	RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options, V payload);
 
 	RedisFuture<Map<K, V>> get(String index, K docId);
 

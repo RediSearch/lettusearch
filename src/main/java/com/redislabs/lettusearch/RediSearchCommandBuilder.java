@@ -1,6 +1,7 @@
 package com.redislabs.lettusearch;
 
 import static com.redislabs.lettusearch.CommandKeyword.DD;
+import static com.redislabs.lettusearch.CommandKeyword.PAYLOAD;
 import static com.redislabs.lettusearch.CommandKeyword.SCHEMA;
 import static com.redislabs.lettusearch.CommandType.ADD;
 import static com.redislabs.lettusearch.CommandType.AGGREGATE;
@@ -64,7 +65,8 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		return new Command<A, B, T>(type, output, args);
 	}
 
-	public Command<K, V, String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options) {
+	public Command<K, V, String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options,
+			V payload) {
 		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
 		LettuceAssert.notNull(docId, "docId " + MUST_NOT_BE_NULL);
 		LettuceAssert.notNull(fields, "fields " + MUST_NOT_BE_NULL);
@@ -73,6 +75,10 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		args.addKey(docId);
 		args.add(score);
 		options.build(args);
+		if (payload != null) {
+			args.add(PAYLOAD);
+			args.addValue(payload);
+		}
 		args.add(CommandKeyword.FIELDS);
 		for (Entry<K, V> entry : fields.entrySet()) {
 			args.addKey(entry.getKey());

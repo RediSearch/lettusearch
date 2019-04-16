@@ -35,9 +35,13 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 		return (StatefulRediSearchConnection<K, V>) super.getStatefulConnection();
 	}
 
-	@Override
 	public Mono<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options) {
-		return createMono(() -> commandBuilder.add(index, docId, score, fields, options));
+		return add(index, docId, score, fields, options, null);
+	}
+
+	@Override
+	public Mono<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options, V payload) {
+		return createMono(() -> commandBuilder.add(index, docId, score, fields, options, payload));
 	}
 
 	@Override

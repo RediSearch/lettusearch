@@ -4,7 +4,6 @@ import static com.redislabs.lettusearch.CommandKeyword.IF;
 import static com.redislabs.lettusearch.CommandKeyword.LANGUAGE;
 import static com.redislabs.lettusearch.CommandKeyword.NOSAVE;
 import static com.redislabs.lettusearch.CommandKeyword.PARTIAL;
-import static com.redislabs.lettusearch.CommandKeyword.PAYLOAD;
 import static com.redislabs.lettusearch.CommandKeyword.REPLACE;
 
 import com.redislabs.lettusearch.RediSearchArgument;
@@ -20,8 +19,7 @@ public class AddOptions implements RediSearchArgument {
 	private boolean noSave;
 	private boolean replace;
 	private boolean replacePartial;
-	private String language;
-	private String payload;
+	private Language language;
 	private String ifCondition;
 
 	@Override
@@ -37,11 +35,7 @@ public class AddOptions implements RediSearchArgument {
 		}
 		if (language != null) {
 			args.add(LANGUAGE);
-			args.add(language);
-		}
-		if (payload != null) {
-			args.add(PAYLOAD);
-			args.add(payload);
+			args.add(language.name().toLowerCase());
 		}
 		if (ifCondition != null) {
 			args.add(IF);

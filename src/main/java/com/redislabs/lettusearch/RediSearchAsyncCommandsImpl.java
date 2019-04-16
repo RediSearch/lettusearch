@@ -36,7 +36,13 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 
 	@Override
 	public RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options) {
-		return dispatch(commandBuilder.add(index, docId, score, fields, options));
+		return add(index, docId, score, fields, options, null);
+	}
+
+	@Override
+	public RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options,
+			V payload) {
+		return dispatch(commandBuilder.add(index, docId, score, fields, options, payload));
 	}
 
 	@Override
