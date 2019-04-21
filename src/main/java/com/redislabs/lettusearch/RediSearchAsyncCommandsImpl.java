@@ -11,7 +11,6 @@ import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.field.FieldOptions;
-import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
 
@@ -32,6 +31,16 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	@Override
 	public StatefulRediSearchConnection<K, V> getStatefulConnection() {
 		return (StatefulRediSearchConnection<K, V>) super.getStatefulConnection();
+	}
+
+	@Override
+	public RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields) {
+		return add(index, docId, score, fields, (AddOptions) null);
+	}
+
+	@Override
+	public RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields, V payload) {
+		return add(index, docId, score, fields, null, payload);
 	}
 
 	@Override
@@ -61,6 +70,11 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
+	public RedisFuture<SearchResults<K, V>> search(String index, String query) {
+		return search(index, query, SearchOptions.builder().build());
+	}
+
+	@Override
 	public RedisFuture<SearchResults<K, V>> search(String index, String query, SearchOptions options) {
 		return dispatch(commandBuilder.search(index, query, options));
 	}
@@ -71,8 +85,23 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
-	public RedisFuture<Long> sugadd(K key, V string, double score, SuggestAddOptions options) {
-		return dispatch(commandBuilder.sugadd(key, string, score, options));
+	public RedisFuture<Long> sugadd(K key, V string, double score) {
+		return sugadd(key, string, score, false, null);
+	}
+
+	@Override
+	public RedisFuture<Long> sugadd(K key, V string, double score, boolean increment) {
+		return sugadd(key, string, score, increment, null);
+	}
+
+	@Override
+	public RedisFuture<Long> sugadd(K key, V string, double score, V payload) {
+		return sugadd(key, string, score, false, payload);
+	}
+
+	@Override
+	public RedisFuture<Long> sugadd(K key, V string, double score, boolean increment, V payload) {
+		return dispatch(commandBuilder.sugadd(key, string, score, increment, payload));
 	}
 
 	@Override

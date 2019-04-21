@@ -23,8 +23,12 @@ public interface SearchAsyncCommands<K, V> extends RedisAsyncCommands<K, V> {
 
 	RedisFuture<String> alter(String index, K field, FieldOptions options);
 
+	RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields);
+
+	RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields, V payload);
+
 	RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options);
-	
+
 	RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options, V payload);
 
 	RedisFuture<Map<K, V>> get(String index, K docId);
@@ -32,6 +36,8 @@ public interface SearchAsyncCommands<K, V> extends RedisAsyncCommands<K, V> {
 	RedisFuture<List<Object>> indexInfo(String index);
 
 	RedisFuture<Boolean> del(String index, K docId, boolean deleteDoc);
+
+	RedisFuture<SearchResults<K, V>> search(String index, String query);
 
 	RedisFuture<SearchResults<K, V>> search(String index, String query, SearchOptions options);
 

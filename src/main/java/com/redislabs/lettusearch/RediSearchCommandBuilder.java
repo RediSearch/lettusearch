@@ -1,6 +1,7 @@
 package com.redislabs.lettusearch;
 
 import static com.redislabs.lettusearch.CommandKeyword.DD;
+import static com.redislabs.lettusearch.CommandKeyword.INCR;
 import static com.redislabs.lettusearch.CommandKeyword.PAYLOAD;
 import static com.redislabs.lettusearch.CommandKeyword.SCHEMA;
 import static com.redislabs.lettusearch.CommandType.ADD;
@@ -30,7 +31,6 @@ import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchOutput;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.field.FieldOptions;
-import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestOutput;
 import com.redislabs.lettusearch.suggest.SuggestResult;
@@ -74,7 +74,9 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		RediSearchCommandArgs<K, V> args = createArgs(index);
 		args.addKey(docId);
 		args.add(score);
-		options.build(args);
+		if (options != null) {
+			options.build(args);
+		}
 		if (payload != null) {
 			args.add(PAYLOAD);
 			args.addValue(payload);
@@ -148,12 +150,16 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		return createCommand(AGGREGATE, new AggregateOutput<>(codec), args);
 	}
 
-	public Command<K, V, Long> sugadd(K key, V string, double score, SuggestAddOptions options) {
+	public Command<K, V, Long> sugadd(K key, V string, double score, boolean increment, V payload) {
 		LettuceAssert.notNull(key, "key " + MUST_NOT_BE_NULL);
 		LettuceAssert.notNull(string, "string " + MUST_NOT_BE_NULL);
 		RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec).addKey(key).addValue(string).add(score);
-		if (options != null) {
-			options.build(args);
+		if (increment) {
+			args.add(INCR);
+		}
+		if (payload != null) {
+			args.add(PAYLOAD);
+			args.addValue(payload);
 		}
 		return createCommand(SUGADD, new IntegerOutput<>(codec), args);
 	}

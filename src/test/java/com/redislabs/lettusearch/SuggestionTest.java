@@ -1,13 +1,17 @@
 package com.redislabs.lettusearch;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.redislabs.lettusearch.search.Limit;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.suggest.SuggestGetOptions;
+import com.redislabs.lettusearch.suggest.SuggestResult;
+import com.redislabs.lettusearch.suggest.api.sync.SuggestCommands;
 
-public class SuggestionTest extends BaseTest {
+public class SuggestionTest extends AbstractBaseTest {
 
 	@Test
 	public void testPhoneticFields() {
@@ -16,32 +20,13 @@ public class SuggestionTest extends BaseTest {
 		Assert.assertEquals(445, results.getCount());
 	}
 
-//	@Test
-//	public void testSuggestions() {
-//		String key = "artists";
-//		StatefulRediSearchConnection<String, String> connection = client.connect();
-//		SuggestCommands<String, String> commands = connection.sync();
-//		String hancock = "Herbie Hancock";
-//		String mann = "Herbie Mann";
-//		commands.sugadd(key, hancock, 1, SuggestAddOptions.builder().build());
-//		commands.sugadd(key, mann, 1, SuggestAddOptions.builder().build());
-//		commands.sugadd(key, "DJ Herbie", 1, SuggestAddOptions.builder().build());
-//		List<SuggestResult<String>> results = commands.sugget(key, "Herb",
-//				SuggestGetOptions.builder().withScores(true).withPayloads(true).build());
-//		Assert.assertEquals(2, results.size());
-//		Assert.assertTrue(results.stream().anyMatch(result -> hancock.equals(result.getString())));
-//		Assert.assertTrue(results.stream().anyMatch(result -> mann.equals(result.getString())));
-//	}
-//
-//
 	@Test
-	public void testSearchNoContent() {
-		SearchResults<String, String> results = connection.sync().search(INDEX, "Hefeweizen", SearchOptions.builder()
-				.withScores(true).noContent(true).limit(Limit.builder().num(100).build()).build());
-		Assert.assertEquals(42, results.getCount());
-		Assert.assertEquals(42, results.getResults().size());
-		Assert.assertEquals("1836", results.getResults().get(0).getDocumentId());
-		Assert.assertEquals(7.5, results.getResults().get(0).getScore(), 0.000001);
+	public void testSuggestions() {
+		SuggestCommands<String, String> commands = connection.sync();
+		List<SuggestResult<String>> results = commands.sugget(SUGINDEX, "Ame",
+				SuggestGetOptions.builder().withScores(true).build());
+		Assert.assertEquals(5, results.size());
+		Assert.assertEquals("American Hero", results.get(0).getString());
 	}
 
 }

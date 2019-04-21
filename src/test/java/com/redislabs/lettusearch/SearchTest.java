@@ -9,7 +9,7 @@ import com.redislabs.lettusearch.search.Limit;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 
-public class SearchTest extends BaseTest {
+public class SearchTest extends AbstractBaseTest {
 
 	@Test
 	public void testPhoneticFields() {

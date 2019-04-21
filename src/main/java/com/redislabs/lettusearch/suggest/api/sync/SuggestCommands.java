@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
-import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 
 import io.lettuce.core.api.sync.RedisCommands;
 
@@ -17,7 +16,13 @@ import io.lettuce.core.api.sync.RedisCommands;
  */
 public interface SuggestCommands<K, V> extends RedisCommands<K, V> {
 
-	Long sugadd(K key, V string, double score, SuggestAddOptions options);
+	Long sugadd(K key, V string, double score);
+
+	Long sugadd(K key, V string, double score, V payload);
+
+	Long sugadd(K key, V string, double score, boolean increment);
+
+	Long sugadd(K key, V string, double score, boolean increment, V payload);
 
 	List<SuggestResult<V>> sugget(K key, V prefix, SuggestGetOptions options);
 

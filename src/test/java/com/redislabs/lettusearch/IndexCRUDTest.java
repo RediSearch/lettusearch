@@ -17,7 +17,7 @@ import com.redislabs.lettusearch.search.field.FieldType;
 
 import io.lettuce.core.RedisCommandExecutionException;
 
-public class IndexCRUDTest extends BaseTest {
+public class IndexCRUDTest extends AbstractBaseTest {
 
 	@Test
 	public void testDrop() {

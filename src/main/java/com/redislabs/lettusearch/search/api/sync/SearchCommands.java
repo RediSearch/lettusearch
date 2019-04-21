@@ -31,8 +31,10 @@ public interface SearchCommands<K, V> extends RedisCommands<K, V> {
 
 	List<Object> indexInfo(String index);
 
+	String add(String index, K docId, double score, Map<K, V> fields);
+
 	String add(String index, K docId, double score, Map<K, V> fields, AddOptions options);
-	
+
 	String add(String index, K docId, double score, Map<K, V> fields, AddOptions options, V payload);
 
 	Map<K, V> get(String index, K docId);

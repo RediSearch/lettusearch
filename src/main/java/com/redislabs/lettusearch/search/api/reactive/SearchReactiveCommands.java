@@ -25,6 +25,8 @@ public interface SearchReactiveCommands<K, V> extends RedisReactiveCommands<K, V
 
 	Mono<String> alter(String index, K field, FieldOptions options);
 
+	Mono<String> add(String index, K docId, double score, Map<K, V> fields);
+
 	Mono<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options);
 
 	Mono<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options, V payload);

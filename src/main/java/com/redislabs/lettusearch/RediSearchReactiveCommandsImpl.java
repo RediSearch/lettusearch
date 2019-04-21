@@ -11,7 +11,6 @@ import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.field.FieldOptions;
-import com.redislabs.lettusearch.suggest.SuggestAddOptions;
 import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
 
@@ -33,6 +32,11 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	@Override
 	public StatefulRediSearchConnection<K, V> getStatefulConnection() {
 		return (StatefulRediSearchConnection<K, V>) super.getStatefulConnection();
+	}
+
+	@Override
+	public Mono<String> add(String index, K docId, double score, Map<K, V> fields) {
+		return add(index, docId, score, fields, null, null);
 	}
 
 	public Mono<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options) {
@@ -80,8 +84,23 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<Long> sugadd(K key, V string, double score, SuggestAddOptions options) {
-		return createMono(() -> commandBuilder.sugadd(key, string, score, options));
+	public Mono<Long> sugadd(K key, V string, double score, boolean increment, V payload) {
+		return createMono(() -> commandBuilder.sugadd(key, string, score, increment, payload));
+	}
+
+	@Override
+	public Mono<Long> sugadd(K key, V string, double score) {
+		return sugadd(key, string, score, false, null);
+	}
+
+	@Override
+	public Mono<Long> sugadd(K key, V string, double score, boolean increment) {
+		return sugadd(key, string, score, increment, null);
+	}
+
+	@Override
+	public Mono<Long> sugadd(K key, V string, double score, V payload) {
+		return sugadd(key, string, score, false, payload);
 	}
 
 	@Override

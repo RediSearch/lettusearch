@@ -13,7 +13,7 @@ import com.redislabs.lettusearch.aggregate.Sort;
 import com.redislabs.lettusearch.aggregate.SortProperty;
 import com.redislabs.lettusearch.aggregate.reducer.Avg;
 
-public class AggregateTest extends BaseTest {
+public class AggregateTest extends AbstractBaseTest {
 
 	@Test
 	public void testAggregateLoad() {

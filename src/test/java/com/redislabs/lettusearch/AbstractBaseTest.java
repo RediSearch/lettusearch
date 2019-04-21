@@ -13,14 +13,13 @@ import org.junit.Before;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.Schema.SchemaBuilder;
 import com.redislabs.lettusearch.search.field.NumericField;
 import com.redislabs.lettusearch.search.field.PhoneticMatcher;
 import com.redislabs.lettusearch.search.field.TextField;
 
-public class BaseTest {
+public abstract class AbstractBaseTest {
 
 //	private final static String FIELD_INDEX = "index";
 	protected final static String FIELD_ABV = "abv";
@@ -32,6 +31,8 @@ public class BaseTest {
 	protected final static String FIELD_OUNCES = "ounces";
 
 	protected final static String INDEX = "beers";
+
+	protected final static String SUGINDEX = "beersSug";
 
 	private RediSearchClient client;
 	protected StatefulRediSearchConnection<String, String> connection;
@@ -58,7 +59,8 @@ public class BaseTest {
 				}
 				cleanBeer.put(entry.getKey(), entry.getValue());
 			}
-			commands.add(INDEX, cleanBeer.get(FIELD_ID), 1, cleanBeer, AddOptions.builder().build());
+			commands.add(INDEX, cleanBeer.get(FIELD_ID), 1, cleanBeer);
+			commands.sugadd(SUGINDEX, cleanBeer.get(FIELD_NAME), 1);
 		}
 	}
 
