@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import com.redislabs.lettusearch.search.Limit;
 import com.redislabs.lettusearch.search.SearchOptions;
+import com.redislabs.lettusearch.search.SearchResult;
 import com.redislabs.lettusearch.search.SearchResults;
 
 public class SearchTest extends AbstractBaseTest {
@@ -40,6 +41,18 @@ public class SearchTest extends AbstractBaseTest {
 		Assert.assertTrue(deleted);
 		Map<String, String> map = connection.sync().get(INDEX, "1836");
 		Assert.assertNull(map);
+	}
+
+	@Test
+	public void testSearchReturn() {
+		SearchResults<String, String> results = connection.sync().search(INDEX, "@style:pale",
+				SearchOptions.builder().returnField(FIELD_NAME).returnField(FIELD_STYLE).build());
+		Assert.assertEquals(445, results.getCount());
+		SearchResult<String, String> result1 = results.getResults().get(0);
+		Assert.assertNotNull(result1.getFields().get(FIELD_NAME));
+		Assert.assertNotNull(result1.getFields().get(FIELD_STYLE));
+		Assert.assertNull(result1.getFields().get(FIELD_ABV));
+
 	}
 
 }

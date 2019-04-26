@@ -41,6 +41,8 @@ public interface SearchCommands<K, V> extends RedisCommands<K, V> {
 
 	boolean del(String index, K docId, boolean deleteDoc);
 
+	SearchResults<K, V> search(String index, String query);
+
 	SearchResults<K, V> search(String index, String query, SearchOptions options);
 
 	AggregateResults<K, V> aggregate(String index, String query, AggregateOptions options);

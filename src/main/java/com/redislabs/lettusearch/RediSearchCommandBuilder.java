@@ -130,12 +130,14 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		LettuceAssert.notNull(query, "query " + MUST_NOT_BE_NULL);
 		RediSearchCommandArgs<K, V> args = createArgs(index);
 		args.add(query);
-		options.build(args);
+		if (options != null) {
+			options.build(args);
+		}
 		return createCommand(SEARCH, getSearchOutput(codec, options), args);
 	}
 
 	private CommandOutput<K, V, SearchResults<K, V>> getSearchOutput(RedisCodec<K, V> codec, SearchOptions options) {
-		if (options.isNoContent()) {
+		if (options!=null && options.isNoContent()) {
 			return new SearchNoContentOutput<>(codec, options);
 		}
 		return new SearchOutput<>(codec, options);
