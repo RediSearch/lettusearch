@@ -30,7 +30,9 @@ public class Schema implements RediSearchArgument {
 	private boolean noHL;
 	private boolean noFields;
 	private boolean noFreqs;
-	@Singular
+	/**
+	 * set to empty list for STOPWORDS 0
+	 */
 	private List<String> stopWords;
 	@Singular
 	private List<Field> fields;
@@ -52,7 +54,7 @@ public class Schema implements RediSearchArgument {
 		if (noFreqs) {
 			args.add(NOFREQS);
 		}
-		if (!stopWords.isEmpty()) {
+		if (stopWords != null) {
 			args.add(STOPWORDS);
 			args.add(stopWords.size());
 			stopWords.forEach(stopWord -> args.add(stopWord));
