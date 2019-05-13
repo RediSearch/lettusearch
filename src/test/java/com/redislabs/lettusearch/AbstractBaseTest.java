@@ -37,13 +37,14 @@ public abstract class AbstractBaseTest {
 	private RediSearchClient client;
 	protected StatefulRediSearchConnection<String, String> connection;
 	protected List<Map<String, String>> beers;
+	protected RediSearchCommands<String, String> commands;
 
 	@Before
 	public void setup() throws IOException {
 		this.beers = loadBeers("beers.csv");
 		client = RediSearchClient.create("redis://localhost");
 		connection = client.connect();
-		RediSearchCommands<String, String> commands = connection.sync();
+		commands = connection.sync();
 		commands.flushall();
 		SchemaBuilder schema = Schema.builder();
 		schema.field(TextField.builder().name(FIELD_NAME).sortable(true).build());

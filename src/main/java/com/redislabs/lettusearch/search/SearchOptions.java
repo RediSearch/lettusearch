@@ -10,6 +10,7 @@ import static com.redislabs.lettusearch.CommandKeyword.VERBATIM;
 import static com.redislabs.lettusearch.CommandKeyword.WITHPAYLOADS;
 import static com.redislabs.lettusearch.CommandKeyword.WITHSCORES;
 import static com.redislabs.lettusearch.CommandKeyword.WITHSORTKEYS;
+import static com.redislabs.lettusearch.CommandKeyword.HIGHLIGHT;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class SearchOptions implements RediSearchArgument {
 	private List<String> inFields;
 	@Singular
 	private List<String> returnFields;
+	private HighlightOptions highlight;
 	private String language;
 	private SortBy sortBy;
 	private Limit limit;
@@ -67,6 +69,10 @@ public class SearchOptions implements RediSearchArgument {
 			args.add(RETURN);
 			args.add(returnFields.size());
 			returnFields.forEach(f -> args.add(f));
+		}
+		if (highlight != null) {
+			args.add(HIGHLIGHT);
+			highlight.build(args);
 		}
 		if (sortBy != null) {
 			args.add(SORTBY);
