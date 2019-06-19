@@ -29,14 +29,16 @@ Add LettuSearch to your application dependencies, e.g. with Maven:
 <dependency>
 	<groupId>com.redislabs</groupId>
 	<artifactId>lettusearch</artifactId>
-	<version>1.2.0</version>
+	<version>1.3.0</version>
 </dependency>
 ----
 
 .Java example
 [source,java]
 ----
-StatefulRediSearchConnection<String, String> conn = RediSearchClient.create("redis://localhost").connect();
+RediSearchClient client = RediSearchClient.create("redis://localhost");
+StatefulRediSearchConnection<String, String> conn = client.connect();
 RediSearchCommands<String, String> commands = conn.sync();
-...
+commands.create("myIndex", Schema.builder().field(field1).build());
+commands.add("myIndex", "doc1", 1, doc1);
 ----
