@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
+import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
+import com.redislabs.lettusearch.aggregate.CursorOptions;
 import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
@@ -46,5 +48,14 @@ public interface SearchCommands<K, V> extends RedisCommands<K, V> {
 	SearchResults<K, V> search(String index, String query, SearchOptions options);
 
 	AggregateResults<K, V> aggregate(String index, String query, AggregateOptions options);
+
+	AggregateWithCursorResults<K, V> aggregate(String index, String query, AggregateOptions options,
+			CursorOptions cursorOptions);
+
+	AggregateWithCursorResults<K, V> cursorRead(String index, long cursor);
+
+	AggregateWithCursorResults<K, V> cursorRead(String index, long cursor, long count);
+	
+	String cursorDelete(String index, long cursor);
 
 }

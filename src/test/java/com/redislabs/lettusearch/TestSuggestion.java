@@ -11,7 +11,7 @@ import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
 import com.redislabs.lettusearch.suggest.api.sync.SuggestCommands;
 
-public class SuggestionTest extends AbstractBaseTest {
+public class TestSuggestion extends AbstractBaseTest {
 
 	@Test
 	public void testPhoneticFields() {

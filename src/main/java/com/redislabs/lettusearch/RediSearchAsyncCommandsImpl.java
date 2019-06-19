@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
+import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
+import com.redislabs.lettusearch.aggregate.CursorOptions;
 import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
@@ -82,6 +84,27 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	@Override
 	public RedisFuture<AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options) {
 		return dispatch(commandBuilder.aggregate(index, query, options));
+	}
+
+	@Override
+	public RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, String query, AggregateOptions options,
+			CursorOptions cursorOptions) {
+		return dispatch(commandBuilder.aggregate(index, query, options, cursorOptions));
+	}
+
+	@Override
+	public RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor) {
+		return dispatch(commandBuilder.cursorRead(index, cursor, null));
+	}
+
+	@Override
+	public RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor, long count) {
+		return dispatch(commandBuilder.cursorRead(index, cursor, count));
+	}
+	
+	@Override
+	public RedisFuture<String> cursorDelete(String index, long cursor) {
+		return dispatch(commandBuilder.cursorDelete(index, cursor));
 	}
 
 	@Override

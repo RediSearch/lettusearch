@@ -1,13 +1,17 @@
 package com.redislabs.lettusearch;
 
+import static com.redislabs.lettusearch.CommandKeyword.COUNT;
 import static com.redislabs.lettusearch.CommandKeyword.DD;
 import static com.redislabs.lettusearch.CommandKeyword.INCR;
 import static com.redislabs.lettusearch.CommandKeyword.PAYLOAD;
+import static com.redislabs.lettusearch.CommandKeyword.READ;
 import static com.redislabs.lettusearch.CommandKeyword.SCHEMA;
+import static com.redislabs.lettusearch.CommandKeyword.WITHCURSOR;
 import static com.redislabs.lettusearch.CommandType.ADD;
 import static com.redislabs.lettusearch.CommandType.AGGREGATE;
 import static com.redislabs.lettusearch.CommandType.ALTER;
 import static com.redislabs.lettusearch.CommandType.CREATE;
+import static com.redislabs.lettusearch.CommandType.CURSOR;
 import static com.redislabs.lettusearch.CommandType.DEL;
 import static com.redislabs.lettusearch.CommandType.DROP;
 import static com.redislabs.lettusearch.CommandType.GET;
@@ -23,6 +27,9 @@ import java.util.Map.Entry;
 import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateOutput;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
+import com.redislabs.lettusearch.aggregate.AggregateWithCursorOutput;
+import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
+import com.redislabs.lettusearch.aggregate.CursorOptions;
 import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
@@ -137,7 +144,7 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 	}
 
 	private CommandOutput<K, V, SearchResults<K, V>> getSearchOutput(RedisCodec<K, V> codec, SearchOptions options) {
-		if (options!=null && options.isNoContent()) {
+		if (options != null && options.isNoContent()) {
 			return new SearchNoContentOutput<>(codec, options);
 		}
 		return new SearchOutput<>(codec, options);
@@ -150,6 +157,40 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		args.add(query);
 		options.build(args);
 		return createCommand(AGGREGATE, new AggregateOutput<>(codec), args);
+	}
+
+	public Command<K, V, AggregateWithCursorResults<K, V>> aggregate(String index, String query,
+			AggregateOptions options, CursorOptions cursorOptions) {
+		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
+		LettuceAssert.notNull(query, "query " + MUST_NOT_BE_NULL);
+		RediSearchCommandArgs<K, V> args = createArgs(index);
+		args.add(query);
+		options.build(args);
+		args.add(WITHCURSOR);
+		cursorOptions.build(args);
+		return createCommand(AGGREGATE, new AggregateWithCursorOutput<>(codec), args);
+	}
+
+	public Command<K, V, AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor, Long count) {
+		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
+		RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec);
+		args.add(READ);
+		args.add(index);
+		args.add(cursor);
+		if (count != null) {
+			args.add(COUNT);
+			args.add(count);
+		}
+		return createCommand(CURSOR, new AggregateWithCursorOutput<>(codec), args);
+	}
+
+	public Command<K, V, String> cursorDelete(String index, long cursor) {
+		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
+		RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec);
+		args.add(com.redislabs.lettusearch.CommandKeyword.DEL);
+		args.add(index);
+		args.add(cursor);
+		return createCommand(CURSOR, new StatusOutput<>(codec), args);
 	}
 
 	public Command<K, V, Long> sugadd(K key, V string, double score, boolean increment, V payload) {

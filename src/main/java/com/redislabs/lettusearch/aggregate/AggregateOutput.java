@@ -20,6 +20,10 @@ public class AggregateOutput<K, V> extends CommandOutput<K, V, AggregateResults<
 		nested = new MapOutput<>(codec);
 	}
 
+	public int getMapCount() {
+		return mapCount;
+	}
+
 	@Override
 	public void set(ByteBuffer bytes) {
 		nested.set(bytes);
@@ -27,10 +31,8 @@ public class AggregateOutput<K, V> extends CommandOutput<K, V, AggregateResults<
 
 	@Override
 	public void complete(int depth) {
-
 		if (!counts.isEmpty()) {
 			int expectedSize = counts.get(0);
-
 			if (nested.get().size() == expectedSize) {
 				counts.remove(0);
 				output.getResults().add(new LinkedHashMap<>(nested.get()));
@@ -46,11 +48,9 @@ public class AggregateOutput<K, V> extends CommandOutput<K, V, AggregateResults<
 
 	@Override
 	public void multi(int count) {
-
 		nested.multi(count);
-
 		if (mapCount == -1) {
-			mapCount = count;
+			mapCount = count - 1;
 		} else {
 			// div 2 because of key value pair counts twice
 			counts.add(count / 2);

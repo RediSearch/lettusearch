@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
+import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
+import com.redislabs.lettusearch.aggregate.CursorOptions;
 import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
@@ -81,6 +83,27 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	@Override
 	public Mono<AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options) {
 		return createMono(() -> commandBuilder.aggregate(index, query, options));
+	}
+
+	@Override
+	public Mono<AggregateWithCursorResults<K, V>> aggregate(String index, String query, AggregateOptions options,
+			CursorOptions cursorOptions) {
+		return createMono(() -> commandBuilder.aggregate(index, query, options, cursorOptions));
+	}
+
+	@Override
+	public Mono<AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor) {
+		return createMono(() -> commandBuilder.cursorRead(index, cursor, null));
+	}
+
+	@Override
+	public Mono<AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor, long count) {
+		return createMono(() -> commandBuilder.cursorRead(index, cursor, count));
+	}
+
+	@Override
+	public Mono<String> cursorDelete(String index, long cursor) {
+		return createMono(() -> commandBuilder.cursorDelete(index, cursor));
 	}
 
 	@Override

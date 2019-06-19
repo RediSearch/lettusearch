@@ -6,6 +6,8 @@ import org.junit.Test;
 
 import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
+import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
+import com.redislabs.lettusearch.aggregate.CursorOptions;
 import com.redislabs.lettusearch.aggregate.Group;
 import com.redislabs.lettusearch.aggregate.Limit;
 import com.redislabs.lettusearch.aggregate.Order;
@@ -13,7 +15,7 @@ import com.redislabs.lettusearch.aggregate.Sort;
 import com.redislabs.lettusearch.aggregate.SortProperty;
 import com.redislabs.lettusearch.aggregate.reducer.Avg;
 
-public class AggregateTest extends AbstractBaseTest {
+public class TestAggregate extends AbstractBaseTest {
 
 	@Test
 	public void testAggregateLoad() {
@@ -41,6 +43,21 @@ public class AggregateTest extends AbstractBaseTest {
 				.operation(Limit.builder().num(20).offset(0).build()).build());
 		assertEquals(100, results.getCount());
 		assertEquals(20, results.getResults().size());
+	}
+
+	@Test
+	public void testAggregateWithCursor() {
+		AggregateWithCursorResults<String, String> results = connection.sync().aggregate(INDEX, "*",
+				AggregateOptions.builder().load(FIELD_ID).load(FIELD_NAME).load(FIELD_ABV).build(),
+				CursorOptions.builder().build());
+		assertEquals(1, results.getResults().getCount());
+		assertEquals(1000, results.getResults().getResults().size());
+		assertEquals("lemon shandy tripel", results.getResults().getResults().get(999).get("name"));
+		assertEquals("0.086", results.getResults().getResults().get(9).get("abv"));
+		results = connection.sync().cursorRead(INDEX, results.getCursor());
+		assertEquals(1000, results.getResults().getResults().size());
+		String deleteStatus = connection.sync().cursorDelete(INDEX, results.getCursor());
+		assertEquals("OK", deleteStatus);
 	}
 
 }

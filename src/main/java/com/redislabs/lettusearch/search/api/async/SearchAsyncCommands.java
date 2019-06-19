@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
+import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
+import com.redislabs.lettusearch.aggregate.CursorOptions;
 import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
@@ -42,4 +44,14 @@ public interface SearchAsyncCommands<K, V> extends RedisAsyncCommands<K, V> {
 	RedisFuture<SearchResults<K, V>> search(String index, String query, SearchOptions options);
 
 	RedisFuture<AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options);
+
+	RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, String query, AggregateOptions options,
+			CursorOptions cursorOptions);
+
+	RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor);
+
+	RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor, long count);
+
+	RedisFuture<String> cursorDelete(String index, long cursor);
+
 }
