@@ -52,7 +52,7 @@ public class TestAggregate extends AbstractBaseTest {
 				CursorOptions.builder().build());
 		assertEquals(1, results.getResults().getCount());
 		assertEquals(1000, results.getResults().getResults().size());
-		assertEquals("lemon shandy tripel", results.getResults().getResults().get(999).get("name"));
+		assertEquals("lemon shandy tripel", results.getResults().getResults().get(999).get("name").toLowerCase());
 		assertEquals("0.086", results.getResults().getResults().get(9).get("abv"));
 		results = connection.sync().cursorRead(INDEX, results.getCursor());
 		assertEquals(1000, results.getResults().getResults().size());
