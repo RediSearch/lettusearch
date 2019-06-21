@@ -156,7 +156,7 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		RediSearchCommandArgs<K, V> args = createArgs(index);
 		args.add(query);
 		options.build(args);
-		return createCommand(AGGREGATE, new AggregateOutput<>(codec), args);
+		return createCommand(AGGREGATE, new AggregateOutput<>(codec, new AggregateResults<>()), args);
 	}
 
 	public Command<K, V, AggregateWithCursorResults<K, V>> aggregate(String index, String query,

@@ -15,6 +15,8 @@ import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.field.FieldOptions;
 import com.redislabs.lettusearch.search.field.FieldType;
 
+import static com.redislabs.lettusearch.Beers.*;
+
 import io.lettuce.core.RedisCommandExecutionException;
 
 public class TestIndexCRUD extends AbstractBaseTest {
@@ -41,7 +43,7 @@ public class TestIndexCRUD extends AbstractBaseTest {
 		SearchResults<String, String> results = connection.sync().search(INDEX, "@newField:{value1}",
 				SearchOptions.builder().build());
 		Assert.assertEquals(1, results.getCount());
-		Assert.assertEquals(fields.get("newField"), results.getResults().get(0).getFields().get("newField"));
+		Assert.assertEquals(fields.get("newField"), results.get(0).get("newField"));
 	}
 
 	@Test

@@ -1,15 +1,19 @@
 package com.redislabs.lettusearch.search;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class SearchResult<K, V> {
+public class SearchResult<K, V> extends LinkedHashMap<K, V> {
 
+	private static final long serialVersionUID = -8178671346134635131L;
+
+	@Getter
+	@Setter
 	private K documentId;
+	@Getter
+	@Setter
 	private Double score;
-	private Map<K, V> fields = new LinkedHashMap<>();
 
 }

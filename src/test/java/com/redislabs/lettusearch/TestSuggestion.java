@@ -15,9 +15,9 @@ public class TestSuggestion extends AbstractBaseTest {
 
 	@Test
 	public void testPhoneticFields() {
-		SearchResults<String, String> results = connection.sync().search(INDEX, "@style:pail",
+		SearchResults<String, String> results = connection.sync().search(Beers.INDEX, "pail",
 				SearchOptions.builder().build());
-		Assert.assertEquals(445, results.getCount());
+		Assert.assertEquals(256, results.getCount());
 	}
 
 	@Test

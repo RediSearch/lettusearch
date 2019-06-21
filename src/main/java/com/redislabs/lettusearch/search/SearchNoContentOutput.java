@@ -23,7 +23,7 @@ public class SearchNoContentOutput<K, V> extends CommandOutput<K, V, SearchResul
 			if (bytes != null) {
 				current.setDocumentId(codec.decodeKey(bytes));
 			}
-			output.getResults().add(current);
+			output.add(current);
 			if (!options.isWithScores()) {
 				current = null;
 			}

@@ -36,9 +36,11 @@ Add LettuSearch to your application dependencies, e.g. with Maven:
 .Java example
 [source,java]
 ----
-RediSearchClient client = RediSearchClient.create("redis://localhost");
-StatefulRediSearchConnection<String, String> conn = client.connect();
-RediSearchCommands<String, String> commands = conn.sync();
-commands.create("myIndex", Schema.builder().field(field1).build());
-commands.add("myIndex", "doc1", 1, doc1);
+include::src/test/java/com/redislabs/lettusearch/UsageExample.java[]
 ----
+
+<1> Establish a connection to RediSearch
+<2> Use _sync_, _async_, or _reactive_ commands
+<3> Create a RediSearch index
+<4> Add documents to the previously created index
+<5> Search the index

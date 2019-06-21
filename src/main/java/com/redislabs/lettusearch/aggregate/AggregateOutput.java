@@ -9,14 +9,14 @@ import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.output.CommandOutput;
 import io.lettuce.core.output.MapOutput;
 
-public class AggregateOutput<K, V> extends CommandOutput<K, V, AggregateResults<K, V>> {
+public class AggregateOutput<K, V, R extends AggregateResults<K, V>> extends CommandOutput<K, V, R> {
 
 	private MapOutput<K, V> nested;
 	private int mapCount = -1;
 	private final List<Integer> counts = new ArrayList<>();
 
-	public AggregateOutput(RedisCodec<K, V> codec) {
-		super(codec, new AggregateResults<>());
+	public AggregateOutput(RedisCodec<K, V> codec, R results) {
+		super(codec, results);
 		nested = new MapOutput<>(codec);
 	}
 
@@ -35,7 +35,7 @@ public class AggregateOutput<K, V> extends CommandOutput<K, V, AggregateResults<
 			int expectedSize = counts.get(0);
 			if (nested.get().size() == expectedSize) {
 				counts.remove(0);
-				output.getResults().add(new LinkedHashMap<>(nested.get()));
+				output.add(new LinkedHashMap<>(nested.get()));
 				nested.get().clear();
 			}
 		}

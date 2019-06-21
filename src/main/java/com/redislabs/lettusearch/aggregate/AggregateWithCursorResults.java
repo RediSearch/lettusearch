@@ -1,11 +1,14 @@
 package com.redislabs.lettusearch.aggregate;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class AggregateWithCursorResults<K, V> {
+public class AggregateWithCursorResults<K, V> extends AggregateResults<K, V> {
 
-	private AggregateResults<K, V> results = new AggregateResults<>();
+	private static final long serialVersionUID = 4898688115426436989L;
+
+	@Getter
+	@Setter
 	private Long cursor;
 
 }

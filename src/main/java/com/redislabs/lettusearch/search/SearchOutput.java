@@ -30,7 +30,7 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 			if (bytes != null) {
 				current.setDocumentId(codec.decodeKey(bytes));
 			}
-			output.getResults().add(current);
+			output.add(current);
 		} else {
 			if (options != null && options.isWithScores() && current.getScore() == null) {
 				if (bytes != null) {
@@ -52,7 +52,7 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 		if (!counts.isEmpty()) {
 			if (nested.get().size() == counts.get(0)) {
 				counts.remove(0);
-				current.setFields(nested.get());
+				current.putAll(nested.get());
 				nested = new MapOutput<>(codec);
 				current = null;
 			}
