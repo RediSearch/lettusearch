@@ -36,7 +36,20 @@ Add LettuSearch to your application dependencies, e.g. with Maven:
 .Java example
 [source,java]
 ----
-include::https://raw.githubusercontent.com/RediSearch/lettusearch/master/src/test/java/com/redislabs/lettusearch/UsageExample.java[]
+public final static Schema SCHEMA = Schema.builder()
+		.field(TextField.builder().name(FIELD_NAME).matcher(PhoneticMatcher.English).build())
+		.field(TagField.builder().name(FIELD_STYLE).sortable(true).build())
+		.field(NumericField.builder().name(FIELD_ABV).sortable(true).build()).build();
+
+public static void main(String[] args) throws Exception {
+	RediSearchClient client = RediSearchClient.create("redis://localhost");
+	StatefulRediSearchConnection<String, String> conn = client.connect(); // <1>
+	RediSearchCommands<String, String> commands = conn.sync(); // <2>
+	commands.create(Beers.INDEX, SCHEMA); // <3>
+	load().forEach(d -> commands.add(Beers.INDEX, d.get(FIELD_ID), 1, d)); // <4>
+	SearchResults<String, String> results = commands.search(INDEX, "sculpin"); // <5>
+	results.forEach(r -> System.out.println(r));
+}
 ----
 
 <1> Establish a connection to RediSearch
