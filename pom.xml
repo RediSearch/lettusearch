@@ -1,11 +1,18 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.redislabs</groupId>
 	<artifactId>lettusearch</artifactId>
 	<version>1.4.1-SNAPSHOT</version>
 	<name>LettuSearch</name>
 	<description>Java client for RediSearch based on Lettuce</description>
-	<url>https://github.com/RediSearch/lettusearch</url>
+	<url>http://redisearch.io</url>
+	<scm>
+		<url>https://github.com/RediSearch/lettusearch</url>
+		<connection>scm:git:git://github.com/RediSearch/lettusearch.git</connection>
+		<developerConnection>scm:git:git@github.com:RediSearch/lettusearch.git</developerConnection>
+	</scm>
 	<developers>
 		<developer>
 			<id>jruaux</id>
@@ -18,25 +25,29 @@
 			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
 		</license>
 	</licenses>
+	<repositories>
+		<repository>
+			<id>sonatype-snapshots</id>
+			<name>Sonatype Snapshot Repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 	</properties>
-	<scm>
-		<url>https://github.com/RediSearch/lettusearch.git</url>
-		<connection>scm:git:git://github.com/RediSearch/lettusearch.git</connection>
-		<developerConnection>scm:git:git@github.com:RediSearch/lettusearch.git</developerConnection>
-		<tag>HEAD</tag>
-	</scm>
 	<dependencies>
 		<dependency>
 			<groupId>io.lettuce</groupId>
 			<artifactId>lettuce-core</artifactId>
-			<version>5.1.3.RELEASE</version>
+			<version>5.1.7.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -47,7 +58,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.0</version>
+			<version>1.18.8</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -56,6 +67,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -63,9 +75,10 @@
 		</snapshotRepository>
 		<repository>
 			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 	</distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -81,6 +94,13 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<parameters>true</parameters>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
 				<version>1.6.8</version>
@@ -93,23 +113,23 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.3</version>
+				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<useReleaseProfile>false</useReleaseProfile>
-					<releaseProfiles>release</releaseProfiles>
-					<goals>deploy</goals>
-					<tagNameFormat>@{project.version}</tagNameFormat>
+					<useSystemClassLoader>false</useSystemClassLoader>
 				</configuration>
 			</plugin>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven-compiler-plugin.version}</version>
-				<configuration>
-					<parameters>true</parameters>
-				</configuration>
-			</plugin>
+			<!-- <plugin> -->
+			<!-- <groupId>org.apache.maven.plugins</groupId> -->
+			<!-- <artifactId>maven-release-plugin</artifactId> -->
+			<!-- <version>2.5.3</version> -->
+			<!-- <configuration> -->
+			<!-- <autoVersionSubmodules>true</autoVersionSubmodules> -->
+			<!-- <useReleaseProfile>false</useReleaseProfile> -->
+			<!-- <releaseProfiles>release</releaseProfiles> -->
+			<!-- <goals>deploy</goals> -->
+			<!-- <tagNameFormat>v@{project.version}</tagNameFormat> -->
+			<!-- </configuration> -->
+			<!-- </plugin> -->
 		</plugins>
 	</build>
 	<profiles>
@@ -121,7 +141,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
-						<version>3.0.1</version>
+						<version>3.1.0</version>
 						<configuration>
 							<attach>true</attach>
 						</configuration>
@@ -137,7 +157,12 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.0.1</version>
+						<version>3.1.0</version>
+						<configuration>
+							<aggregate>true</aggregate>
+							<additionalparam>-Xdoclint:none</additionalparam>
+							<additionalOptions>-Xdoclint:none</additionalOptions>
+						</configuration>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>
@@ -167,14 +192,4 @@
 			</build>
 		</profile>
 	</profiles>
-	<repositories>
-		<repository>
-			<id>sonatype-snapshots</id>
-			<name>Sonatype Snapshot Repository</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 </project>

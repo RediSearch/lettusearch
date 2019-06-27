@@ -54,4 +54,12 @@ public interface SearchAsyncCommands<K, V> extends RedisAsyncCommands<K, V> {
 
 	RedisFuture<String> cursorDelete(String index, long cursor);
 
+	RedisFuture<String> aliasAdd(String name, String index);
+
+	RedisFuture<String> aliasUpdate(String name, String index);
+
+	RedisFuture<String> aliasDel(String name);
+
+	RedisFuture<String> alterAliasDel(String index, String alias);
+
 }

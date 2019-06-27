@@ -55,7 +55,15 @@ public interface SearchCommands<K, V> extends RedisCommands<K, V> {
 	AggregateWithCursorResults<K, V> cursorRead(String index, long cursor);
 
 	AggregateWithCursorResults<K, V> cursorRead(String index, long cursor, long count);
-	
+
 	String cursorDelete(String index, long cursor);
+
+	String aliasAdd(String name, String index);
+
+	String aliasUpdate(String name, String index);
+
+	String aliasDel(String name);
+
+	String alterAliasDel(String index, String alias);
 
 }

@@ -101,7 +101,7 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	public RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor, long count) {
 		return dispatch(commandBuilder.cursorRead(index, cursor, count));
 	}
-	
+
 	@Override
 	public RedisFuture<String> cursorDelete(String index, long cursor) {
 		return dispatch(commandBuilder.cursorDelete(index, cursor));
@@ -145,6 +145,26 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	@Override
 	public RedisFuture<String> alter(String index, K field, FieldOptions options) {
 		return dispatch(commandBuilder.alter(index, field, options));
+	}
+
+	@Override
+	public RedisFuture<String> aliasAdd(String name, String index) {
+		return dispatch(commandBuilder.aliasAdd(name, index));
+	}
+
+	@Override
+	public RedisFuture<String> aliasDel(String name) {
+		return dispatch(commandBuilder.aliasDel(name));
+	}
+
+	@Override
+	public RedisFuture<String> aliasUpdate(String name, String index) {
+		return dispatch(commandBuilder.aliasUpdate(name, index));
+	}
+
+	@Override
+	public RedisFuture<String> alterAliasDel(String index, String alias) {
+		return dispatch(commandBuilder.alterAliasDel(index, alias));
 	}
 
 }

@@ -14,7 +14,7 @@ public abstract class AbstractBaseTest {
 	protected final static String SUGINDEX = "beersSug";
 
 	private RediSearchClient client;
-	protected StatefulRediSearchConnection<String, String> connection;
+	private StatefulRediSearchConnection<String, String> connection;
 	protected List<Map<String, String>> beers;
 	protected RediSearchCommands<String, String> commands;
 

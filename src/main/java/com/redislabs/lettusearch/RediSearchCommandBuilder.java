@@ -1,5 +1,6 @@
 package com.redislabs.lettusearch;
 
+import static com.redislabs.lettusearch.CommandKeyword.ALIAS;
 import static com.redislabs.lettusearch.CommandKeyword.COUNT;
 import static com.redislabs.lettusearch.CommandKeyword.DD;
 import static com.redislabs.lettusearch.CommandKeyword.INCR;
@@ -9,6 +10,9 @@ import static com.redislabs.lettusearch.CommandKeyword.SCHEMA;
 import static com.redislabs.lettusearch.CommandKeyword.WITHCURSOR;
 import static com.redislabs.lettusearch.CommandType.ADD;
 import static com.redislabs.lettusearch.CommandType.AGGREGATE;
+import static com.redislabs.lettusearch.CommandType.ALIASADD;
+import static com.redislabs.lettusearch.CommandType.ALIASDEL;
+import static com.redislabs.lettusearch.CommandType.ALIASUPDATE;
 import static com.redislabs.lettusearch.CommandType.ALTER;
 import static com.redislabs.lettusearch.CommandType.CREATE;
 import static com.redislabs.lettusearch.CommandType.CURSOR;
@@ -231,5 +235,40 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 			args.add(DD);
 		}
 		return createCommand(DEL, new BooleanOutput<>(codec), args);
+	}
+
+	public Command<K, V, String> aliasAdd(String name, String index) {
+		LettuceAssert.notNull(name, "name " + MUST_NOT_BE_NULL);
+		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
+		RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec);
+		args.add(name);
+		args.add(index);
+		return createCommand(ALIASADD, new StatusOutput<>(codec), args);
+	}
+
+	public Command<K, V, String> aliasUpdate(String name, String index) {
+		LettuceAssert.notNull(name, "name " + MUST_NOT_BE_NULL);
+		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
+		RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec);
+		args.add(name);
+		args.add(index);
+		return createCommand(ALIASUPDATE, new StatusOutput<>(codec), args);
+	}
+
+	public Command<K, V, String> aliasDel(String name) {
+		LettuceAssert.notNull(name, "name " + MUST_NOT_BE_NULL);
+		RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec);
+		args.add(name);
+		return createCommand(ALIASDEL, new StatusOutput<>(codec), args);
+	}
+
+	public Command<K, V, String> alterAliasDel(String index, String alias) {
+		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
+		LettuceAssert.notNull(alias, "alias " + MUST_NOT_BE_NULL);
+		RediSearchCommandArgs<K, V> args = createArgs(index);
+		args.add(ALIAS);
+		args.add(com.redislabs.lettusearch.CommandKeyword.DEL);
+		args.add(alias);
+		return createCommand(ALTER, new StatusOutput<>(codec), args);
 	}
 }

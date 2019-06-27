@@ -9,20 +9,17 @@ import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
-import com.redislabs.lettusearch.suggest.api.sync.SuggestCommands;
 
 public class TestSuggestion extends AbstractBaseTest {
 
 	@Test
 	public void testPhoneticFields() {
-		SearchResults<String, String> results = connection.sync().search(Beers.INDEX, "pail",
-				SearchOptions.builder().build());
+		SearchResults<String, String> results = commands.search(Beers.INDEX, "pail", SearchOptions.builder().build());
 		Assert.assertEquals(256, results.getCount());
 	}
 
 	@Test
 	public void testSuggestions() {
-		SuggestCommands<String, String> commands = connection.sync();
 		List<SuggestResult<String>> results = commands.sugget(SUGINDEX, "Ame",
 				SuggestGetOptions.builder().withScores(true).build());
 		Assert.assertEquals(5, results.size());

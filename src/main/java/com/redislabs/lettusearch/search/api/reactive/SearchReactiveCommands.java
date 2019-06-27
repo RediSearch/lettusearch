@@ -50,4 +50,12 @@ public interface SearchReactiveCommands<K, V> extends RedisReactiveCommands<K, V
 
 	Mono<String> cursorDelete(String index, long cursor);
 
+	Mono<String> aliasAdd(String name, String index);
+
+	Mono<String> aliasUpdate(String name, String index);
+
+	Mono<String> aliasDel(String name);
+
+	Mono<String> alterAliasDel(String index, String alias);
+
 }
