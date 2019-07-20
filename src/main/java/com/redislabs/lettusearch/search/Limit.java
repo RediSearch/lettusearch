@@ -13,10 +13,13 @@ import lombok.Data;
 @Builder
 public class Limit implements RediSearchArgument {
 
+	public final static long DEFAULT_OFFSET = 0;
+	public final static long DEFAULT_NUM = 10;
+
 	@Default
-	private long offset = 0;
+	private long offset = DEFAULT_OFFSET;
 	@Default
-	private long num = 10;
+	private long num = DEFAULT_NUM;
 
 	@Override
 	public <K, V> void build(RediSearchCommandArgs<K, V> args) {

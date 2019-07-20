@@ -14,9 +14,11 @@ import lombok.Data;
 @Builder
 public class SortProperty implements RediSearchArgument {
 
+	public final static Order DEFAULT_ORDER = Order.Asc;
+
 	private String property;
 	@Default
-	private Order order = Order.Asc;
+	private Order order = DEFAULT_ORDER;
 
 	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
 		args.addProperty(property);
