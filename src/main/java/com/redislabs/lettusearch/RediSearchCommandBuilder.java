@@ -20,6 +20,7 @@ import static com.redislabs.lettusearch.CommandType.DEL;
 import static com.redislabs.lettusearch.CommandType.DROP;
 import static com.redislabs.lettusearch.CommandType.GET;
 import static com.redislabs.lettusearch.CommandType.INFO;
+import static com.redislabs.lettusearch.CommandType.MGET;
 import static com.redislabs.lettusearch.CommandType.SEARCH;
 import static com.redislabs.lettusearch.CommandType.SUGADD;
 import static com.redislabs.lettusearch.CommandType.SUGGET;
@@ -36,6 +37,7 @@ import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
 import com.redislabs.lettusearch.aggregate.CursorOptions;
 import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.DropOptions;
+import com.redislabs.lettusearch.search.MapListOutput;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchNoContentOutput;
 import com.redislabs.lettusearch.search.SearchOptions;
@@ -116,7 +118,7 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		return createCommand(DROP, new StatusOutput<>(codec), args);
 	}
 
-	public Command<K, V, List<Object>> indexInfo(String index) {
+	public Command<K, V, List<Object>> info(String index) {
 		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
 		RediSearchCommandArgs<K, V> args = createArgs(index);
 		return createCommand(INFO, new NestedMultiOutput<>(codec), args);
@@ -224,6 +226,14 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		RediSearchCommandArgs<K, V> args = createArgs(index);
 		args.addKey(docId);
 		return createCommand(GET, new MapOutput<K, V>(codec), args);
+	}
+
+	public Command<K, V, List<Map<K, V>>> mget(String index, @SuppressWarnings("unchecked") K... docIds) {
+		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
+		LettuceAssert.notNull(docIds, "docId " + MUST_NOT_BE_EMPTY);
+		RediSearchCommandArgs<K, V> args = createArgs(index);
+		args.addKeys(docIds);
+		return createCommand(MGET, new MapListOutput<>(codec), args);
 	}
 
 	public Command<K, V, Boolean> del(String index, K docId, boolean deleteDoc) {

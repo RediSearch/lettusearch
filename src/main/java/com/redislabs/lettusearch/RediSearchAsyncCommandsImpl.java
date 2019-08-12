@@ -23,16 +23,18 @@ import io.lettuce.core.codec.RedisCodec;
 public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K, V>
 		implements RediSearchAsyncCommands<K, V> {
 
+	private final StatefulRediSearchConnection<K, V> connection;
 	private final RediSearchCommandBuilder<K, V> commandBuilder;
 
 	public RediSearchAsyncCommandsImpl(StatefulRediSearchConnection<K, V> connection, RedisCodec<K, V> codec) {
 		super(connection, codec);
+		this.connection = connection;
 		this.commandBuilder = new RediSearchCommandBuilder<>(codec);
 	}
 
 	@Override
 	public StatefulRediSearchConnection<K, V> getStatefulConnection() {
-		return (StatefulRediSearchConnection<K, V>) super.getStatefulConnection();
+		return connection;
 	}
 
 	@Override
@@ -67,8 +69,8 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
-	public RedisFuture<List<Object>> indexInfo(String index) {
-		return dispatch(commandBuilder.indexInfo(index));
+	public RedisFuture<List<Object>> ftInfo(String index) {
+		return dispatch(commandBuilder.info(index));
 	}
 
 	@Override
@@ -135,6 +137,11 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	@Override
 	public RedisFuture<Map<K, V>> get(String index, K docId) {
 		return dispatch(commandBuilder.get(index, docId));
+	}
+
+	@Override
+	public RedisFuture<List<Map<K, V>>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds) {
+		return dispatch(commandBuilder.mget(index, docIds));
 	}
 
 	@Override

@@ -6,9 +6,16 @@ import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
 
 import io.lettuce.core.RedisFuture;
-import io.lettuce.core.api.async.RedisAsyncCommands;
 
-public interface SuggestAsyncCommands<K, V> extends RedisAsyncCommands<K, V> {
+/**
+ * Asynchronously executed commands for RediSearch suggestion index.
+ *
+ * @param <K> Key type.
+ * @param <V> Value type.
+ * @author Julien Ruaux
+ * @since 1.0
+ */
+public interface SuggestAsyncCommands<K, V> {
 
 	RedisFuture<Long> sugadd(K key, V string, double score);
 

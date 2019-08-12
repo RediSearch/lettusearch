@@ -14,16 +14,15 @@ import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.field.FieldOptions;
 
-import io.lettuce.core.api.sync.RedisCommands;
-
 /**
- * Synchronously executed commands for search.
+ * Synchronously executed commands for RediSearch search index.
  *
  * @param <K> Key type.
  * @param <V> Value type.
  * @author Julien Ruaux
+ * @since 1.0
  */
-public interface SearchCommands<K, V> extends RedisCommands<K, V> {
+public interface SearchCommands<K, V> {
 
 	String create(String index, Schema schema);
 
@@ -31,7 +30,7 @@ public interface SearchCommands<K, V> extends RedisCommands<K, V> {
 
 	String alter(String index, K field, FieldOptions options);
 
-	List<Object> indexInfo(String index);
+	List<Object> ftInfo(String index);
 
 	String add(String index, K docId, double score, Map<K, V> fields);
 
@@ -40,6 +39,8 @@ public interface SearchCommands<K, V> extends RedisCommands<K, V> {
 	String add(String index, K docId, double score, Map<K, V> fields, AddOptions options, V payload);
 
 	Map<K, V> get(String index, K docId);
+
+	List<Map<K, V>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds);
 
 	boolean del(String index, K docId, boolean deleteDoc);
 

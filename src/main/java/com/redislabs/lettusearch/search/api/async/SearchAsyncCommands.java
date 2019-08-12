@@ -15,9 +15,16 @@ import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.field.FieldOptions;
 
 import io.lettuce.core.RedisFuture;
-import io.lettuce.core.api.async.RedisAsyncCommands;
 
-public interface SearchAsyncCommands<K, V> extends RedisAsyncCommands<K, V> {
+/**
+ * Asynchronously executed commands for RediSearch search index.
+ *
+ * @param <K> Key type.
+ * @param <V> Value type.
+ * @author Julien Ruaux
+ * @since 1.0
+ */
+public interface SearchAsyncCommands<K, V> {
 
 	RedisFuture<String> create(String index, Schema schema);
 
@@ -35,7 +42,9 @@ public interface SearchAsyncCommands<K, V> extends RedisAsyncCommands<K, V> {
 
 	RedisFuture<Map<K, V>> get(String index, K docId);
 
-	RedisFuture<List<Object>> indexInfo(String index);
+	RedisFuture<List<Map<K, V>>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds);
+
+	RedisFuture<List<Object>> ftInfo(String index);
 
 	RedisFuture<Boolean> del(String index, K docId, boolean deleteDoc);
 

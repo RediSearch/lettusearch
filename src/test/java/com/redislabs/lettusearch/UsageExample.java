@@ -1,6 +1,11 @@
 package com.redislabs.lettusearch;
 
-import static com.redislabs.lettusearch.Beers.*;
+import static com.redislabs.lettusearch.Beers.FIELD_ABV;
+import static com.redislabs.lettusearch.Beers.FIELD_ID;
+import static com.redislabs.lettusearch.Beers.FIELD_NAME;
+import static com.redislabs.lettusearch.Beers.FIELD_STYLE;
+import static com.redislabs.lettusearch.Beers.INDEX;
+import static com.redislabs.lettusearch.Beers.load;
 
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchResults;
@@ -18,11 +23,11 @@ public class UsageExample {
 
 	public static void main(String[] args) throws Exception {
 		RediSearchClient client = RediSearchClient.create("redis://localhost");
-		StatefulRediSearchConnection<String, String> conn = client.connect(); // <1>
-		RediSearchCommands<String, String> commands = conn.sync(); // <2>
-		commands.create(Beers.INDEX, SCHEMA); // <3>
-		load().forEach(d -> commands.add(Beers.INDEX, d.get(FIELD_ID), 1, d)); // <4>
-		SearchResults<String, String> results = commands.search(INDEX, "sculpin"); // <5>
+		StatefulRediSearchConnection<String, String> conn = client.connect();
+		RediSearchCommands<String, String> commands = conn.sync();
+		commands.create(Beers.INDEX, SCHEMA);
+		load().forEach(d -> commands.add(Beers.INDEX, d.get(FIELD_ID), 1, d));
+		SearchResults<String, String> results = commands.search(INDEX, "sculpin");
 		results.forEach(r -> System.out.println(r));
 	}
 }

@@ -24,16 +24,18 @@ import reactor.core.publisher.Mono;
 public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsImpl<K, V>
 		implements RediSearchReactiveCommands<K, V> {
 
+	private final StatefulRediSearchConnection<K, V> connection;
 	private final RediSearchCommandBuilder<K, V> commandBuilder;
 
 	public RediSearchReactiveCommandsImpl(StatefulRediSearchConnection<K, V> connection, RedisCodec<K, V> codec) {
 		super(connection, codec);
+		this.connection = connection;
 		this.commandBuilder = new RediSearchCommandBuilder<>(codec);
 	}
 
 	@Override
 	public StatefulRediSearchConnection<K, V> getStatefulConnection() {
-		return (StatefulRediSearchConnection<K, V>) super.getStatefulConnection();
+		return connection;
 	}
 
 	@Override
@@ -61,13 +63,18 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<List<Object>> indexInfo(String index) {
-		return createMono(() -> commandBuilder.indexInfo(index));
+	public Mono<List<Object>> ftInfo(String index) {
+		return createMono(() -> commandBuilder.info(index));
 	}
 
 	@Override
 	public Mono<Map<K, V>> get(String index, K docId) {
 		return createMono(() -> commandBuilder.get(index, docId));
+	}
+
+	@Override
+	public Mono<List<Map<K, V>>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds) {
+		return createMono(() -> commandBuilder.mget(index, docIds));
 	}
 
 	@Override

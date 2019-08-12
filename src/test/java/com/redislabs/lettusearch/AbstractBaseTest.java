@@ -1,6 +1,9 @@
 package com.redislabs.lettusearch;
 
-import static com.redislabs.lettusearch.Beers.*;
+import static com.redislabs.lettusearch.Beers.FIELD_ID;
+import static com.redislabs.lettusearch.Beers.FIELD_NAME;
+import static com.redislabs.lettusearch.Beers.INDEX;
+import static com.redislabs.lettusearch.Beers.load;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,7 +27,7 @@ public abstract class AbstractBaseTest {
 		client = RediSearchClient.create("redis://localhost");
 		connection = client.connect();
 		commands = connection.sync();
-		commands.flushall();
+		connection.sync().flushall();
 		commands.create(INDEX, UsageExample.SCHEMA);
 		for (Map<String, String> beer : beers) {
 			commands.add(INDEX, beer.get(FIELD_ID), 1, beer);

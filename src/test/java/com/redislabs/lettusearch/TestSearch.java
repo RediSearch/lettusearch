@@ -1,5 +1,11 @@
 package com.redislabs.lettusearch;
 
+import static com.redislabs.lettusearch.Beers.FIELD_ABV;
+import static com.redislabs.lettusearch.Beers.FIELD_NAME;
+import static com.redislabs.lettusearch.Beers.FIELD_STYLE;
+import static com.redislabs.lettusearch.Beers.INDEX;
+
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -11,8 +17,6 @@ import com.redislabs.lettusearch.search.Limit;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResult;
 import com.redislabs.lettusearch.search.SearchResults;
-
-import static com.redislabs.lettusearch.Beers.*;
 
 public class TestSearch extends AbstractBaseTest {
 
@@ -36,6 +40,14 @@ public class TestSearch extends AbstractBaseTest {
 	public void get() {
 		Map<String, String> map = commands.get(INDEX, "1836");
 		Assert.assertEquals("Widmer Brothers Hefeweizen", map.get(FIELD_NAME));
+	}
+
+	@Test
+	public void mget() {
+		List<Map<String, String>> mapList = commands.ftMget(INDEX, "1836", "1837");
+		Assert.assertEquals(2, mapList.size());
+		Assert.assertEquals("Widmer Brothers Hefeweizen", mapList.get(0).get(FIELD_NAME));
+		Assert.assertEquals("Hefe Black", mapList.get(1).get(FIELD_NAME));
 	}
 
 	@Test

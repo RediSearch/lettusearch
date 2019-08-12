@@ -14,16 +14,23 @@ import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.field.FieldOptions;
 
-import io.lettuce.core.api.reactive.RedisReactiveCommands;
 import reactor.core.publisher.Mono;
 
-public interface SearchReactiveCommands<K, V> extends RedisReactiveCommands<K, V> {
+/**
+ * Reactive executed commands for RediSearch search index.
+ *
+ * @param <K> Key type.
+ * @param <V> Value type.
+ * @author Julien Ruaux
+ * @since 1.0
+ */
+public interface SearchReactiveCommands<K, V> {
 
 	Mono<String> create(String index, Schema schema);
 
 	Mono<String> drop(String index, DropOptions options);
 
-	Mono<List<Object>> indexInfo(String index);
+	Mono<List<Object>> ftInfo(String index);
 
 	Mono<String> alter(String index, K field, FieldOptions options);
 
@@ -36,6 +43,8 @@ public interface SearchReactiveCommands<K, V> extends RedisReactiveCommands<K, V
 	Mono<SearchResults<K, V>> search(String index, String query, SearchOptions options);
 
 	Mono<Map<K, V>> get(String index, K docId);
+
+	Mono<List<Map<K, V>>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds);
 
 	Mono<Boolean> del(String index, K docId, boolean deleteDoc);
 

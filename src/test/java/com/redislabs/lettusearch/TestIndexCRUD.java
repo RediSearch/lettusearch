@@ -48,7 +48,7 @@ public class TestIndexCRUD extends AbstractBaseTest {
 
 	@Test
 	public void testIndexInfo() {
-		Map<String, Object> indexInfo = toMap(commands.indexInfo(INDEX));
+		Map<String, Object> indexInfo = toMap(commands.ftInfo(INDEX));
 		Assert.assertEquals(INDEX, indexInfo.get("index_name"));
 	}
 

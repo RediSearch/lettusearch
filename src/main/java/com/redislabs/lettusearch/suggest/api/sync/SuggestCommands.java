@@ -5,16 +5,15 @@ import java.util.List;
 import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
 
-import io.lettuce.core.api.sync.RedisCommands;
-
 /**
- * Synchronously executed commands for Suggestions.
+ * Synchronously executed commands for RediSearch suggestion index.
  *
  * @param <K> Key type.
  * @param <V> Value type.
  * @author Julien Ruaux
+ * @since 1.0
  */
-public interface SuggestCommands<K, V> extends RedisCommands<K, V> {
+public interface SuggestCommands<K, V> {
 
 	Long sugadd(K key, V string, double score);
 

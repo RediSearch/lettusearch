@@ -3,11 +3,18 @@ package com.redislabs.lettusearch.suggest.api.reactive;
 import com.redislabs.lettusearch.suggest.SuggestGetOptions;
 import com.redislabs.lettusearch.suggest.SuggestResult;
 
-import io.lettuce.core.api.reactive.RedisReactiveCommands;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface SuggestReactiveCommands<K, V> extends RedisReactiveCommands<K, V> {
+/**
+ * Reactive executed commands for RediSearch suggestion index.
+ *
+ * @param <K> Key type.
+ * @param <V> Value type.
+ * @author Julien Ruaux
+ * @since 1.0
+ */
+public interface SuggestReactiveCommands<K, V> {
 
 	Mono<Long> sugadd(K key, V string, double score);
 
