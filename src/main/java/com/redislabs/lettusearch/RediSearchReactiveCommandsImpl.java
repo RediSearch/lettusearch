@@ -158,9 +158,4 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 		return createMono(() -> commandBuilder.aliasDel(name));
 	}
 
-	@Override
-	public Mono<String> alterAliasDel(String index, String alias) {
-		return createMono(() -> commandBuilder.alterAliasDel(index, alias));
-	}
-
 }

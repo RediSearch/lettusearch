@@ -1,6 +1,5 @@
 package com.redislabs.lettusearch;
 
-import static com.redislabs.lettusearch.CommandKeyword.ALIAS;
 import static com.redislabs.lettusearch.CommandKeyword.COUNT;
 import static com.redislabs.lettusearch.CommandKeyword.DD;
 import static com.redislabs.lettusearch.CommandKeyword.INCR;
@@ -272,13 +271,4 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		return createCommand(ALIASDEL, new StatusOutput<>(codec), args);
 	}
 
-	public Command<K, V, String> alterAliasDel(String index, String alias) {
-		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
-		LettuceAssert.notNull(alias, "alias " + MUST_NOT_BE_NULL);
-		RediSearchCommandArgs<K, V> args = createArgs(index);
-		args.add(ALIAS);
-		args.add(com.redislabs.lettusearch.CommandKeyword.DEL);
-		args.add(alias);
-		return createCommand(ALTER, new StatusOutput<>(codec), args);
-	}
 }

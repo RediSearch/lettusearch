@@ -65,6 +65,4 @@ public interface SearchCommands<K, V> {
 
 	String aliasDel(String name);
 
-	String alterAliasDel(String index, String alias);
-
 }

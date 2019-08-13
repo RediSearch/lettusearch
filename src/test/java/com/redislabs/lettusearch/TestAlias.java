@@ -39,17 +39,5 @@ public class TestAlias extends AbstractBaseTest {
 		commands.aliasUpdate(newAlias, INDEX);
 		Assert.assertTrue(commands.search(newAlias, "*").size() > 0);
 	}
-	
-	@Test
-	public void testAlterIndexAliasDel() {
-		testAddAlias();
-		commands.alterAliasDel(INDEX, ALIAS);
-		try {
-			commands.search(ALIAS, "*");
-			Assert.fail("Alias was not removed");
-		} catch (RedisCommandExecutionException e) {
-			Assert.assertTrue(e.getMessage().contains("no such index"));
-		}
-	}
 
 }

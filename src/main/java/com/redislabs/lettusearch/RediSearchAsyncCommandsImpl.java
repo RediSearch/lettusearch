@@ -169,9 +169,4 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 		return dispatch(commandBuilder.aliasUpdate(name, index));
 	}
 
-	@Override
-	public RedisFuture<String> alterAliasDel(String index, String alias) {
-		return dispatch(commandBuilder.alterAliasDel(index, alias));
-	}
-
 }

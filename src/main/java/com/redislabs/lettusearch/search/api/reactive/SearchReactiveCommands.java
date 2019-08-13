@@ -65,6 +65,4 @@ public interface SearchReactiveCommands<K, V> {
 
 	Mono<String> aliasDel(String name);
 
-	Mono<String> alterAliasDel(String index, String alias);
-
 }

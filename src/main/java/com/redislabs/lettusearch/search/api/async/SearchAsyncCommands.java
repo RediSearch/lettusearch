@@ -69,6 +69,4 @@ public interface SearchAsyncCommands<K, V> {
 
 	RedisFuture<String> aliasDel(String name);
 
-	RedisFuture<String> alterAliasDel(String index, String alias);
-
 }
