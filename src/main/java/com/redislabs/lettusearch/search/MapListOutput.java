@@ -51,7 +51,7 @@ public class MapListOutput<K, V> extends CommandOutput<K, V, List<Map<K, V>>> im
 	public void set(ByteBuffer bytes) {
 
 		if (key == null) {
-			key = codec.decodeKey(bytes);
+			key = bytes == null ? null : codec.decodeKey(bytes);
 			return;
 		}
 

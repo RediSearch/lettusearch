@@ -44,8 +44,8 @@ public class TestSearch extends AbstractBaseTest {
 
 	@Test
 	public void mget() {
-		List<Map<String, String>> mapList = commands.ftMget(INDEX, "1836", "1837");
-		Assert.assertEquals(2, mapList.size());
+		List<Map<String, String>> mapList = commands.ftMget(INDEX, "1836", "1837", "292929292");
+		Assert.assertEquals(3, mapList.size());
 		Assert.assertEquals("Widmer Brothers Hefeweizen", mapList.get(0).get(FIELD_NAME));
 		Assert.assertEquals("Hefe Black", mapList.get(1).get(FIELD_NAME));
 	}
