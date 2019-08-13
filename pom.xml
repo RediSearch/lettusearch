@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.redislabs</groupId>
 	<artifactId>lettusearch</artifactId>
-	<version>1.5.1</version>
+	<version>1.5.2-SNAPSHOT</version>
 	<name>LettuSearch</name>
 	<description>Java client for RediSearch based on Lettuce</description>
 	<url>http://redisearch.io</url>
@@ -10,7 +10,7 @@
 		<url>https://github.com/RediSearch/lettusearch</url>
 		<connection>scm:git:git://github.com/RediSearch/lettusearch.git</connection>
 		<developerConnection>scm:git:git@github.com:RediSearch/lettusearch.git</developerConnection>
-		<tag>lettusearch-1.5.1</tag>
+		<tag>HEAD</tag>
 	</scm>
 	<developers>
 		<developer>
