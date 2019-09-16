@@ -68,6 +68,17 @@ public class TestSearch extends AbstractBaseTest {
 		Assert.assertNotNull(result1.get(FIELD_STYLE));
 		Assert.assertNull(result1.get(FIELD_ABV));
 	}
+	
+	@Test
+	public void searchInvalidReturn() {
+		SearchResults<String, String> results = commands.search(INDEX, "pale",
+				SearchOptions.builder().returnField(FIELD_NAME).returnField(FIELD_STYLE).returnField("").build());
+		Assert.assertEquals(256, results.getCount());
+		SearchResult<String, String> result1 = results.get(0);
+		Assert.assertNotNull(result1.get(FIELD_NAME));
+		Assert.assertNotNull(result1.get(FIELD_STYLE));
+		Assert.assertNull(result1.get(FIELD_ABV));
+	}
 
 	@Test
 	public void searchHighlight() {
