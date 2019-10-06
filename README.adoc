@@ -29,6 +29,7 @@ image:https://www.javadoc.io/badge/com.redislabs/lettusearch.svg["Javadocs", lin
 image:https://codecov.io/gh/RediSearch/lettusearch/branch/master/graph/badge.svg["Codecov", link="https://codecov.io/gh/RediSearch/lettusearch"]
 image:https://circleci.com/gh/RediSearch/lettusearch/tree/master.svg?style=svg["CircleCI", link="https://circleci.com/gh/RediSearch/lettusearch/tree/master"]
 image:https://img.shields.io/github/release/RediSearch/lettusearch.svg["GitHub issues", link="https://github.com/RediSearch/lettusearch/releases/latest"]
+image:https://img.shields.io/lgtm/alerts/g/RediSearch/lettusearch.svg?logo=lgtm&logoWidth=18["Total alerts", link="https://lgtm.com/projects/g/RediSearch/lettusearch/alerts/"]
 endif::[]
 
 Java client for https://redisearch.io[RediSearch] based on https://lettuce.io[Lettuce]
