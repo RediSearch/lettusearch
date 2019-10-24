@@ -50,7 +50,7 @@ Add LettuSearch to your application dependencies, e.g. with Maven:
 <dependency>
 	<groupId>com.redislabs</groupId>
 	<artifactId>lettusearch</artifactId>
-	<version>1.5.3</version>
+	<version>1.7.0</version>
 </dependency>
 ----
 
