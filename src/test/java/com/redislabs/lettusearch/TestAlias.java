@@ -28,7 +28,8 @@ public class TestAlias extends AbstractBaseTest {
 			commands.search(ALIAS, "*");
 			Assert.fail("Alias was not removed");
 		} catch (RedisCommandExecutionException e) {
-			Assert.assertTrue(e.getMessage().contains("no such index"));
+			Assert.assertTrue(e.getMessage().contains("no such index") || 
+					  e.getMessage().contains("Unknown Index name"));
 		}
 	}
 
