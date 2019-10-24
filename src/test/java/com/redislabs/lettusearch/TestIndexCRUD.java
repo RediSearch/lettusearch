@@ -9,17 +9,37 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.redislabs.lettusearch.search.AddOptions;
+import com.redislabs.lettusearch.search.CreateOptions;
 import com.redislabs.lettusearch.search.DropOptions;
+import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.field.FieldOptions;
 import com.redislabs.lettusearch.search.field.FieldType;
+import com.redislabs.lettusearch.search.field.TextField;
 
 import static com.redislabs.lettusearch.Beers.*;
 
 import io.lettuce.core.RedisCommandExecutionException;
 
 public class TestIndexCRUD extends AbstractBaseTest {
+
+	@Test
+	public void testTemporaryIndex() throws InterruptedException {
+		String indexName = "temporaryIndex";
+		commands.create(indexName, Schema.builder().field(TextField.builder().name("field1").build()).build(),
+				CreateOptions.builder().temporary(1l).build());
+		List<Object> info = commands.ftInfo(indexName);
+		Assert.assertEquals(indexName, info.get(1));
+		Thread.sleep(1000);
+		try {
+			info = commands.ftInfo(indexName);
+		} catch (RedisCommandExecutionException e) {
+			Assert.assertEquals("Unknown Index name", e.getMessage());
+			return;
+		}
+		Assert.fail("Temporary index not deleted");
+	}
 
 	@Test
 	public void testDrop() {

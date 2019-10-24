@@ -8,6 +8,7 @@ import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
 import com.redislabs.lettusearch.aggregate.CursorOptions;
 import com.redislabs.lettusearch.search.AddOptions;
+import com.redislabs.lettusearch.search.CreateOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
@@ -60,7 +61,12 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 
 	@Override
 	public RedisFuture<String> create(String index, Schema schema) {
-		return dispatch(commandBuilder.create(index, schema));
+		return create(index, schema, null);
+	}
+
+	@Override
+	public RedisFuture<String> create(String index, Schema schema, CreateOptions options) {
+		return dispatch(commandBuilder.create(index, schema, options));
 	}
 
 	@Override

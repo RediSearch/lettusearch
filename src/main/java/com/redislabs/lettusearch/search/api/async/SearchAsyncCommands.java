@@ -8,6 +8,7 @@ import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
 import com.redislabs.lettusearch.aggregate.CursorOptions;
 import com.redislabs.lettusearch.search.AddOptions;
+import com.redislabs.lettusearch.search.CreateOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
@@ -27,6 +28,8 @@ import io.lettuce.core.RedisFuture;
 public interface SearchAsyncCommands<K, V> {
 
 	RedisFuture<String> create(String index, Schema schema);
+	
+	RedisFuture<String> create(String index, Schema schema, CreateOptions options);
 
 	RedisFuture<String> drop(String index, DropOptions options);
 

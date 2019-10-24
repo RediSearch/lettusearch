@@ -8,6 +8,7 @@ import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
 import com.redislabs.lettusearch.aggregate.CursorOptions;
 import com.redislabs.lettusearch.search.AddOptions;
+import com.redislabs.lettusearch.search.CreateOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
@@ -25,6 +26,8 @@ import com.redislabs.lettusearch.search.field.FieldOptions;
 public interface SearchCommands<K, V> {
 
 	String create(String index, Schema schema);
+
+	String create(String index, Schema schema, CreateOptions options);
 
 	String drop(String index, DropOptions options);
 

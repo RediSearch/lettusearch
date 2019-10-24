@@ -22,8 +22,8 @@ import static com.redislabs.lettusearch.CommandType.INFO;
 import static com.redislabs.lettusearch.CommandType.MGET;
 import static com.redislabs.lettusearch.CommandType.SEARCH;
 import static com.redislabs.lettusearch.CommandType.SUGADD;
-import static com.redislabs.lettusearch.CommandType.SUGGET;
 import static com.redislabs.lettusearch.CommandType.SUGDEL;
+import static com.redislabs.lettusearch.CommandType.SUGGET;
 import static com.redislabs.lettusearch.CommandType.SUGLEN;
 
 import java.util.List;
@@ -37,6 +37,7 @@ import com.redislabs.lettusearch.aggregate.AggregateWithCursorOutput;
 import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
 import com.redislabs.lettusearch.aggregate.CursorOptions;
 import com.redislabs.lettusearch.search.AddOptions;
+import com.redislabs.lettusearch.search.CreateOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.MapListOutput;
 import com.redislabs.lettusearch.search.Schema;
@@ -103,11 +104,14 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		return createCommand(ADD, new StatusOutput<>(codec), args);
 	}
 
-	public Command<K, V, String> create(String index, Schema schema) {
+	public Command<K, V, String> create(String index, Schema schema, CreateOptions options) {
 		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
 		LettuceAssert.notEmpty(index, "index " + MUST_NOT_BE_EMPTY);
 		LettuceAssert.notNull(schema, "schema " + MUST_NOT_BE_NULL);
 		RediSearchCommandArgs<K, V> args = createArgs(index);
+		if (options != null) {
+			options.build(args);
+		}
 		schema.build(args);
 		return createCommand(CREATE, new StatusOutput<>(codec), args);
 	}
@@ -228,7 +232,7 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec).addKey(key).addValue(string);
 		return createCommand(SUGDEL, new BooleanOutput<>(codec), args);
 	}
-	
+
 	public Command<K, V, Long> suglen(K key) {
 		LettuceAssert.notNull(key, "key " + MUST_NOT_BE_NULL);
 		RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec).addKey(key);
