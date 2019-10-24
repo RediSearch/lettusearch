@@ -26,4 +26,8 @@ public interface SuggestReactiveCommands<K, V> {
 
 	Flux<SuggestResult<V>> sugget(K key, V prefix, SuggestGetOptions options);
 
+	Mono<Boolean> sugdel(K key, V string);
+
+	Mono<Long> suglen(K key);
+
 }

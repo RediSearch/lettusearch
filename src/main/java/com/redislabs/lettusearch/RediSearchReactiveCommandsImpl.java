@@ -139,6 +139,16 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
+	public Mono<Boolean> sugdel(K key, V string) {
+		return createMono(() -> commandBuilder.sugdel(key, string));
+	}
+
+	@Override
+	public Mono<Long> suglen(K key) {
+		return createMono(() -> commandBuilder.suglen(key));
+	}
+
+	@Override
 	public Mono<String> alter(String index, K field, FieldOptions options) {
 		return createMono(() -> commandBuilder.alter(index, field, options));
 	}

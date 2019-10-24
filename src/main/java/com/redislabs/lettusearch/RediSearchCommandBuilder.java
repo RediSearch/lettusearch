@@ -23,6 +23,8 @@ import static com.redislabs.lettusearch.CommandType.MGET;
 import static com.redislabs.lettusearch.CommandType.SEARCH;
 import static com.redislabs.lettusearch.CommandType.SUGADD;
 import static com.redislabs.lettusearch.CommandType.SUGGET;
+import static com.redislabs.lettusearch.CommandType.SUGDEL;
+import static com.redislabs.lettusearch.CommandType.SUGLEN;
 
 import java.util.List;
 import java.util.Map;
@@ -218,6 +220,20 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec).addKey(key).addValue(prefix);
 		options.build(args);
 		return createCommand(SUGGET, new SuggestOutput<>(codec, options), args);
+	}
+
+	public Command<K, V, Boolean> sugdel(K key, V string) {
+		LettuceAssert.notNull(key, "key " + MUST_NOT_BE_NULL);
+		LettuceAssert.notNull(string, "string " + MUST_NOT_BE_NULL);
+		RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec).addKey(key).addValue(string);
+		return createCommand(SUGDEL, new BooleanOutput<>(codec), args);
+	}
+	
+	public Command<K, V, Long> suglen(K key) {
+		LettuceAssert.notNull(key, "key " + MUST_NOT_BE_NULL);
+		RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec).addKey(key);
+		return createCommand(SUGLEN, new IntegerOutput<>(codec), args);
+
 	}
 
 	public Command<K, V, Map<K, V>> get(String index, K docId) {

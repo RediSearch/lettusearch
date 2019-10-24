@@ -25,4 +25,7 @@ public interface SuggestCommands<K, V> {
 
 	List<SuggestResult<V>> sugget(K key, V prefix, SuggestGetOptions options);
 
+	Boolean sugdel(K key, V string);
+
+	Long suglen(K key);
 }

@@ -135,6 +135,16 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
+	public RedisFuture<Boolean> sugdel(K key, V string) {
+		return dispatch(commandBuilder.sugdel(key, string));
+	}
+
+	@Override
+	public RedisFuture<Long> suglen(K key) {
+		return dispatch(commandBuilder.suglen(key));
+	}
+
+	@Override
 	public RedisFuture<Map<K, V>> get(String index, K docId) {
 		return dispatch(commandBuilder.get(index, docId));
 	}

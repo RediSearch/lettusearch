@@ -27,4 +27,8 @@ public interface SuggestAsyncCommands<K, V> {
 
 	RedisFuture<List<SuggestResult<V>>> sugget(K key, V prefix, SuggestGetOptions options);
 
+	RedisFuture<Boolean> sugdel(K key, V string);
+
+	RedisFuture<Long> suglen(K key);
+
 }
