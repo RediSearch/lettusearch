@@ -31,7 +31,7 @@ public class TestIndexCRUD extends AbstractBaseTest {
 				CreateOptions.builder().temporary(1l).build());
 		List<Object> info = commands.ftInfo(indexName);
 		Assert.assertEquals(indexName, info.get(1));
-		Thread.sleep(1000);
+		Thread.sleep(1001);
 		try {
 			info = commands.ftInfo(indexName);
 		} catch (RedisCommandExecutionException e) {
