@@ -59,10 +59,10 @@ Add LettuSearch to your application dependencies, e.g. with Maven:
 ----
 RediSearchClient client = RediSearchClient.create("redis://localhost");
 StatefulRediSearchConnection<String, String> conn = client.connect(); //<1>
-RediSearchCommands<String, String> ft = conn.sync(); //<2>
-ft.create("beers", Schema.builder().field(TextField.builder().name("name").build())....build()); //<3>
-beers().forEach(b -> ft.add("beers", b.get("id"), 1, b)); //<4>
-SearchResults<String, String> results = ft.search("beers", "sculpin"); //<5>
+RediSearchCommands<String, String> ft = conn.sync();                  //<2>
+ft.create("beers", Schema.builder().field(Field.text("name"))...);    //<3>
+beers().forEach(b -> ft.add("beers", b.get("id"), 1, b));             //<4>
+SearchResults<String, String> results = ft.search("beers", "sculpin");//<5>
 ----
 <1> Establish a connection to RediSearch
 <2> Use _sync_, _async_, or _reactive_ API

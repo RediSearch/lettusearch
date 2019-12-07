@@ -5,9 +5,7 @@ import static com.redislabs.lettusearch.CommandKeyword.GEO;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
 import lombok.Builder;
-import lombok.Getter;
 
-@Getter
 public class GeoField extends Field {
 
 	@Builder

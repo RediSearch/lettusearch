@@ -6,10 +6,13 @@ import static com.redislabs.lettusearch.CommandKeyword.TAG;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-@Getter
-public class TagField extends Field {
+@EqualsAndHashCode(callSuper = true)
+@Accessors(fluent = true)
+public @Data class TagField extends Field {
 
 	private String separator;
 

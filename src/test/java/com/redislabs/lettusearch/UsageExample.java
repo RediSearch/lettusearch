@@ -9,17 +9,16 @@ import static com.redislabs.lettusearch.Beers.load;
 
 import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchResults;
-import com.redislabs.lettusearch.search.field.NumericField;
+import com.redislabs.lettusearch.search.field.Field;
 import com.redislabs.lettusearch.search.field.PhoneticMatcher;
-import com.redislabs.lettusearch.search.field.TagField;
-import com.redislabs.lettusearch.search.field.TextField;
 
 public class UsageExample {
 
 	public final static Schema SCHEMA = Schema.builder()
-			.field(TextField.builder().name(FIELD_NAME).matcher(PhoneticMatcher.English).build())
-			.field(TagField.builder().name(FIELD_STYLE).sortable(true).build())
-			.field(NumericField.builder().name(FIELD_ABV).sortable(true).build()).build();
+			.field(Field.text(FIELD_NAME).matcher(PhoneticMatcher.English))
+			.field(Field.tag(FIELD_STYLE).sortable(true))
+			.field(Field.numeric(FIELD_ABV).sortable(true))
+			.build();
 
 	public static void main(String[] args) throws Exception {
 		RediSearchClient client = RediSearchClient.create("redis://localhost");

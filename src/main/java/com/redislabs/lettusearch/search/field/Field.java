@@ -8,11 +8,14 @@ import com.redislabs.lettusearch.RediSearchCommandArgs;
 
 import io.lettuce.core.internal.LettuceAssert;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
-@Getter
+@NoArgsConstructor
 @AllArgsConstructor
-public abstract class Field implements RediSearchArgument {
+@Accessors(fluent = true)
+public abstract @Data class Field implements RediSearchArgument {
 
 	static final String MUST_NOT_BE_EMPTY = "must not be empty";
 	static final String MUST_NOT_BE_NULL = "must not be null";
@@ -20,6 +23,22 @@ public abstract class Field implements RediSearchArgument {
 	private String name;
 	private boolean sortable;
 	private boolean noIndex;
+
+	public static TextField text(String name) {
+		return TextField.builder().name(name).build();
+	}
+
+	public static GeoField geo(String name) {
+		return GeoField.builder().name(name).build();
+	}
+
+	public static NumericField numeric(String name) {
+		return NumericField.builder().name(name).build();
+	}
+
+	public static TagField tag(String name) {
+		return TagField.builder().name(name).build();
+	}
 
 	@Override
 	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
