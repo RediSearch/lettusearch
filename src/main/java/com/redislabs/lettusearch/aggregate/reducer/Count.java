@@ -5,16 +5,13 @@ import static com.redislabs.lettusearch.CommandKeyword.COUNT;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 import com.redislabs.lettusearch.aggregate.Reducer;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-@Getter
-public class Count extends Reducer {
-
-	@Builder
-	public Count(String as) {
-		super(as);
-	}
+@EqualsAndHashCode(callSuper = true)
+@Accessors(fluent = true)
+public @Data class Count extends Reducer {
 
 	@Override
 	protected <K, V> void buildFunction(RediSearchCommandArgs<K, V> args) {

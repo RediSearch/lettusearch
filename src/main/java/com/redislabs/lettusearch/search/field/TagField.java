@@ -5,21 +5,19 @@ import static com.redislabs.lettusearch.CommandKeyword.TAG;
 
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(callSuper = true)
 @Accessors(fluent = true)
-public @Data class TagField extends Field {
+public class TagField extends Field {
 
+	@Getter
+	@Setter
 	private String separator;
 
-	@Builder
-	public TagField(String name, boolean sortable, boolean noIndex, String separator) {
-		super(name, sortable, noIndex);
-		this.separator = separator;
+	public TagField(String name) {
+		super(name);
 	}
 
 	@Override

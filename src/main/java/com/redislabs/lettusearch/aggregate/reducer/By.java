@@ -1,11 +1,10 @@
 package com.redislabs.lettusearch.aggregate.reducer;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
-public class By {
+@Accessors(fluent = true)
+public @Data class By {
 
 	private String property;
 	private Order order;

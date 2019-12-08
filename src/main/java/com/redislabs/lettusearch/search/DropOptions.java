@@ -5,12 +5,11 @@ import static com.redislabs.lettusearch.CommandKeyword.KEEPDOCS;
 import com.redislabs.lettusearch.RediSearchArgument;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
-public class DropOptions implements RediSearchArgument {
+@Accessors(fluent = true)
+public @Data class DropOptions implements RediSearchArgument {
 
 	private boolean keepDocs;
 

@@ -5,21 +5,16 @@ import static com.redislabs.lettusearch.CommandKeyword.QUANTILE;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 import com.redislabs.lettusearch.aggregate.Reducer;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-@Getter
-public class Quantile extends Reducer {
+@EqualsAndHashCode(callSuper = true)
+@Accessors(fluent = true)
+public @Data class Quantile extends Reducer {
 
 	private final String property;
 	private final double quantile;
-
-	@Builder
-	public Quantile(String as, String property, double quantile) {
-		super(as);
-		this.property = property;
-		this.quantile = quantile;
-	}
 
 	@Override
 	protected <K, V> void buildFunction(RediSearchCommandArgs<K, V> args) {

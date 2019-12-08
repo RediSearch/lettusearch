@@ -4,12 +4,11 @@ import static com.redislabs.lettusearch.CommandKeyword.FILTER;
 
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
-public class Filter implements Operation {
+@Accessors(fluent = true)
+public @Data class Filter implements Operation {
 
 	private String expression;
 

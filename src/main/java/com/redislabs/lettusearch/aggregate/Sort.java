@@ -3,21 +3,24 @@ package com.redislabs.lettusearch.aggregate;
 import static com.redislabs.lettusearch.CommandKeyword.MAX;
 import static com.redislabs.lettusearch.CommandKeyword.SORTBY;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
 import lombok.Data;
-import lombok.Singular;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
-public class Sort implements Operation {
+@Accessors(fluent = true)
+public @Data class Sort implements Operation {
 
-	@Singular
-	private List<SortProperty> properties;
+	private List<SortProperty> properties = new ArrayList<>();
 	private Long max;
+
+	public Sort property(SortProperty property) {
+		properties.add(property);
+		return this;
+	}
 
 	@Override
 	public <K, V> void build(RediSearchCommandArgs<K, V> args) {

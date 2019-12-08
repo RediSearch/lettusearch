@@ -69,7 +69,7 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<List<Object>> ftInfo(String index) {
+	public Mono<List<Object>> indexInfo(String index) {
 		return createMono(() -> commandBuilder.info(index));
 	}
 

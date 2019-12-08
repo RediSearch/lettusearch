@@ -7,26 +7,25 @@ import static com.redislabs.lettusearch.CommandKeyword.WEIGHT;
 
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(callSuper = true)
 @Accessors(fluent = true)
-public @Data class TextField extends Field {
+public class TextField extends Field {
 
+	@Getter
+	@Setter
 	private Double weight;
+	@Getter
+	@Setter
 	private boolean noStem;
+	@Getter
+	@Setter
 	private PhoneticMatcher matcher;
 
-	@Builder
-	public TextField(String name, boolean sortable, boolean noIndex, Double weight, boolean noStem,
-			PhoneticMatcher matcher) {
-		super(name, sortable, noIndex);
-		this.weight = weight;
-		this.noStem = noStem;
-		this.matcher = matcher;
+	public TextField(String name) {
+		super(name);
 	}
 
 	@Override

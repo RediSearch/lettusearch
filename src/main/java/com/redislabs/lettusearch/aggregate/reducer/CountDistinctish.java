@@ -5,19 +5,15 @@ import static com.redislabs.lettusearch.CommandKeyword.COUNT_DISTINCTISH;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 import com.redislabs.lettusearch.aggregate.Reducer;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-@Getter
-public class CountDistinctish extends Reducer {
+@EqualsAndHashCode(callSuper = true)
+@Accessors(fluent = true)
+public @Data class CountDistinctish extends Reducer {
 
 	private final String property;
-
-	@Builder
-	public CountDistinctish(String as, String property) {
-		super(as);
-		this.property = property;
-	}
 
 	@Override
 	protected <K, V> void buildFunction(RediSearchCommandArgs<K, V> args) {

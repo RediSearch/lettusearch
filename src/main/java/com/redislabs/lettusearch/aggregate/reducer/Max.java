@@ -5,19 +5,15 @@ import static com.redislabs.lettusearch.CommandKeyword.MAX;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 import com.redislabs.lettusearch.aggregate.Reducer;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-@Getter
-public class Max extends Reducer {
+@EqualsAndHashCode(callSuper = true)
+@Accessors(fluent = true)
+public @Data class Max extends Reducer {
 
 	private final String property;
-
-	@Builder
-	public Max(String as, String property) {
-		super(as);
-		this.property = property;
-	}
 
 	@Override
 	protected <K, V> void buildFunction(RediSearchCommandArgs<K, V> args) {

@@ -1,5 +1,7 @@
 package com.redislabs.lettusearch;
 
+import static com.redislabs.lettusearch.Beers.INDEX;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -8,17 +10,13 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.CreateOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
-import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.search.field.Field;
 import com.redislabs.lettusearch.search.field.FieldOptions;
 import com.redislabs.lettusearch.search.field.FieldType;
-import com.redislabs.lettusearch.search.field.TextField;
-
-import static com.redislabs.lettusearch.Beers.*;
 
 import io.lettuce.core.RedisCommandExecutionException;
 
@@ -27,13 +25,12 @@ public class TestIndexCRUD extends AbstractBaseTest {
 	@Test
 	public void testTemporaryIndex() throws InterruptedException {
 		String indexName = "temporaryIndex";
-		commands.create(indexName, Schema.builder().field(TextField.builder().name("field1").build()).build(),
-				CreateOptions.builder().temporary(1l).build());
-		List<Object> info = commands.ftInfo(indexName);
+		commands.create(indexName, new Schema().field(Field.text("field1")), new CreateOptions().temporary(1l));
+		List<Object> info = commands.indexInfo(indexName);
 		Assert.assertEquals(indexName, info.get(1));
 		Thread.sleep(1001);
 		try {
-			info = commands.ftInfo(indexName);
+			info = commands.indexInfo(indexName);
 		} catch (RedisCommandExecutionException e) {
 			Assert.assertEquals("Unknown Index name", e.getMessage());
 			return;
@@ -43,11 +40,11 @@ public class TestIndexCRUD extends AbstractBaseTest {
 
 	@Test
 	public void testDrop() {
-		commands.drop(INDEX, DropOptions.builder().keepDocs(false).build());
+		commands.drop(INDEX, new DropOptions().keepDocs(false));
 		Map<String, String> fields = new HashMap<>();
 		fields.put("field1", "value1");
 		try {
-			commands.add(INDEX, "newDocId", 1, fields, AddOptions.builder().build());
+			commands.add(INDEX, "newDocId", 1, fields);
 			Assert.fail("Index not dropped");
 		} catch (RedisCommandExecutionException e) {
 			// ignored, expected behavior
@@ -56,19 +53,18 @@ public class TestIndexCRUD extends AbstractBaseTest {
 
 	@Test
 	public void testAlter() {
-		commands.alter(INDEX, "newField", FieldOptions.builder().type(FieldType.Tag).build());
+		commands.alter(INDEX, "newField", new FieldOptions().type(FieldType.Tag));
 		Map<String, String> fields = new HashMap<>();
 		fields.put("newField", "value1");
-		commands.add(INDEX, "newDocId", 1, fields, AddOptions.builder().build());
-		SearchResults<String, String> results = commands.search(INDEX, "@newField:{value1}",
-				SearchOptions.builder().build());
+		commands.add(INDEX, "newDocId", 1, fields);
+		SearchResults<String, String> results = commands.search(INDEX, "@newField:{value1}");
 		Assert.assertEquals(1, results.getCount());
 		Assert.assertEquals(fields.get("newField"), results.get(0).get("newField"));
 	}
 
 	@Test
 	public void testIndexInfo() {
-		Map<String, Object> indexInfo = toMap(commands.ftInfo(INDEX));
+		Map<String, Object> indexInfo = toMap(commands.indexInfo(INDEX));
 		Assert.assertEquals(INDEX, indexInfo.get("index_name"));
 	}
 

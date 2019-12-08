@@ -47,7 +47,7 @@ public interface SearchAsyncCommands<K, V> {
 
 	RedisFuture<List<Map<K, V>>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds);
 
-	RedisFuture<List<Object>> ftInfo(String index);
+	RedisFuture<List<Object>> indexInfo(String index);
 
 	RedisFuture<Boolean> del(String index, K docId, boolean deleteDoc);
 

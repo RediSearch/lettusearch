@@ -26,19 +26,19 @@ public class SuggestOutput<K, V> extends CommandOutput<K, V, List<SuggestResult<
 				current.setString(codec.decodeValue(bytes));
 			}
 			output.add(current);
-			if (!options.isWithScores() && !options.isWithPayloads()) {
+			if (!options.withScores() && !options.withPayloads()) {
 				current = null;
 			}
 		} else {
-			if (current.getScore() == null && options.isWithScores()) {
+			if (current.getScore() == null && options.withScores()) {
 				if (bytes != null) {
 					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
 				}
-				if (!options.isWithPayloads()) {
+				if (!options.withPayloads()) {
 					current = null;
 				}
 			} else {
-				if (current.getPayload() == null && options.isWithPayloads()) {
+				if (current.getPayload() == null && options.withPayloads()) {
 					if (bytes != null) {
 						current.setPayload(codec.decodeValue(bytes));
 					}

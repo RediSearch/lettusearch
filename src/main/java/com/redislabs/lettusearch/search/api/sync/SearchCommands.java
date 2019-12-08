@@ -33,7 +33,7 @@ public interface SearchCommands<K, V> {
 
 	String alter(String index, K field, FieldOptions options);
 
-	List<Object> ftInfo(String index);
+	List<Object> indexInfo(String index);
 
 	String add(String index, K docId, double score, Map<K, V> fields);
 

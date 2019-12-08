@@ -6,18 +6,15 @@ import static com.redislabs.lettusearch.CommandKeyword.DESC;
 import com.redislabs.lettusearch.RediSearchArgument;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
-public class SortBy implements RediSearchArgument {
+@Accessors(fluent = true)
+public @Data class SortBy implements RediSearchArgument {
 
 	public final static Direction DEFAULT_DIRECTION = Direction.Ascending;
 
 	private String field;
-	@Default
 	private Direction direction = DEFAULT_DIRECTION;
 
 	@Override

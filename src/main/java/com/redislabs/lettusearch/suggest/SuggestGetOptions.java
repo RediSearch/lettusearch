@@ -8,12 +8,11 @@ import static com.redislabs.lettusearch.CommandKeyword.WITHSCORES;
 import com.redislabs.lettusearch.RediSearchArgument;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
-public class SuggestGetOptions implements RediSearchArgument {
+@Accessors(fluent = true)
+public @Data class SuggestGetOptions implements RediSearchArgument {
 
 	private boolean fuzzy;
 	private boolean withScores;

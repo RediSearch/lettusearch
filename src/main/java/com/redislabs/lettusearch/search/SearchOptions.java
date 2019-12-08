@@ -1,5 +1,6 @@
 package com.redislabs.lettusearch.search;
 
+import static com.redislabs.lettusearch.CommandKeyword.HIGHLIGHT;
 import static com.redislabs.lettusearch.CommandKeyword.INFIELDS;
 import static com.redislabs.lettusearch.CommandKeyword.LANGUAGE;
 import static com.redislabs.lettusearch.CommandKeyword.NOCONTENT;
@@ -10,20 +11,18 @@ import static com.redislabs.lettusearch.CommandKeyword.VERBATIM;
 import static com.redislabs.lettusearch.CommandKeyword.WITHPAYLOADS;
 import static com.redislabs.lettusearch.CommandKeyword.WITHSCORES;
 import static com.redislabs.lettusearch.CommandKeyword.WITHSORTKEYS;
-import static com.redislabs.lettusearch.CommandKeyword.HIGHLIGHT;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.redislabs.lettusearch.RediSearchArgument;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
 import lombok.Data;
-import lombok.Singular;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
-public class SearchOptions implements RediSearchArgument {
+@Accessors(fluent = true)
+public @Data class SearchOptions implements RediSearchArgument {
 
 	private boolean noContent;
 	private boolean verbatim;
@@ -31,14 +30,22 @@ public class SearchOptions implements RediSearchArgument {
 	private boolean withScores;
 	private boolean withPayloads;
 	private boolean withSortKeys;
-	@Singular
-	private List<String> inFields;
-	@Singular
-	private List<String> returnFields;
+	private List<String> inFields = new ArrayList<>();
+	private List<String> returnFields = new ArrayList<>();
 	private HighlightOptions highlight;
 	private String language;
 	private SortBy sortBy;
 	private Limit limit;
+	
+	public SearchOptions inField(String inField) {
+		inFields.add(inField);
+		return this;
+	}
+	
+	public SearchOptions returnField(String returnField) {
+		returnFields.add(returnField);
+		return this;
+	}
 
 	@Override
 	public <K, V> void build(RediSearchCommandArgs<K, V> args) {

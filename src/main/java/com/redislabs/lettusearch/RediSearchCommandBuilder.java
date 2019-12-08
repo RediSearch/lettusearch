@@ -155,7 +155,7 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 	}
 
 	private CommandOutput<K, V, SearchResults<K, V>> getSearchOutput(RedisCodec<K, V> codec, SearchOptions options) {
-		if (options != null && options.isNoContent()) {
+		if (options != null && options.noContent()) {
 			return new SearchNoContentOutput<>(codec, options);
 		}
 		return new SearchOutput<>(codec, options);

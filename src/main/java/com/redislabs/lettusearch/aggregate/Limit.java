@@ -4,12 +4,11 @@ import static com.redislabs.lettusearch.CommandKeyword.LIMIT;
 
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
-public class Limit implements Operation {
+@Accessors(fluent = true)
+public @Data class Limit implements Operation {
 
 	private long offset;
 	private long num;

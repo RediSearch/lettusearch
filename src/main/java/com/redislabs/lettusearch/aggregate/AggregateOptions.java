@@ -4,25 +4,32 @@ import static com.redislabs.lettusearch.CommandKeyword.LOAD;
 import static com.redislabs.lettusearch.CommandKeyword.VERBATIM;
 import static com.redislabs.lettusearch.CommandKeyword.WITHSCHEMA;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.redislabs.lettusearch.RediSearchArgument;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
 import lombok.Data;
-import lombok.Singular;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
-public class AggregateOptions implements RediSearchArgument {
+@Accessors(fluent = true)
+public @Data class AggregateOptions implements RediSearchArgument {
 
 	private boolean withSchema;
 	private boolean verbatim;
-	@Singular
-	private List<String> loads;
-	@Singular
-	private List<Operation> operations;
+	private List<String> loads = new ArrayList<>();
+	private List<Operation> operations = new ArrayList<>();
+
+	public AggregateOptions load(String load) {
+		loads.add(load);
+		return this;
+	}
+
+	public AggregateOptions operation(Operation operation) {
+		operations.add(operation);
+		return this;
+	}
 
 	@Override
 	public <K, V> void build(RediSearchCommandArgs<K, V> args) {

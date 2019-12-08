@@ -6,18 +6,15 @@ import static com.redislabs.lettusearch.CommandKeyword.DESC;
 import com.redislabs.lettusearch.RediSearchArgument;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
-public class SortProperty implements RediSearchArgument {
+@Accessors(fluent = true)
+public @Data class SortProperty implements RediSearchArgument {
 
 	public final static Order DEFAULT_ORDER = Order.Asc;
 
 	private String property;
-	@Default
 	private Order order = DEFAULT_ORDER;
 
 	public <K, V> void build(RediSearchCommandArgs<K, V> args) {

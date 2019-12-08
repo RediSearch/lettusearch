@@ -24,11 +24,11 @@ public class SearchNoContentOutput<K, V> extends CommandOutput<K, V, SearchResul
 				current.setDocumentId(codec.decodeKey(bytes));
 			}
 			output.add(current);
-			if (!options.isWithScores()) {
+			if (!options.withScores()) {
 				current = null;
 			}
 		} else {
-			if (options.isWithScores()) {
+			if (options.withScores()) {
 				if (bytes != null) {
 					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
 				}

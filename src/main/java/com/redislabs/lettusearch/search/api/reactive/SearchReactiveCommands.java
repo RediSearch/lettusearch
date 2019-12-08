@@ -33,7 +33,7 @@ public interface SearchReactiveCommands<K, V> {
 
 	Mono<String> drop(String index, DropOptions options);
 
-	Mono<List<Object>> ftInfo(String index);
+	Mono<List<Object>> indexInfo(String index);
 
 	Mono<String> alter(String index, K field, FieldOptions options);
 

@@ -9,12 +9,11 @@ import static com.redislabs.lettusearch.CommandKeyword.REPLACE;
 import com.redislabs.lettusearch.RediSearchArgument;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
-public class AddOptions implements RediSearchArgument {
+@Accessors(fluent = true)
+public @Data class AddOptions implements RediSearchArgument {
 
 	private boolean noSave;
 	private boolean replace;

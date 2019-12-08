@@ -43,7 +43,7 @@ public class AggregateOutput<K, V, R extends AggregateResults<K, V>> extends Com
 
 	@Override
 	public void set(long integer) {
-		output.setCount(integer);
+		output.count(integer);
 	}
 
 	@Override

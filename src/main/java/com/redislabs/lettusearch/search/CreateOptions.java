@@ -13,12 +13,11 @@ import java.util.List;
 import com.redislabs.lettusearch.RediSearchArgument;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
-public class CreateOptions implements RediSearchArgument {
+@Accessors(fluent = true)
+public @Data class CreateOptions implements RediSearchArgument {
 
 	private boolean maxTextFields;
 	private Long temporary;

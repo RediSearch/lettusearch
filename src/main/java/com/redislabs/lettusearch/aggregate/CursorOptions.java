@@ -6,12 +6,11 @@ import static com.redislabs.lettusearch.CommandKeyword.MAXIDLE;
 import com.redislabs.lettusearch.RediSearchArgument;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
-public class CursorOptions implements RediSearchArgument {
+@Accessors(fluent = true)
+public @Data class CursorOptions implements RediSearchArgument {
 
 	private Long count;
 	private Long maxIdle;

@@ -8,21 +8,16 @@ import static com.redislabs.lettusearch.CommandKeyword.FIRST_VALUE;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 import com.redislabs.lettusearch.aggregate.Reducer;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-@Getter
-public class FirstValue extends Reducer {
+@EqualsAndHashCode(callSuper = true)
+@Accessors(fluent = true)
+public @Data class FirstValue extends Reducer {
 
 	private final String property;
 	private final By by;
-
-	@Builder
-	public FirstValue(String as, String property, By by) {
-		super(as);
-		this.property = property;
-		this.by = by;
-	}
 
 	@Override
 	protected <K, V> void buildFunction(RediSearchCommandArgs<K, V> args) {
@@ -32,8 +27,8 @@ public class FirstValue extends Reducer {
 		if (by != null) {
 			args.add(BY);
 			args.addProperty(property);
-			if (by.getOrder() != null) {
-				args.add(by.getOrder() == Order.Asc ? ASC : DESC);
+			if (by.order() != null) {
+				args.add(by.order() == Order.Asc ? ASC : DESC);
 			}
 		}
 	}
@@ -41,7 +36,7 @@ public class FirstValue extends Reducer {
 	private int getNumberOfArgs() {
 		int nargs = 1;
 		if (by != null) {
-			nargs += by.getOrder() == null ? 2 : 3;
+			nargs += by.order() == null ? 2 : 3;
 		}
 		return nargs;
 	}

@@ -14,11 +14,8 @@ import com.redislabs.lettusearch.search.field.PhoneticMatcher;
 
 public class UsageExample {
 
-	public final static Schema SCHEMA = Schema.builder()
-			.field(Field.text(FIELD_NAME).matcher(PhoneticMatcher.English))
-			.field(Field.tag(FIELD_STYLE).sortable(true))
-			.field(Field.numeric(FIELD_ABV).sortable(true))
-			.build();
+	public final static Schema SCHEMA = new Schema().field(Field.text(FIELD_NAME).matcher(PhoneticMatcher.English))
+			.field(Field.tag(FIELD_STYLE).sortable(true)).field(Field.numeric(FIELD_ABV).sortable(true));
 
 	public static void main(String[] args) throws Exception {
 		RediSearchClient client = RediSearchClient.create("redis://localhost");

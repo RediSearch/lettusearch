@@ -3,22 +3,25 @@ package com.redislabs.lettusearch.search;
 import static com.redislabs.lettusearch.CommandKeyword.FIELDS;
 import static com.redislabs.lettusearch.CommandKeyword.TAGS;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.redislabs.lettusearch.RediSearchArgument;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
 import lombok.Data;
-import lombok.Singular;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
-public class HighlightOptions implements RediSearchArgument {
+@Accessors(fluent = true)
+public @Data class HighlightOptions implements RediSearchArgument {
 
-	@Singular
-	private List<String> fields;
+	private List<String> fields = new ArrayList<>();
 	private TagOptions tags;
+
+	public HighlightOptions field(String field) {
+		fields.add(field);
+		return this;
+	}
 
 	@Override
 	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
@@ -35,7 +38,7 @@ public class HighlightOptions implements RediSearchArgument {
 	}
 
 	@Data
-	@Builder
+	@Accessors(fluent = true)
 	public static class TagOptions {
 
 		private String open;

@@ -5,19 +5,15 @@ import static com.redislabs.lettusearch.CommandKeyword.SUM;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 import com.redislabs.lettusearch.aggregate.Reducer;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
-@Getter
-public class Sum extends Reducer {
+@EqualsAndHashCode(callSuper = true)
+@Accessors(fluent = true)
+public @Data class Sum extends Reducer {
 
 	private final String property;
-
-	@Builder
-	public Sum(String as, String property) {
-		super(as);
-		this.property = property;
-	}
 
 	@Override
 	protected <K, V> void buildFunction(RediSearchCommandArgs<K, V> args) {

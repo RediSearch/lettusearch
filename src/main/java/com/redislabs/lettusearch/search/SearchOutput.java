@@ -32,7 +32,7 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 			}
 			output.add(current);
 		} else {
-			if (options != null && options.isWithScores() && current.getScore() == null) {
+			if (options != null && options.withScores() && current.getScore() == null) {
 				if (bytes != null) {
 					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
 				}

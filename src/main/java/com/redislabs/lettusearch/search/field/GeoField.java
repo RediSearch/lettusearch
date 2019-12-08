@@ -4,13 +4,10 @@ import static com.redislabs.lettusearch.CommandKeyword.GEO;
 
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
-
 public class GeoField extends Field {
 
-	@Builder
-	public GeoField(String name, boolean sortable, boolean noIndex) {
-		super(name, sortable, noIndex);
+	public GeoField(String name) {
+		super(name);
 	}
 
 	@Override

@@ -75,13 +75,13 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
-	public RedisFuture<List<Object>> ftInfo(String index) {
+	public RedisFuture<List<Object>> indexInfo(String index) {
 		return dispatch(commandBuilder.info(index));
 	}
 
 	@Override
 	public RedisFuture<SearchResults<K, V>> search(String index, String query) {
-		return search(index, query, SearchOptions.builder().build());
+		return search(index, query, new SearchOptions());
 	}
 
 	@Override

@@ -6,14 +6,13 @@ import static com.redislabs.lettusearch.CommandKeyword.REDUCE;
 import com.redislabs.lettusearch.RediSearchArgument;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Getter
-@AllArgsConstructor
-public abstract class Reducer implements RediSearchArgument {
+@Accessors(fluent = true)
+public abstract @Data class Reducer implements RediSearchArgument {
 
-	private final String as;
+	private String as;
 
 	@Override
 	public <K, V> void build(RediSearchCommandArgs<K, V> args) {

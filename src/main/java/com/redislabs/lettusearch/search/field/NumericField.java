@@ -4,13 +4,10 @@ import static com.redislabs.lettusearch.CommandKeyword.NUMERIC;
 
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
-
 public class NumericField extends Field {
 
-	@Builder
-	public NumericField(String name, boolean sortable, boolean noIndex) {
-		super(name, sortable, noIndex);
+	public NumericField(String name) {
+		super(name);
 	}
 
 	@Override

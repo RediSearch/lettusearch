@@ -10,14 +10,12 @@ import static com.redislabs.lettusearch.CommandKeyword.WEIGHT;
 import com.redislabs.lettusearch.RediSearchArgument;
 import com.redislabs.lettusearch.RediSearchCommandArgs;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Data
-@Builder
-public class FieldOptions implements RediSearchArgument {
+@Accessors(fluent = true)
+public @Data class FieldOptions implements RediSearchArgument {
 
-	@Builder.Default
 	private FieldType type = FieldType.Text;
 	private boolean sortable;
 	private boolean noIndex;
