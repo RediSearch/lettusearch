@@ -70,6 +70,11 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
+	public RedisFuture<String> drop(String index) {
+		return drop(index, null);
+	}
+
+	@Override
 	public RedisFuture<String> drop(String index, DropOptions options) {
 		return dispatch(commandBuilder.drop(index, options));
 	}
@@ -81,7 +86,7 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 
 	@Override
 	public RedisFuture<SearchResults<K, V>> search(String index, String query) {
-		return search(index, query, new SearchOptions());
+		return search(index, query, null);
 	}
 
 	@Override

@@ -28,8 +28,10 @@ import reactor.core.publisher.Mono;
 public interface SearchReactiveCommands<K, V> {
 
 	Mono<String> create(String index, Schema schema);
-	
+
 	Mono<String> create(String index, Schema schema, CreateOptions options);
+
+	Mono<String> drop(String index);
 
 	Mono<String> drop(String index, DropOptions options);
 

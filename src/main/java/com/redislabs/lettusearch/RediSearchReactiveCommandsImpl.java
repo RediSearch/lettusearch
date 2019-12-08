@@ -52,7 +52,7 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	public Mono<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options, V payload) {
 		return createMono(() -> commandBuilder.add(index, docId, score, fields, options, payload));
 	}
-	
+
 	@Override
 	public Mono<String> create(String index, Schema schema) {
 		return create(index, schema, null);
@@ -61,6 +61,11 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	@Override
 	public Mono<String> create(String index, Schema schema, CreateOptions options) {
 		return createMono(() -> commandBuilder.create(index, schema, options));
+	}
+
+	@Override
+	public Mono<String> drop(String index) {
+		return drop(index, null);
 	}
 
 	@Override

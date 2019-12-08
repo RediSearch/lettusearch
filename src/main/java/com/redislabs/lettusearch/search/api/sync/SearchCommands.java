@@ -29,6 +29,8 @@ public interface SearchCommands<K, V> {
 
 	String create(String index, Schema schema, CreateOptions options);
 
+	String drop(String index);
+
 	String drop(String index, DropOptions options);
 
 	String alter(String index, K field, FieldOptions options);

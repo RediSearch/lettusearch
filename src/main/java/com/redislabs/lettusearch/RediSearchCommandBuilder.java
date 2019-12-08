@@ -119,7 +119,9 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 	public Command<K, V, String> drop(String index, DropOptions options) {
 		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
 		RediSearchCommandArgs<K, V> args = createArgs(index);
-		options.build(args);
+		if (options != null) {
+			options.build(args);
+		}
 		return createCommand(DROP, new StatusOutput<>(codec), args);
 	}
 

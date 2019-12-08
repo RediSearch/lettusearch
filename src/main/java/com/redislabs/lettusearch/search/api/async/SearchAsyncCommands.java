@@ -28,8 +28,10 @@ import io.lettuce.core.RedisFuture;
 public interface SearchAsyncCommands<K, V> {
 
 	RedisFuture<String> create(String index, Schema schema);
-	
+
 	RedisFuture<String> create(String index, Schema schema, CreateOptions options);
+
+	RedisFuture<String> drop(String index);
 
 	RedisFuture<String> drop(String index, DropOptions options);
 
