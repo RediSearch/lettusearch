@@ -1,13 +1,28 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.21.1"
+    }
+}
+
 plugins {
     id 'java-library'
     id 'com.github.ben-manes.versions' version '0.27.0'
     id 'maven-publish'
     id 'signing'
+    id 'io.codearte.nexus-staging' version '0.21.1'
 }
 
 repositories {
 	mavenCentral()
 	mavenLocal()
+}
+
+nexusStaging {
+	username = "$ossrhUsername"
+	password = "$ossrhPassword"
 }
 
 dependencies {
