@@ -1,3 +1,3 @@
 #!/bin/sh -ex
 
-gradle clean publish closeAndReleaseRepository
+gradle clean publishToMavenLocal publish closeAndReleaseRepository
