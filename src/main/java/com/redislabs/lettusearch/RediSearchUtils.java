@@ -17,6 +17,8 @@ import lombok.experimental.Accessors;
 
 public class RediSearchUtils {
 
+	private final static Long ZERO = 0l;
+
 	@Accessors(fluent = true)
 	public static @Data class IndexInfo {
 		private String indexName;
@@ -47,11 +49,11 @@ public class RediSearchUtils {
 			map.put((String) infoList.get(i * 2), infoList.get(i * 2 + 1));
 		}
 		IndexInfo info = new IndexInfo();
-		info.indexName((String) map.get("index_name"));
+		info.indexName(getString(map.get("index_name")));
 		info.indexOptions((List<Object>) map.get("index_options"));
 		info.fields(fields(map.get("fields")));
 		info.numDocs(getLong(map, "num_docs"));
-		info.maxDocId((String) map.get("max_doc_id"));
+		info.maxDocId(getString(map.get("max_doc_id")));
 		info.numTerms(getLong(map, "num_terms"));
 		info.numRecords(getLong(map, "num_records"));
 		info.invertedSizeMb(getDouble(map, "inverted_sz_mb"));
@@ -67,6 +69,18 @@ public class RediSearchUtils {
 		info.gcStats((List<Object>) map.get("gc_stats"));
 		info.cursorStats((List<Object>) map.get("cursor_stats"));
 		return info;
+	}
+
+	private static String getString(Object object) {
+		if (object != null) {
+			if (object instanceof String) {
+				return (String) object;
+			}
+			if (ZERO.equals(object)) {
+				return null;
+			}
+		}
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -123,12 +137,20 @@ public class RediSearchUtils {
 
 	private static Long getLong(Map<String, Object> map, String key) {
 		if (map.containsKey(key)) {
-			String value = (String) map.get(key);
-			if (value != null && value.length() > 0) {
-				try {
-					return Long.parseLong(value);
-				} catch (NumberFormatException e) {
-					// ignore
+			Object value = map.get(key);
+			if (value != null) {
+				if (value instanceof Long) {
+					return (Long) value;
+				}
+				if (value instanceof String) {
+					String string = (String) value;
+					if (string.length() > 0) {
+						try {
+							return Long.parseLong(string);
+						} catch (NumberFormatException e) {
+							// ignore
+						}
+					}
 				}
 			}
 		}

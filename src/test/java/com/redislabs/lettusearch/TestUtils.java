@@ -10,6 +10,8 @@ import com.redislabs.lettusearch.search.field.Field;
 import com.redislabs.lettusearch.search.field.TagField;
 import com.redislabs.lettusearch.search.field.TextField;
 
+import io.lettuce.core.RedisURI;
+
 public class TestUtils extends AbstractBaseTest {
 
 	@Test
@@ -27,6 +29,13 @@ public class TestUtils extends AbstractBaseTest {
 		Assert.assertEquals(Beers.FIELD_STYLE, styleField.name());
 		Assert.assertEquals(true, styleField.sortable());
 		Assert.assertEquals(",", styleField.separator());
+	}
+
+	public void testEnterpriseFtInfo() {
+		RediSearchClient client = RediSearchClient.create(RedisURI.create("redis-15322.jrx.demo.redislabs.com", 15322));
+		RediSearchCommands<String, String> commands = client.connect().sync();
+		List<Object> indexInfo = commands.indexInfo("IDXUTSEARCH");
+		RediSearchUtils.getInfo(indexInfo);
 	}
 
 }
