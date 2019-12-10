@@ -78,7 +78,7 @@ publishing {
 
 		        scm {
 		          connection = 'scm:git:git://github.com/RediSearch/lettusearch.git'
-		          developerConnection = 'scm:git:git@github.com:RediSearcj/lettusearch.git'
+		          developerConnection = 'scm:git:git@github.com:RediSearch/lettusearch.git'
 		          url = 'https://github.com/RediSearch/lettusearch'
 		        }
 
@@ -104,10 +104,8 @@ signing {
 	sign publishing.publications.mavenJava
 }
 
-
-
 group = 'com.redislabs'
 archivesBaseName = 'lettusearch'
-version = '1.9.1'
+version = '1.9.2'
 description = 'LettuSearch'
 sourceCompatibility = '1.8'
