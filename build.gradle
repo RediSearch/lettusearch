@@ -1,28 +1,13 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.21.1"
-    }
-}
-
 plugins {
     id 'java-library'
-    id 'com.github.ben-manes.versions' version '0.27.0'
     id 'maven-publish'
-    id 'signing'
-    id 'io.codearte.nexus-staging' version '0.21.1'
+    id 'com.jfrog.bintray' version '1.8.4'
+    id 'com.github.ben-manes.versions' version '0.27.0'
 }
 
 repositories {
 	mavenCentral()
 	mavenLocal()
-}
-
-nexusStaging {
-	username = "$ossrhUsername"
-	password = "$ossrhPassword"
 }
 
 dependencies {
@@ -31,6 +16,27 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.10'
 	testImplementation 'junit:junit:4.12'
 	testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.10.1'
+}
+
+bintray {
+    user = bintrayUser
+    key = bintrayKey
+    publications = ['mavenJava']
+    pkg {
+        repo = 'maven'
+        name = 'lettusearch'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/RediSearch/lettusearch.git'
+    }
+    version {
+    	gpg {
+    		sign = true
+    	}
+    	mavenCentralSync {
+    		sync = true
+    	}
+    }
+    publish = true
 }
 
 task sourcesJar(type: Jar) {
@@ -48,19 +54,6 @@ artifacts {
 }
 
 publishing {
-    
-    repositories {
-        maven {
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            credentials {
-                username = "$ossrhUsername"
-                password = "$ossrhPassword"
-            }
-        }
-    }
-    
     publications {
         mavenJava(MavenPublication) {
             groupId 'com.redislabs'
@@ -100,12 +93,8 @@ publishing {
     }
 }
 
-signing {
-	sign publishing.publications.mavenJava
-}
-
 group = 'com.redislabs'
 archivesBaseName = 'lettusearch'
-version = '1.9.2'
+version = '1.9.3'
 description = 'LettuSearch'
 sourceCompatibility = '1.8'
