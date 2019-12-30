@@ -1,6 +1,5 @@
 package com.redislabs.lettusearch;
 
-import java.util.List;
 import java.util.Map;
 
 import com.redislabs.lettusearch.aggregate.AggregateOptions;
@@ -74,8 +73,8 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<List<Object>> indexInfo(String index) {
-		return createMono(() -> commandBuilder.info(index));
+	public Flux<Object> indexInfo(String index) {
+		return createDissolvingFlux(() -> commandBuilder.info(index));
 	}
 
 	@Override
@@ -84,8 +83,8 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<List<Map<K, V>>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds) {
-		return createMono(() -> commandBuilder.mget(index, docIds));
+	public Flux<Map<K, V>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds) {
+		return createDissolvingFlux(() -> commandBuilder.mget(index, docIds));
 	}
 
 	@Override

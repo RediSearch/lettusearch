@@ -18,6 +18,9 @@ import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResult;
 import com.redislabs.lettusearch.search.SearchResults;
 
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
+
 public class TestSearch extends AbstractBaseTest {
 
 	@Test
@@ -43,11 +46,14 @@ public class TestSearch extends AbstractBaseTest {
 	}
 
 	@Test
-	public void mget() {
+	public void mget() throws InterruptedException {
 		List<Map<String, String>> mapList = commands.ftMget(INDEX, "1836", "1837", "292929292");
 		Assert.assertEquals(3, mapList.size());
 		Assert.assertEquals("Widmer Brothers Hefeweizen", mapList.get(0).get(FIELD_NAME));
 		Assert.assertEquals("Hefe Black", mapList.get(1).get(FIELD_NAME));
+		Flux<Map<String, String>> source = connection.reactive().ftMget(INDEX, "1836", "1837");
+		StepVerifier.create(source).expectNextMatches(beer -> beer.get(FIELD_NAME).equals("Widmer Brothers Hefeweizen"))
+				.expectNextMatches(beer -> beer.get(FIELD_NAME).equals("Hefe Black")).expectComplete().verify();
 	}
 
 	@Test

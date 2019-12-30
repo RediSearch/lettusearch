@@ -1,6 +1,5 @@
 package com.redislabs.lettusearch.search.api.reactive;
 
-import java.util.List;
 import java.util.Map;
 
 import com.redislabs.lettusearch.aggregate.AggregateOptions;
@@ -15,6 +14,7 @@ import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.field.FieldOptions;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -35,7 +35,7 @@ public interface SearchReactiveCommands<K, V> {
 
 	Mono<String> drop(String index, DropOptions options);
 
-	Mono<List<Object>> indexInfo(String index);
+	Flux<Object> indexInfo(String index);
 
 	Mono<String> alter(String index, K field, FieldOptions options);
 
@@ -49,7 +49,7 @@ public interface SearchReactiveCommands<K, V> {
 
 	Mono<Map<K, V>> get(String index, K docId);
 
-	Mono<List<Map<K, V>>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds);
+	Flux<Map<K, V>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds);
 
 	Mono<Boolean> del(String index, K docId, boolean deleteDoc);
 
