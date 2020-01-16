@@ -5,17 +5,8 @@ import static com.redislabs.lettusearch.protocol.CommandKeyword.COUNT_DISTINCTIS
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
-@EqualsAndHashCode(callSuper = true)
-@Accessors(fluent = true)
-@SuperBuilder
-@NoArgsConstructor
-public @Data class CountDistinctish extends AbstractPropertyReducer {
+public class CountDistinctish extends AbstractPropertyReducer {
 
 	@Builder
 	private CountDistinctish(String as, String property) {

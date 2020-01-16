@@ -5,15 +5,8 @@ import static com.redislabs.lettusearch.protocol.CommandKeyword.SUM;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
-@EqualsAndHashCode(callSuper = true)
-@Accessors(fluent = true)
-@SuperBuilder
-public @Data class Sum extends AbstractPropertyReducer {
+public class Sum extends AbstractPropertyReducer {
 
 	@Builder
 	private Sum(String as, String property) {

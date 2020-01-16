@@ -5,15 +5,8 @@ import static com.redislabs.lettusearch.protocol.CommandKeyword.STDDEV;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
-@EqualsAndHashCode(callSuper = true)
-@Accessors(fluent = true)
-@SuperBuilder
-public @Data class StdDev extends AbstractPropertyReducer {
+public class StdDev extends AbstractPropertyReducer {
 
 	@Builder
 	private StdDev(String as, String property) {

@@ -5,13 +5,7 @@ import static com.redislabs.lettusearch.protocol.CommandKeyword.AVG;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
-@EqualsAndHashCode(callSuper = true)
-@Accessors(fluent = true)
-@SuperBuilder
 public class Avg extends AbstractPropertyReducer {
 
 	@Builder

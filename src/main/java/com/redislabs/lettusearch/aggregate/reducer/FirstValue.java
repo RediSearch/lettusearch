@@ -8,15 +8,14 @@ import static com.redislabs.lettusearch.protocol.CommandKeyword.FIRST_VALUE;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Accessors(fluent = true)
-@SuperBuilder
-public @Data class FirstValue extends AbstractPropertyReducer {
+public @Getter @Setter class FirstValue extends AbstractPropertyReducer {
 
 	private By by;
 

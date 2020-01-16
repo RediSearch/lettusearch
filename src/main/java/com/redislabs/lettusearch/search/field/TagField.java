@@ -6,21 +6,21 @@ import static com.redislabs.lettusearch.protocol.CommandKeyword.TAG;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Accessors(fluent = true)
-@SuperBuilder
-public @Data class TagField extends Field {
+public @Getter @Setter class TagField extends Field {
 
 	private String separator;
 
 	@Builder
-	private TagField(String name) {
+	private TagField(String name, String separator) {
 		super(name);
+		this.separator = separator;
 	}
 
 	@Override

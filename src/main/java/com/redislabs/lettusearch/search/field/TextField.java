@@ -8,15 +8,14 @@ import static com.redislabs.lettusearch.protocol.CommandKeyword.WEIGHT;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Accessors(fluent = true)
-@SuperBuilder
-public @Data class TextField extends Field {
+public @Getter @Setter class TextField extends Field {
 
 	private Double weight;
 	private boolean noStem;

@@ -3,18 +3,15 @@ package com.redislabs.lettusearch.aggregate.reducer;
 import com.redislabs.lettusearch.aggregate.Reducer;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
-@EqualsAndHashCode(callSuper = true)
 @Accessors(fluent = true)
-@SuperBuilder
-@NoArgsConstructor
-public abstract @Data class AbstractPropertyReducer extends Reducer {
+public abstract class AbstractPropertyReducer extends Reducer {
 
+	@Getter
+	@Setter
 	private String property;
 
 	protected AbstractPropertyReducer(String as, String property) {

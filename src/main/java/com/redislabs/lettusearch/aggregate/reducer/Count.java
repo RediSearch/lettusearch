@@ -6,17 +6,11 @@ import com.redislabs.lettusearch.aggregate.Reducer;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
-@EqualsAndHashCode(callSuper = true)
-@Accessors(fluent = true)
-@SuperBuilder
 public class Count extends Reducer {
 
 	@Builder
-	public Count(String as) {
+	private Count(String as) {
 		super(as);
 	}
 

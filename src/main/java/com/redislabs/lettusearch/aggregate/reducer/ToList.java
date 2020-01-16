@@ -5,15 +5,8 @@ import static com.redislabs.lettusearch.protocol.CommandKeyword.TOLIST;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
-@EqualsAndHashCode(callSuper = true)
-@Accessors(fluent = true)
-@SuperBuilder
-public @Data class ToList extends AbstractPropertyReducer {
+public class ToList extends AbstractPropertyReducer {
 
 	@Builder
 	private ToList(String as, String property) {

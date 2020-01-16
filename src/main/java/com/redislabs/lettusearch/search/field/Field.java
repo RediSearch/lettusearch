@@ -7,15 +7,14 @@ import com.redislabs.lettusearch.RediSearchArgument;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import io.lettuce.core.internal.LettuceAssert;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 @Accessors(fluent = true)
-@SuperBuilder
-@NoArgsConstructor
-public abstract @Data class Field implements RediSearchArgument {
+@AllArgsConstructor
+public abstract @Getter @Setter class Field implements RediSearchArgument {
 
 	static final String MUST_NOT_BE_EMPTY = "must not be empty";
 	static final String MUST_NOT_BE_NULL = "must not be null";
@@ -24,7 +23,7 @@ public abstract @Data class Field implements RediSearchArgument {
 	private boolean sortable;
 	private boolean noIndex;
 
-	protected Field(String name) {
+	public Field(String name) {
 		this.name = name;
 	}
 

@@ -7,17 +7,16 @@ import com.redislabs.lettusearch.RediSearchArgument;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
 @Accessors(fluent = true)
-@SuperBuilder
 @AllArgsConstructor
-@NoArgsConstructor
-public abstract @Data class Reducer implements RediSearchArgument {
+public abstract class Reducer implements RediSearchArgument {
 
+	@Getter
+	@Setter
 	private String as;
 
 	@Override

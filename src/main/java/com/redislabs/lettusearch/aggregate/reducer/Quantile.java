@@ -5,15 +5,12 @@ import static com.redislabs.lettusearch.protocol.CommandKeyword.QUANTILE;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
-@EqualsAndHashCode(callSuper = true)
 @Accessors(fluent = true)
-@SuperBuilder
-public @Data class Quantile extends AbstractPropertyReducer {
+public @Getter @Setter class Quantile extends AbstractPropertyReducer {
 
 	private double quantile;
 
