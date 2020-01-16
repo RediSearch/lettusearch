@@ -9,42 +9,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.redislabs.lettusearch.RediSearchUtils.IndexInfo.IndexInfoBuilder;
+import com.redislabs.lettusearch.index.IndexInfo;
 import com.redislabs.lettusearch.protocol.CommandKeyword;
 import com.redislabs.lettusearch.search.field.Field;
 import com.redislabs.lettusearch.search.field.TextField;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.experimental.Accessors;
-
 public class RediSearchUtils {
 
 	private final static Long ZERO = 0l;
-
-	@Accessors(fluent = true)
-	@Builder
-	public static @Data class IndexInfo {
-		private String indexName;
-		private Long numDocs;
-		private List<Object> indexOptions;
-		private List<Field> fields;
-		private String maxDocId;
-		private Long numTerms;
-		private Long numRecords;
-		private Double invertedSizeMb;
-		private Long totalInvertedIndexBlocks;
-		private Double offsetVectorsSizeMb;
-		private Double docTableSizeMb;
-		private Double sortableValuesSizeMb;
-		private Double keyTableSizeMb;
-		private Double recordsPerDocAvg;
-		private Double bytesPerRecordAvg;
-		private Double offsetsPerTermAvg;
-		private Double offsetBitsPerRecordAvg;
-		private List<Object> gcStats;
-		private List<Object> cursorStats;
-	}
 
 	@SuppressWarnings("unchecked")
 	public static IndexInfo getInfo(List<Object> infoList) {
@@ -52,27 +24,22 @@ public class RediSearchUtils {
 		for (int i = 0; i < (infoList.size() / 2); i++) {
 			map.put((String) infoList.get(i * 2), infoList.get(i * 2 + 1));
 		}
-		IndexInfoBuilder info = IndexInfo.builder();
-		info.indexName(getString(map.get("index_name")));
-		info.indexOptions((List<Object>) map.get("index_options"));
-		info.fields(fields(map.get("fields")));
-		info.numDocs(getLong(map, "num_docs"));
-		info.maxDocId(getString(map.get("max_doc_id")));
-		info.numTerms(getLong(map, "num_terms"));
-		info.numRecords(getLong(map, "num_records"));
-		info.invertedSizeMb(getDouble(map, "inverted_sz_mb"));
-		info.totalInvertedIndexBlocks(getLong(map, "total_inverted_index_blocks"));
-		info.offsetVectorsSizeMb(getDouble(map, "offset_vectors_sz_mb"));
-		info.docTableSizeMb(getDouble(map, "doc_table_size_mb"));
-		info.sortableValuesSizeMb(getDouble(map, "sortable_values_size_mb"));
-		info.keyTableSizeMb(getDouble(map, "key_table_size_mb"));
-		info.recordsPerDocAvg(getDouble(map, "records_per_doc_avg"));
-		info.bytesPerRecordAvg(getDouble(map, "bytes_per_record_avg"));
-		info.offsetsPerTermAvg(getDouble(map, "offsets_per_term_avg"));
-		info.offsetBitsPerRecordAvg(getDouble(map, "offset_bits_per_record_avg"));
-		info.gcStats((List<Object>) map.get("gc_stats"));
-		info.cursorStats((List<Object>) map.get("cursor_stats"));
-		return info.build();
+		return IndexInfo.builder().indexName(getString(map.get("index_name")))
+				.indexOptions((List<Object>) map.get("index_options")).fields(fields(map.get("fields")))
+				.numDocs(getLong(map, "num_docs")).maxDocId(getString(map.get("max_doc_id")))
+				.numTerms(getLong(map, "num_terms")).numRecords(getLong(map, "num_records"))
+				.invertedSizeMb(getDouble(map, "inverted_sz_mb"))
+				.totalInvertedIndexBlocks(getLong(map, "total_inverted_index_blocks"))
+				.offsetVectorsSizeMb(getDouble(map, "offset_vectors_sz_mb"))
+				.docTableSizeMb(getDouble(map, "doc_table_size_mb"))
+				.sortableValuesSizeMb(getDouble(map, "sortable_values_size_mb"))
+				.keyTableSizeMb(getDouble(map, "key_table_size_mb"))
+				.recordsPerDocAvg(getDouble(map, "records_per_doc_avg"))
+				.bytesPerRecordAvg(getDouble(map, "bytes_per_record_avg"))
+				.offsetsPerTermAvg(getDouble(map, "offsets_per_term_avg"))
+				.offsetBitsPerRecordAvg(getDouble(map, "offset_bits_per_record_avg"))
+				.gcStats((List<Object>) map.get("gc_stats")).cursorStats((List<Object>) map.get("cursor_stats"))
+				.build();
 	}
 
 	private static String getString(Object object) {

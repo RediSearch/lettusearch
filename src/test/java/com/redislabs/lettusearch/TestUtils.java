@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.redislabs.lettusearch.RediSearchUtils.IndexInfo;
+import com.redislabs.lettusearch.index.IndexInfo;
 import com.redislabs.lettusearch.search.field.Field;
 import com.redislabs.lettusearch.search.field.TagField;
 import com.redislabs.lettusearch.search.field.TextField;
