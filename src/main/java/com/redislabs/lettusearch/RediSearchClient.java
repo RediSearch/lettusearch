@@ -11,7 +11,8 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Supplier;
 
-import com.redislabs.lettusearch.sentinel.StatefulRediSearchSentinelConnectionImpl;
+import com.redislabs.lettusearch.impl.StatefulRediSearchConnectionImpl;
+import com.redislabs.lettusearch.impl.StatefulRediSearchSentinelConnectionImpl;
 import com.redislabs.lettusearch.sentinel.api.StatefulRediSearchSentinelConnection;
 
 import io.lettuce.core.AbstractRedisClient;

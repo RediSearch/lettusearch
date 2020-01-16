@@ -10,16 +10,33 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
+
+import redis.embedded.RedisExecProvider;
+import redis.embedded.RedisServer;
+import redis.embedded.util.OS;
 
 public abstract class AbstractBaseTest {
 
 	protected final static String SUGINDEX = "beersSug";
 
+	private static RedisServer server;
+
 	private RediSearchClient client;
 	protected StatefulRediSearchConnection<String, String> connection;
 	protected List<Map<String, String>> beers;
 	protected RediSearchCommands<String, String> commands;
+
+	@BeforeClass
+	public static void setupRedis() throws IOException {
+		RedisExecProvider provider = RedisExecProvider.defaultProvider().override(OS.MAC_OS_X,
+				"/usr/local/bin/redis-server");
+		server = RedisServer.builder().redisExecProvider(provider)
+				.setting("loadmodule /Users/jruaux/git/RediSearch/build/redisearch.so").build();
+		server.start();
+	}
 
 	@Before
 	public void setup() throws IOException {
@@ -42,6 +59,13 @@ public abstract class AbstractBaseTest {
 		}
 		if (client != null) {
 			client.shutdown();
+		}
+	}
+
+	@AfterClass
+	public static void teardownRedis() {
+		if (server != null) {
+			server.stop();
 		}
 	}
 

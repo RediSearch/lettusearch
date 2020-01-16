@@ -25,7 +25,8 @@ public class TestIndexCRUD extends AbstractBaseTest {
 	@Test
 	public void testTemporaryIndex() throws InterruptedException {
 		String indexName = "temporaryIndex";
-		commands.create(indexName, new Schema().field(Field.text("field1")), new CreateOptions().temporary(1l));
+		commands.create(indexName, Schema.builder().field(Field.text("field1")).build(),
+				CreateOptions.builder().temporary(1l).build());
 		List<Object> info = commands.indexInfo(indexName);
 		Assert.assertEquals(indexName, info.get(1));
 		Thread.sleep(1001);
@@ -40,7 +41,7 @@ public class TestIndexCRUD extends AbstractBaseTest {
 
 	@Test
 	public void testDrop() {
-		commands.drop(INDEX, new DropOptions().keepDocs(false));
+		commands.drop(INDEX, DropOptions.builder().keepDocs(false).build());
 		Map<String, String> fields = new HashMap<>();
 		fields.put("field1", "value1");
 		try {
@@ -53,7 +54,7 @@ public class TestIndexCRUD extends AbstractBaseTest {
 
 	@Test
 	public void testAlter() {
-		commands.alter(INDEX, "newField", new FieldOptions().type(FieldType.Tag));
+		commands.alter(INDEX, "newField", FieldOptions.builder().type(FieldType.Tag).build());
 		Map<String, String> fields = new HashMap<>();
 		fields.put("newField", "value1");
 		commands.add(INDEX, "newDocId", 1, fields);

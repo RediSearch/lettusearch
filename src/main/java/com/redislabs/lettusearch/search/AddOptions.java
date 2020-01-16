@@ -1,18 +1,20 @@
 package com.redislabs.lettusearch.search;
 
-import static com.redislabs.lettusearch.CommandKeyword.IF;
-import static com.redislabs.lettusearch.CommandKeyword.LANGUAGE;
-import static com.redislabs.lettusearch.CommandKeyword.NOSAVE;
-import static com.redislabs.lettusearch.CommandKeyword.PARTIAL;
-import static com.redislabs.lettusearch.CommandKeyword.REPLACE;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.IF;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.LANGUAGE;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NOSAVE;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.PARTIAL;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.REPLACE;
 
 import com.redislabs.lettusearch.RediSearchArgument;
-import com.redislabs.lettusearch.RediSearchCommandArgs;
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Accessors(fluent = true)
+@Builder
 public @Data class AddOptions implements RediSearchArgument {
 
 	private boolean noSave;

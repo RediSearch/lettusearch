@@ -1,12 +1,22 @@
 package com.redislabs.lettusearch.search.field;
 
-import static com.redislabs.lettusearch.CommandKeyword.NUMERIC;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NUMERIC;
 
-import com.redislabs.lettusearch.RediSearchCommandArgs;
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
-public class NumericField extends Field {
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
-	public NumericField(String name) {
+@EqualsAndHashCode(callSuper = true)
+@Accessors(fluent = true)
+@SuperBuilder
+public @Data class NumericField extends Field {
+
+	@Builder
+	private NumericField(String name) {
 		super(name);
 	}
 

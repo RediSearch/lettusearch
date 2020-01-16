@@ -1,21 +1,25 @@
 package com.redislabs.lettusearch.search.field;
 
-import static com.redislabs.lettusearch.CommandKeyword.NOINDEX;
-import static com.redislabs.lettusearch.CommandKeyword.NOSTEM;
-import static com.redislabs.lettusearch.CommandKeyword.PHONETIC;
-import static com.redislabs.lettusearch.CommandKeyword.SEPARATOR;
-import static com.redislabs.lettusearch.CommandKeyword.SORTABLE;
-import static com.redislabs.lettusearch.CommandKeyword.WEIGHT;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NOINDEX;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NOSTEM;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.PHONETIC;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.SEPARATOR;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.SORTABLE;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.WEIGHT;
 
 import com.redislabs.lettusearch.RediSearchArgument;
-import com.redislabs.lettusearch.RediSearchCommandArgs;
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
+import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Accessors(fluent = true)
+@Builder
 public @Data class FieldOptions implements RediSearchArgument {
 
+	@Default
 	private FieldType type = FieldType.Text;
 	private boolean sortable;
 	private boolean noIndex;

@@ -1,50 +1,47 @@
 package com.redislabs.lettusearch.search.field;
 
-import static com.redislabs.lettusearch.CommandKeyword.NOINDEX;
-import static com.redislabs.lettusearch.CommandKeyword.SORTABLE;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NOINDEX;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.SORTABLE;
 
 import com.redislabs.lettusearch.RediSearchArgument;
-import com.redislabs.lettusearch.RediSearchCommandArgs;
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import io.lettuce.core.internal.LettuceAssert;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 @Accessors(fluent = true)
-public abstract class Field implements RediSearchArgument {
+@SuperBuilder
+@NoArgsConstructor
+public abstract @Data class Field implements RediSearchArgument {
 
 	static final String MUST_NOT_BE_EMPTY = "must not be empty";
 	static final String MUST_NOT_BE_NULL = "must not be null";
 
-	@Getter
 	private String name;
-	@Getter
-	@Setter
 	private boolean sortable;
-	@Getter
-	@Setter
 	private boolean noIndex;
 
 	protected Field(String name) {
-		super();
 		this.name = name;
 	}
 
 	public static TextField text(String name) {
-		return new TextField(name);
+		return TextField.builder().name(name).build();
 	}
 
 	public static GeoField geo(String name) {
-		return new GeoField(name);
+		return GeoField.builder().name(name).build();
 	}
 
 	public static NumericField numeric(String name) {
-		return new NumericField(name);
+		return NumericField.builder().name(name).build();
 	}
 
 	public static TagField tag(String name) {
-		return new TagField(name);
+		return TagField.builder().name(name).build();
 	}
 
 	@Override

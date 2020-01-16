@@ -15,10 +15,6 @@
  */
 package com.redislabs.lettusearch.sentinel.api;
 
-import com.redislabs.lettusearch.sentinel.api.async.RediSearchSentinelAsyncCommands;
-import com.redislabs.lettusearch.sentinel.api.reactive.RediSearchSentinelReactiveCommands;
-import com.redislabs.lettusearch.sentinel.api.sync.RediSearchSentinelCommands;
-
 import io.lettuce.core.protocol.ConnectionWatchdog;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
 

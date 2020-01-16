@@ -1,11 +1,11 @@
 package com.redislabs.lettusearch.search.field;
 
-import static com.redislabs.lettusearch.CommandKeyword.GEO;
-import static com.redislabs.lettusearch.CommandKeyword.NUMERIC;
-import static com.redislabs.lettusearch.CommandKeyword.TAG;
-import static com.redislabs.lettusearch.CommandKeyword.TEXT;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.GEO;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NUMERIC;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.TAG;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.TEXT;
 
-import com.redislabs.lettusearch.CommandKeyword;
+import com.redislabs.lettusearch.protocol.CommandKeyword;
 
 public enum FieldType {
 

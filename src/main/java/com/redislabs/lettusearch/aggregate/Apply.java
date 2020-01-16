@@ -1,14 +1,16 @@
 package com.redislabs.lettusearch.aggregate;
 
-import static com.redislabs.lettusearch.CommandKeyword.APPLY;
-import static com.redislabs.lettusearch.CommandKeyword.AS;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.APPLY;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.AS;
 
-import com.redislabs.lettusearch.RediSearchCommandArgs;
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Accessors(fluent = true)
+@Builder
 public @Data class Apply implements Operation {
 
 	private String expression;

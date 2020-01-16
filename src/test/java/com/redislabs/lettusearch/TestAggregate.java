@@ -25,7 +25,7 @@ public class TestAggregate extends AbstractBaseTest {
 	@Test
 	public void testAggregateLoad() {
 		AggregateResults<String, String> results = commands.aggregate(INDEX, "*",
-				new AggregateOptions().load(FIELD_NAME).load(FIELD_STYLE));
+				AggregateOptions.builder().load(FIELD_NAME).load(FIELD_STYLE).build());
 		assertEquals(1, results.count());
 		assertEquals(beers.size(), results.size());
 		for (int index = 0; index < beers.size(); index++) {
@@ -40,10 +40,12 @@ public class TestAggregate extends AbstractBaseTest {
 
 	@Test
 	public void testAggregateGroup() {
-		AggregateResults<String, String> results = commands.aggregate(INDEX, "*", new AggregateOptions()
-				.operation(new Group().property(FIELD_STYLE).reducer(new Avg().property(FIELD_ABV).as(FIELD_ABV)))
-				.operation(new Sort().property(new SortProperty().property(FIELD_ABV).order(Order.Desc)))
-				.operation(new Limit().num(20).offset(0)));
+		AggregateResults<String, String> results = commands.aggregate(INDEX, "*", AggregateOptions.builder()
+				.operation(Group.builder().property(FIELD_STYLE)
+						.reducer(Avg.builder().property(FIELD_ABV).as(FIELD_ABV).build()).build())
+				.operation(Sort.builder().property(SortProperty.builder().property(FIELD_ABV).order(Order.Desc).build())
+						.build())
+				.operation(Limit.builder().num(20).offset(0).build()).build());
 		assertEquals(100, results.count());
 		assertEquals(20, results.size());
 	}
@@ -51,7 +53,8 @@ public class TestAggregate extends AbstractBaseTest {
 	@Test
 	public void testAggregateWithCursor() {
 		AggregateWithCursorResults<String, String> results = commands.aggregate(INDEX, "*",
-				new AggregateOptions().load(FIELD_ID).load(FIELD_NAME).load(FIELD_ABV), new CursorOptions());
+				AggregateOptions.builder().load(FIELD_ID).load(FIELD_NAME).load(FIELD_ABV).build(),
+				CursorOptions.builder().build());
 		assertEquals(1, results.count());
 		assertEquals(1000, results.size());
 		assertEquals("harpoon ipa (2010)", results.get(999).get("name").toLowerCase());

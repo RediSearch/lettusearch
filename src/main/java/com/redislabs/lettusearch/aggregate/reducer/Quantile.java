@@ -1,23 +1,29 @@
 package com.redislabs.lettusearch.aggregate.reducer;
 
-import static com.redislabs.lettusearch.CommandKeyword.QUANTILE;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.QUANTILE;
 
-import com.redislabs.lettusearch.RediSearchCommandArgs;
-import com.redislabs.lettusearch.aggregate.Reducer;
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Accessors(fluent = true)
-public @Data class Quantile extends Reducer {
+@SuperBuilder
+public @Data class Quantile extends AbstractPropertyReducer {
 
-	private final String property;
-	private final double quantile;
+	private double quantile;
+
+	@Builder
+	private Quantile(String as, String property) {
+		super(as, property);
+	}
 
 	@Override
-	protected <K, V> void buildFunction(RediSearchCommandArgs<K, V> args) {
+	protected <K, V> void buildFunction(RediSearchCommandArgs<K, V> args, String property) {
 		args.add(QUANTILE);
 		args.add(2);
 		args.addProperty(property);

@@ -1,22 +1,25 @@
 package com.redislabs.lettusearch.search.field;
 
-import static com.redislabs.lettusearch.CommandKeyword.SEPARATOR;
-import static com.redislabs.lettusearch.CommandKeyword.TAG;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.SEPARATOR;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.TAG;
 
-import com.redislabs.lettusearch.RediSearchCommandArgs;
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
+@EqualsAndHashCode(callSuper = true)
 @Accessors(fluent = true)
-public class TagField extends Field {
+@SuperBuilder
+public @Data class TagField extends Field {
 
-	@Getter
-	@Setter
 	private String separator;
 
-	public TagField(String name) {
+	@Builder
+	private TagField(String name) {
 		super(name);
 	}
 

@@ -1,17 +1,20 @@
 package com.redislabs.lettusearch;
 
-import static com.redislabs.lettusearch.CommandKeyword.NOINDEX;
-import static com.redislabs.lettusearch.CommandKeyword.NOSTEM;
-import static com.redislabs.lettusearch.CommandKeyword.SORTABLE;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NOINDEX;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NOSTEM;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.SORTABLE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.redislabs.lettusearch.RediSearchUtils.IndexInfo.IndexInfoBuilder;
+import com.redislabs.lettusearch.protocol.CommandKeyword;
 import com.redislabs.lettusearch.search.field.Field;
 import com.redislabs.lettusearch.search.field.TextField;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -20,6 +23,7 @@ public class RediSearchUtils {
 	private final static Long ZERO = 0l;
 
 	@Accessors(fluent = true)
+	@Builder
 	public static @Data class IndexInfo {
 		private String indexName;
 		private Long numDocs;
@@ -48,7 +52,7 @@ public class RediSearchUtils {
 		for (int i = 0; i < (infoList.size() / 2); i++) {
 			map.put((String) infoList.get(i * 2), infoList.get(i * 2 + 1));
 		}
-		IndexInfo info = new IndexInfo();
+		IndexInfoBuilder info = IndexInfo.builder();
 		info.indexName(getString(map.get("index_name")));
 		info.indexOptions((List<Object>) map.get("index_options"));
 		info.fields(fields(map.get("fields")));
@@ -68,7 +72,7 @@ public class RediSearchUtils {
 		info.offsetBitsPerRecordAvg(getDouble(map, "offset_bits_per_record_avg"));
 		info.gcStats((List<Object>) map.get("gc_stats"));
 		info.cursorStats((List<Object>) map.get("cursor_stats"));
-		return info;
+		return info.build();
 	}
 
 	private static String getString(Object object) {

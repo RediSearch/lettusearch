@@ -1,31 +1,33 @@
 package com.redislabs.lettusearch.search.field;
 
-import static com.redislabs.lettusearch.CommandKeyword.NOSTEM;
-import static com.redislabs.lettusearch.CommandKeyword.PHONETIC;
-import static com.redislabs.lettusearch.CommandKeyword.TEXT;
-import static com.redislabs.lettusearch.CommandKeyword.WEIGHT;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NOSTEM;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.PHONETIC;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.TEXT;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.WEIGHT;
 
-import com.redislabs.lettusearch.RediSearchCommandArgs;
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
+@EqualsAndHashCode(callSuper = true)
 @Accessors(fluent = true)
-public class TextField extends Field {
+@SuperBuilder
+public @Data class TextField extends Field {
 
-	@Getter
-	@Setter
 	private Double weight;
-	@Getter
-	@Setter
 	private boolean noStem;
-	@Getter
-	@Setter
 	private PhoneticMatcher matcher;
 
-	public TextField(String name) {
+	@Builder
+	private TextField(String name, double weight, boolean noStem, PhoneticMatcher matcher) {
 		super(name);
+		this.weight = weight;
+		this.noStem = noStem;
+		this.matcher = matcher;
 	}
 
 	@Override

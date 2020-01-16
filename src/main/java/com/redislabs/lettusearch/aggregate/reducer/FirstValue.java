@@ -1,26 +1,33 @@
 package com.redislabs.lettusearch.aggregate.reducer;
 
-import static com.redislabs.lettusearch.CommandKeyword.ASC;
-import static com.redislabs.lettusearch.CommandKeyword.BY;
-import static com.redislabs.lettusearch.CommandKeyword.DESC;
-import static com.redislabs.lettusearch.CommandKeyword.FIRST_VALUE;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.ASC;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.BY;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.DESC;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.FIRST_VALUE;
 
-import com.redislabs.lettusearch.RediSearchCommandArgs;
-import com.redislabs.lettusearch.aggregate.Reducer;
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
 @Accessors(fluent = true)
-public @Data class FirstValue extends Reducer {
+@SuperBuilder
+public @Data class FirstValue extends AbstractPropertyReducer {
 
-	private final String property;
-	private final By by;
+	private By by;
+
+	@Builder
+	private FirstValue(String as, String property, By by) {
+		super(as, property);
+		this.by = by;
+	}
 
 	@Override
-	protected <K, V> void buildFunction(RediSearchCommandArgs<K, V> args) {
+	protected <K, V> void buildFunction(RediSearchCommandArgs<K, V> args, String property) {
 		args.add(FIRST_VALUE);
 		args.add(getNumberOfArgs());
 		args.addProperty(property);

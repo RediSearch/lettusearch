@@ -1,27 +1,29 @@
 package com.redislabs.lettusearch.search;
 
-import static com.redislabs.lettusearch.CommandKeyword.HIGHLIGHT;
-import static com.redislabs.lettusearch.CommandKeyword.INFIELDS;
-import static com.redislabs.lettusearch.CommandKeyword.LANGUAGE;
-import static com.redislabs.lettusearch.CommandKeyword.NOCONTENT;
-import static com.redislabs.lettusearch.CommandKeyword.NOSTOPWORDS;
-import static com.redislabs.lettusearch.CommandKeyword.RETURN;
-import static com.redislabs.lettusearch.CommandKeyword.SORTBY;
-import static com.redislabs.lettusearch.CommandKeyword.VERBATIM;
-import static com.redislabs.lettusearch.CommandKeyword.WITHPAYLOADS;
-import static com.redislabs.lettusearch.CommandKeyword.WITHSCORES;
-import static com.redislabs.lettusearch.CommandKeyword.WITHSORTKEYS;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.HIGHLIGHT;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.INFIELDS;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.LANGUAGE;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NOCONTENT;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NOSTOPWORDS;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.RETURN;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.SORTBY;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.VERBATIM;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.WITHPAYLOADS;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.WITHSCORES;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.WITHSORTKEYS;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.redislabs.lettusearch.RediSearchArgument;
-import com.redislabs.lettusearch.RediSearchCommandArgs;
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.Singular;
 import lombok.experimental.Accessors;
 
 @Accessors(fluent = true)
+@Builder
 public @Data class SearchOptions implements RediSearchArgument {
 
 	private boolean noContent;
@@ -30,22 +32,14 @@ public @Data class SearchOptions implements RediSearchArgument {
 	private boolean withScores;
 	private boolean withPayloads;
 	private boolean withSortKeys;
-	private List<String> inFields = new ArrayList<>();
-	private List<String> returnFields = new ArrayList<>();
+	@Singular
+	private List<String> inFields;
+	@Singular
+	private List<String> returnFields;
 	private HighlightOptions highlight;
 	private String language;
 	private SortBy sortBy;
 	private Limit limit;
-	
-	public SearchOptions inField(String inField) {
-		inFields.add(inField);
-		return this;
-	}
-	
-	public SearchOptions returnField(String returnField) {
-		returnFields.add(returnField);
-		return this;
-	}
 
 	@Override
 	public <K, V> void build(RediSearchCommandArgs<K, V> args) {

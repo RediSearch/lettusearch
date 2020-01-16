@@ -20,7 +20,7 @@ public class TestSuggestion extends AbstractBaseTest {
 	@Test
 	public void testSuggestions() {
 		List<SuggestResult<String>> results = commands.sugget(SUGINDEX, "Ame",
-				new SuggestGetOptions().max(1000l).withScores(true));
+				SuggestGetOptions.builder().max(1000l).withScores(true).build());
 		Assert.assertEquals(8, results.size());
 		Assert.assertEquals("American Hero", results.get(0).getString());
 	}
@@ -29,7 +29,8 @@ public class TestSuggestion extends AbstractBaseTest {
 	public void testSugdel() {
 		Boolean result = commands.sugdel(SUGINDEX, "American Hero");
 		Assert.assertTrue(result);
-		List<SuggestResult<String>> results = commands.sugget(SUGINDEX, "Ame", new SuggestGetOptions().max(1000l));
+		List<SuggestResult<String>> results = commands.sugget(SUGINDEX, "Ame",
+				SuggestGetOptions.builder().max(1000l).build());
 		Assert.assertEquals(7, results.size());
 	}
 

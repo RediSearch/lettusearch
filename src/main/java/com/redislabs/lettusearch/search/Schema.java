@@ -1,21 +1,27 @@
 package com.redislabs.lettusearch.search;
 
-import static com.redislabs.lettusearch.CommandKeyword.SCHEMA;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.SCHEMA;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.redislabs.lettusearch.RediSearchArgument;
-import com.redislabs.lettusearch.RediSearchCommandArgs;
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 import com.redislabs.lettusearch.search.field.Field;
 
 import io.lettuce.core.internal.LettuceAssert;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Singular;
+import lombok.experimental.Accessors;
 
-public class Schema implements RediSearchArgument {
+@Accessors(fluent = true)
+@Builder
+public @Data class Schema implements RediSearchArgument {
 
 	static final String MUST_NOT_BE_EMPTY = "must not be empty";
 
-	private List<Field> fields = new ArrayList<>();
+	@Singular
+	private List<Field> fields;
 
 	public Schema field(Field field) {
 		fields.add(field);

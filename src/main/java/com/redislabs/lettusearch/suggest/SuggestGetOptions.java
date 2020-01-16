@@ -1,17 +1,19 @@
 package com.redislabs.lettusearch.suggest;
 
-import static com.redislabs.lettusearch.CommandKeyword.FUZZY;
-import static com.redislabs.lettusearch.CommandKeyword.MAX;
-import static com.redislabs.lettusearch.CommandKeyword.WITHPAYLOADS;
-import static com.redislabs.lettusearch.CommandKeyword.WITHSCORES;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.FUZZY;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.MAX;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.WITHPAYLOADS;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.WITHSCORES;
 
 import com.redislabs.lettusearch.RediSearchArgument;
-import com.redislabs.lettusearch.RediSearchCommandArgs;
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Accessors(fluent = true)
+@Builder
 public @Data class SuggestGetOptions implements RediSearchArgument {
 
 	private boolean fuzzy;

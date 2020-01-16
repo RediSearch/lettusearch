@@ -1,15 +1,17 @@
 package com.redislabs.lettusearch.aggregate;
 
-import static com.redislabs.lettusearch.CommandKeyword.COUNT;
-import static com.redislabs.lettusearch.CommandKeyword.MAXIDLE;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.COUNT;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.MAXIDLE;
 
 import com.redislabs.lettusearch.RediSearchArgument;
-import com.redislabs.lettusearch.RediSearchCommandArgs;
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Accessors(fluent = true)
+@Builder
 public @Data class CursorOptions implements RediSearchArgument {
 
 	private Long count;

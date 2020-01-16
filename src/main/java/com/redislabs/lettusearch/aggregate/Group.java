@@ -1,30 +1,24 @@
 package com.redislabs.lettusearch.aggregate;
 
-import static com.redislabs.lettusearch.CommandKeyword.GROUPBY;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.GROUPBY;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.redislabs.lettusearch.RediSearchCommandArgs;
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.Singular;
 import lombok.experimental.Accessors;
 
 @Accessors(fluent = true)
+@Builder
 public @Data class Group implements Operation {
 
-	private List<String> properties = new ArrayList<>();
-	private List<Reducer> reducers = new ArrayList<>();
-
-	public Group property(String property) {
-		properties.add(property);
-		return this;
-	}
-
-	public Group reducer(Reducer reducer) {
-		reducers.add(reducer);
-		return this;
-	}
+	@Singular
+	private List<String> properties;
+	@Singular
+	private List<Reducer> reducers;
 
 	@Override
 	public <K, V> void build(RediSearchCommandArgs<K, V> args) {

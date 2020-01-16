@@ -12,11 +12,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.redislabs.lettusearch.search.HighlightOptions;
-import com.redislabs.lettusearch.search.HighlightOptions.TagOptions;
 import com.redislabs.lettusearch.search.Limit;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResult;
 import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.search.TagOptions;
 
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
@@ -31,8 +31,8 @@ public class TestSearch extends AbstractBaseTest {
 
 	@Test
 	public void searchNoContent() {
-		SearchResults<String, String> results = commands.search(INDEX, "Hefeweizen",
-				new SearchOptions().withScores(true).noContent(true).limit(new Limit().num(100)));
+		SearchResults<String, String> results = commands.search(INDEX, "Hefeweizen", SearchOptions.builder()
+				.withScores(true).noContent(true).limit(Limit.builder().num(100).build()).build());
 		Assert.assertEquals(22, results.getCount());
 		Assert.assertEquals(22, results.size());
 		Assert.assertEquals("1836", results.get(0).getDocumentId());
@@ -67,7 +67,7 @@ public class TestSearch extends AbstractBaseTest {
 	@Test
 	public void searchReturn() {
 		SearchResults<String, String> results = commands.search(INDEX, "pale",
-				new SearchOptions().returnField(FIELD_NAME).returnField(FIELD_STYLE));
+				SearchOptions.builder().returnField(FIELD_NAME).returnField(FIELD_STYLE).build());
 		Assert.assertEquals(256, results.getCount());
 		SearchResult<String, String> result1 = results.get(0);
 		Assert.assertNotNull(result1.get(FIELD_NAME));
@@ -78,7 +78,7 @@ public class TestSearch extends AbstractBaseTest {
 	@Test
 	public void searchInvalidReturn() {
 		SearchResults<String, String> results = commands.search(INDEX, "pale",
-				new SearchOptions().returnField(FIELD_NAME).returnField(FIELD_STYLE).returnField(""));
+				SearchOptions.builder().returnField(FIELD_NAME).returnField(FIELD_STYLE).returnField("").build());
 		Assert.assertEquals(256, results.getCount());
 		SearchResult<String, String> result1 = results.get(0);
 		Assert.assertNotNull(result1.get(FIELD_NAME));
@@ -90,20 +90,20 @@ public class TestSearch extends AbstractBaseTest {
 	public void searchHighlight() {
 		String term = "pale";
 		String query = "@style:" + term;
-		TagOptions tagOptions = new TagOptions().open("<b>").close("</b>");
+		TagOptions tagOptions = TagOptions.builder().open("<b>").close("</b>").build();
 		SearchResults<String, String> results = commands.search(INDEX, query,
-				new SearchOptions().highlight(new HighlightOptions()));
+				SearchOptions.builder().highlight(HighlightOptions.builder().build()).build());
 		for (SearchResult<String, String> result : results) {
 			Assert.assertTrue(highlighted(result, FIELD_STYLE, tagOptions, term));
 		}
 		results = commands.search(INDEX, query,
-				new SearchOptions().highlight(new HighlightOptions().field(FIELD_NAME)));
+				SearchOptions.builder().highlight(HighlightOptions.builder().field(FIELD_NAME).build()).build());
 		for (SearchResult<String, String> result : results) {
 			Assert.assertFalse(highlighted(result, FIELD_STYLE, tagOptions, term));
 		}
-		tagOptions = new TagOptions().open("[start]").close("[end]");
-		results = commands.search(INDEX, query,
-				new SearchOptions().highlight(new HighlightOptions().field(FIELD_STYLE).tags(tagOptions)));
+		tagOptions = TagOptions.builder().open("[start]").close("[end]").build();
+		results = commands.search(INDEX, query, SearchOptions.builder()
+				.highlight(HighlightOptions.builder().field(FIELD_STYLE).tags(tagOptions).build()).build());
 		for (SearchResult<String, String> result : results) {
 			Assert.assertTrue(highlighted(result, FIELD_STYLE, tagOptions, term));
 		}

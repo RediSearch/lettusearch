@@ -1,22 +1,24 @@
 package com.redislabs.lettusearch.search;
 
-import static com.redislabs.lettusearch.CommandKeyword.MAXTEXTFIELDS;
-import static com.redislabs.lettusearch.CommandKeyword.NOFIELDS;
-import static com.redislabs.lettusearch.CommandKeyword.NOFREQS;
-import static com.redislabs.lettusearch.CommandKeyword.NOHL;
-import static com.redislabs.lettusearch.CommandKeyword.NOOFFSETS;
-import static com.redislabs.lettusearch.CommandKeyword.STOPWORDS;
-import static com.redislabs.lettusearch.CommandKeyword.TEMPORARY;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.MAXTEXTFIELDS;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NOFIELDS;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NOFREQS;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NOHL;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NOOFFSETS;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.STOPWORDS;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.TEMPORARY;
 
 import java.util.List;
 
 import com.redislabs.lettusearch.RediSearchArgument;
-import com.redislabs.lettusearch.RediSearchCommandArgs;
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Accessors(fluent = true)
+@Builder
 public @Data class CreateOptions implements RediSearchArgument {
 
 	private boolean maxTextFields;
