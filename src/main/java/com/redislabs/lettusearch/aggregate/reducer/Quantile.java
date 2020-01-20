@@ -7,9 +7,7 @@ import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
-@Accessors(fluent = true)
 public @Getter @Setter class Quantile extends AbstractPropertyReducer {
 
 	private double quantile;

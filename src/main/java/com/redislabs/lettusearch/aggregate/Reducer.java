@@ -9,14 +9,10 @@ import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
-@Accessors(fluent = true)
 @AllArgsConstructor
-public abstract class Reducer implements RediSearchArgument {
+public abstract @Getter @Setter class Reducer implements RediSearchArgument {
 
-	@Getter
-	@Setter
 	private String as;
 
 	@Override

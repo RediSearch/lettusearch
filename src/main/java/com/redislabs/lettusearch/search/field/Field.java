@@ -10,9 +10,7 @@ import io.lettuce.core.internal.LettuceAssert;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
-@Accessors(fluent = true)
 @AllArgsConstructor
 public abstract @Getter @Setter class Field implements RediSearchArgument {
 
@@ -23,7 +21,7 @@ public abstract @Getter @Setter class Field implements RediSearchArgument {
 	private boolean sortable;
 	private boolean noIndex;
 
-	public Field(String name) {
+	protected Field(String name) {
 		this.name = name;
 	}
 

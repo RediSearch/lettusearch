@@ -12,9 +12,7 @@ import io.lettuce.core.internal.LettuceAssert;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
-import lombok.experimental.Accessors;
 
-@Accessors(fluent = true)
 @Builder
 public @Data class Schema implements RediSearchArgument {
 

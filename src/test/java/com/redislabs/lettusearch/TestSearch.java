@@ -26,17 +26,17 @@ public class TestSearch extends AbstractBaseTest {
 	@Test
 	public void phoneticFields() {
 		SearchResults<String, String> results = commands.search(INDEX, "eldur");
-		Assert.assertEquals(7, results.getCount());
+		Assert.assertEquals(7, results.count());
 	}
 
 	@Test
 	public void searchNoContent() {
 		SearchResults<String, String> results = commands.search(INDEX, "Hefeweizen", SearchOptions.builder()
 				.withScores(true).noContent(true).limit(Limit.builder().num(100).build()).build());
-		Assert.assertEquals(22, results.getCount());
+		Assert.assertEquals(22, results.count());
 		Assert.assertEquals(22, results.size());
-		Assert.assertEquals("1836", results.get(0).getDocumentId());
-		Assert.assertEquals(1.2, results.get(0).getScore(), 0.000001);
+		Assert.assertEquals("1836", results.get(0).documentId());
+		Assert.assertEquals(1.2, results.get(0).score(), 0.000001);
 	}
 
 	@Test
@@ -68,7 +68,7 @@ public class TestSearch extends AbstractBaseTest {
 	public void searchReturn() {
 		SearchResults<String, String> results = commands.search(INDEX, "pale",
 				SearchOptions.builder().returnField(FIELD_NAME).returnField(FIELD_STYLE).build());
-		Assert.assertEquals(256, results.getCount());
+		Assert.assertEquals(256, results.count());
 		SearchResult<String, String> result1 = results.get(0);
 		Assert.assertNotNull(result1.get(FIELD_NAME));
 		Assert.assertNotNull(result1.get(FIELD_STYLE));
@@ -79,7 +79,7 @@ public class TestSearch extends AbstractBaseTest {
 	public void searchInvalidReturn() {
 		SearchResults<String, String> results = commands.search(INDEX, "pale",
 				SearchOptions.builder().returnField(FIELD_NAME).returnField(FIELD_STYLE).returnField("").build());
-		Assert.assertEquals(256, results.getCount());
+		Assert.assertEquals(256, results.count());
 		SearchResult<String, String> result1 = results.get(0);
 		Assert.assertNotNull(result1.get(FIELD_NAME));
 		Assert.assertNotNull(result1.get(FIELD_STYLE));

@@ -20,9 +20,7 @@ import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
-import lombok.experimental.Accessors;
 
-@Accessors(fluent = true)
 @Builder
 public @Data class SearchOptions implements RediSearchArgument {
 

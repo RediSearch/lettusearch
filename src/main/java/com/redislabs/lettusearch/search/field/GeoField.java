@@ -9,8 +9,8 @@ import lombok.Builder;
 public class GeoField extends Field {
 
 	@Builder
-	private GeoField(String name) {
-		super(name);
+	private GeoField(String name, boolean sortable, boolean noIndex) {
+		super(name, sortable, noIndex);
 	}
 
 	@Override

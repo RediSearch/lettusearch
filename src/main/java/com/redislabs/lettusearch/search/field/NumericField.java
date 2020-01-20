@@ -9,8 +9,8 @@ import lombok.Builder;
 public class NumericField extends Field {
 
 	@Builder
-	private NumericField(String name) {
-		super(name);
+	private NumericField(String name, boolean sortable, boolean noIndex) {
+		super(name, sortable, noIndex);
 	}
 
 	@Override

@@ -9,9 +9,7 @@ import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
-@Accessors(fluent = true)
 @Builder
 public @Data class SortBy implements RediSearchArgument {
 

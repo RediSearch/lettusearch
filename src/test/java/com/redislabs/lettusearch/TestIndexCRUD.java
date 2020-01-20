@@ -59,7 +59,7 @@ public class TestIndexCRUD extends AbstractBaseTest {
 		fields.put("newField", "value1");
 		commands.add(INDEX, "newDocId", 1, fields);
 		SearchResults<String, String> results = commands.search(INDEX, "@newField:{value1}");
-		Assert.assertEquals(1, results.getCount());
+		Assert.assertEquals(1, results.count());
 		Assert.assertEquals(fields.get("newField"), results.get(0).get("newField"));
 	}
 

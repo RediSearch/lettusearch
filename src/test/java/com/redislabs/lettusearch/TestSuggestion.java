@@ -14,7 +14,7 @@ public class TestSuggestion extends AbstractBaseTest {
 	@Test
 	public void testPhoneticFields() {
 		SearchResults<String, String> results = commands.search(Beers.INDEX, "pail");
-		Assert.assertEquals(256, results.getCount());
+		Assert.assertEquals(256, results.count());
 	}
 
 	@Test
@@ -22,7 +22,7 @@ public class TestSuggestion extends AbstractBaseTest {
 		List<SuggestResult<String>> results = commands.sugget(SUGINDEX, "Ame",
 				SuggestGetOptions.builder().max(1000l).withScores(true).build());
 		Assert.assertEquals(8, results.size());
-		Assert.assertEquals("American Hero", results.get(0).getString());
+		Assert.assertEquals("American Hero", results.get(0).string());
 	}
 
 	@Test

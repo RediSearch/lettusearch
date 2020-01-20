@@ -25,7 +25,7 @@ public class SearchNoContentOutput<K, V> extends CommandOutput<K, V, SearchResul
 		if (current == null) {
 			current = new SearchResult<>();
 			if (bytes != null) {
-				current.setDocumentId(codec.decodeKey(bytes));
+				current.documentId(codec.decodeKey(bytes));
 			}
 			output.add(current);
 			if (!options.withScores()) {
@@ -34,7 +34,7 @@ public class SearchNoContentOutput<K, V> extends CommandOutput<K, V, SearchResul
 		} else {
 			if (options.withScores()) {
 				if (bytes != null) {
-					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
+					current.score(LettuceStrings.toDouble(decodeAscii(bytes)));
 				}
 			}
 			current = null;
@@ -43,7 +43,7 @@ public class SearchNoContentOutput<K, V> extends CommandOutput<K, V, SearchResul
 
 	@Override
 	public void set(long integer) {
-		output.setCount(integer);
+		output.count(integer);
 	}
 
 }

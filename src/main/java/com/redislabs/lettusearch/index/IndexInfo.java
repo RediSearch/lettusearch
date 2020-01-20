@@ -5,13 +5,10 @@ import java.util.List;
 import com.redislabs.lettusearch.search.field.Field;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import lombok.Data;
 
-@Accessors(fluent = true)
 @Builder
-public @Getter @Setter class IndexInfo {
+public @Data class IndexInfo {
 	private String indexName;
 	private Long numDocs;
 	private List<Object> indexOptions;

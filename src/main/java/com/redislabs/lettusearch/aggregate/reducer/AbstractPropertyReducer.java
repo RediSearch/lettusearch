@@ -5,13 +5,9 @@ import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
-@Accessors(fluent = true)
-public abstract class AbstractPropertyReducer extends Reducer {
+public abstract @Getter @Setter class AbstractPropertyReducer extends Reducer {
 
-	@Getter
-	@Setter
 	private String property;
 
 	protected AbstractPropertyReducer(String as, String property) {

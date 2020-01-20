@@ -32,13 +32,13 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 		if (current == null) {
 			current = new SearchResult<>();
 			if (bytes != null) {
-				current.setDocumentId(codec.decodeKey(bytes));
+				current.documentId(codec.decodeKey(bytes));
 			}
 			output.add(current);
 		} else {
-			if (options != null && options.withScores() && current.getScore() == null) {
+			if (options != null && options.withScores() && current.score() == null) {
 				if (bytes != null) {
-					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
+					current.score(LettuceStrings.toDouble(decodeAscii(bytes)));
 				}
 			} else {
 				nested.set(bytes);
@@ -48,7 +48,7 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 
 	@Override
 	public void set(long integer) {
-		output.setCount(integer);
+		output.count(integer);
 	}
 
 	@Override

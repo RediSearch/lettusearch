@@ -5,13 +5,9 @@ import static com.redislabs.lettusearch.protocol.CommandKeyword.RANDOM_SAMPLE;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
-@EqualsAndHashCode(callSuper = true)
-@Accessors(fluent = true)
 public @Getter @Setter class RandomSample extends AbstractPropertyReducer {
 
 	private int size;

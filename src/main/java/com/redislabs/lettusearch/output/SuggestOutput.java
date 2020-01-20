@@ -26,24 +26,24 @@ public class SuggestOutput<K, V> extends CommandOutput<K, V, List<SuggestResult<
 		if (current == null) {
 			current = new SuggestResult<>();
 			if (bytes != null) {
-				current.setString(codec.decodeValue(bytes));
+				current.string(codec.decodeValue(bytes));
 			}
 			output.add(current);
 			if (!options.withScores() && !options.withPayloads()) {
 				current = null;
 			}
 		} else {
-			if (current.getScore() == null && options.withScores()) {
+			if (current.score() == null && options.withScores()) {
 				if (bytes != null) {
-					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
+					current.score(LettuceStrings.toDouble(decodeAscii(bytes)));
 				}
 				if (!options.withPayloads()) {
 					current = null;
 				}
 			} else {
-				if (current.getPayload() == null && options.withPayloads()) {
+				if (current.payload() == null && options.withPayloads()) {
 					if (bytes != null) {
-						current.setPayload(codec.decodeValue(bytes));
+						current.payload(codec.decodeValue(bytes));
 					}
 					current = null;
 				}
