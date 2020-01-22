@@ -10,38 +10,32 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
-
-import redis.embedded.RedisExecProvider;
-import redis.embedded.RedisServer;
-import redis.embedded.util.OS;
 
 public abstract class AbstractBaseTest {
 
 	protected final static String SUGINDEX = "beersSug";
 
-	private static RedisServer server;
+//	private static RedisServer server;
 
 	private RediSearchClient client;
 	protected StatefulRediSearchConnection<String, String> connection;
 	protected List<Map<String, String>> beers;
 	protected RediSearchCommands<String, String> commands;
 
-	@BeforeClass
-	public static void setupRedis() throws IOException {
-		RedisExecProvider provider = RedisExecProvider.defaultProvider().override(OS.MAC_OS_X,
-				"/usr/local/bin/redis-server");
-		server = RedisServer.builder().port(16379).redisExecProvider(provider)
-				.setting("loadmodule /Users/jruaux/git/RediSearch/build/redisearch.so").build();
-		server.start();
-	}
+//	@BeforeClass
+//	public static void setupRedis() throws IOException {
+//		RedisExecProvider provider = RedisExecProvider.defaultProvider().override(OS.MAC_OS_X,
+//				"/usr/local/bin/redis-server");
+//		server = RedisServer.builder().port(16379).redisExecProvider(provider)
+//				.setting("loadmodule /Users/jruaux/git/RediSearch/build/redisearch.so").build();
+//		server.start();
+//	}
 
 	@Before
 	public void setup() throws IOException {
 		this.beers = load();
-		client = RediSearchClient.create("redis://localhost:16379");
+		client = RediSearchClient.create("redis://localhost:6379");
 		connection = client.connect();
 		commands = connection.sync();
 		connection.sync().flushall();
@@ -62,11 +56,11 @@ public abstract class AbstractBaseTest {
 		}
 	}
 
-	@AfterClass
-	public static void teardownRedis() {
-		if (server != null) {
-			server.stop();
-		}
-	}
+//	@AfterClass
+//	public static void teardownRedis() {
+//		if (server != null) {
+//			server.stop();
+//		}
+//	}
 
 }
