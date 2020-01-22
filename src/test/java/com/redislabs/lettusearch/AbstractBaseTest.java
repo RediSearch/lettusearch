@@ -33,7 +33,7 @@ public abstract class AbstractBaseTest {
 	public static void setupRedis() throws IOException {
 		RedisExecProvider provider = RedisExecProvider.defaultProvider().override(OS.MAC_OS_X,
 				"/usr/local/bin/redis-server");
-		server = RedisServer.builder().redisExecProvider(provider)
+		server = RedisServer.builder().port(16379).redisExecProvider(provider)
 				.setting("loadmodule /Users/jruaux/git/RediSearch/build/redisearch.so").build();
 		server.start();
 	}
@@ -41,7 +41,7 @@ public abstract class AbstractBaseTest {
 	@Before
 	public void setup() throws IOException {
 		this.beers = load();
-		client = RediSearchClient.create("redis://localhost");
+		client = RediSearchClient.create("redis://localhost:16379");
 		connection = client.connect();
 		commands = connection.sync();
 		connection.sync().flushall();
