@@ -18,7 +18,7 @@ public @Getter @Setter class TextField extends Field {
 	private PhoneticMatcher matcher;
 
 	@Builder
-	private TextField(String name, boolean sortable, boolean noIndex, double weight, boolean noStem,
+	private TextField(String name, boolean sortable, boolean noIndex, Double weight, boolean noStem,
 			PhoneticMatcher matcher) {
 		super(name, sortable, noIndex);
 		this.weight = weight;
