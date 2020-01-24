@@ -9,36 +9,25 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class AbstractBaseTest {
 
 	protected final static String SUGINDEX = "beersSug";
-
-//	private static RedisServer server;
 
 	private RediSearchClient client;
 	protected StatefulRediSearchConnection<String, String> connection;
 	protected List<Map<String, String>> beers;
 	protected RediSearchCommands<String, String> commands;
 
-//	@BeforeClass
-//	public static void setupRedis() throws IOException {
-//		RedisExecProvider provider = RedisExecProvider.defaultProvider().override(OS.MAC_OS_X,
-//				"/usr/local/bin/redis-server");
-//		server = RedisServer.builder().port(16379).redisExecProvider(provider)
-//				.setting("loadmodule /Users/jruaux/git/RediSearch/build/redisearch.so").build();
-//		server.start();
-//	}
-
-	@Before
+	@BeforeEach
 	public void setup() throws IOException {
-		this.beers = load();
+		beers = load();
 		client = RediSearchClient.create("redis://localhost:6379");
 		connection = client.connect();
 		commands = connection.sync();
-		connection.sync().flushall();
+		commands.flushall();
 		commands.create(INDEX, UsageExample.SCHEMA);
 		for (Map<String, String> beer : beers) {
 			commands.add(INDEX, beer.get(FIELD_ID), 1, beer);
@@ -46,7 +35,7 @@ public abstract class AbstractBaseTest {
 		}
 	}
 
-	@After
+	@AfterEach
 	public void teardown() {
 		if (connection != null) {
 			connection.close();
@@ -55,12 +44,5 @@ public abstract class AbstractBaseTest {
 			client.shutdown();
 		}
 	}
-
-//	@AfterClass
-//	public static void teardownRedis() {
-//		if (server != null) {
-//			server.stop();
-//		}
-//	}
 
 }

@@ -16,3 +16,4 @@ buildNumber.properties
 /.factorypath
 /build/
 /.gradle/
+/bin/

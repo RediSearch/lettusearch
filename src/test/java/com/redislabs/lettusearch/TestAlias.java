@@ -1,9 +1,10 @@
 package com.redislabs.lettusearch;
 
 import static com.redislabs.lettusearch.Beers.INDEX;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.redislabs.lettusearch.search.SearchResults;
 
@@ -17,7 +18,7 @@ public class TestAlias extends AbstractBaseTest {
 	public void testAddAlias() {
 		commands.aliasAdd(ALIAS, INDEX);
 		SearchResults<String, String> results = commands.search(ALIAS, "*");
-		Assert.assertTrue(results.size() > 0);
+		assertTrue(results.size() > 0);
 	}
 
 	@Test
@@ -26,10 +27,9 @@ public class TestAlias extends AbstractBaseTest {
 		commands.aliasDel(ALIAS);
 		try {
 			commands.search(ALIAS, "*");
-			Assert.fail("Alias was not removed");
+			fail("Alias was not removed");
 		} catch (RedisCommandExecutionException e) {
-			Assert.assertTrue(e.getMessage().contains("no such index") || 
-					  e.getMessage().contains("Unknown Index name"));
+			assertTrue(e.getMessage().contains("no such index") || e.getMessage().contains("Unknown Index name"));
 		}
 	}
 
@@ -38,7 +38,7 @@ public class TestAlias extends AbstractBaseTest {
 		testAddAlias();
 		String newAlias = "alias456";
 		commands.aliasUpdate(newAlias, INDEX);
-		Assert.assertTrue(commands.search(newAlias, "*").size() > 0);
+		assertTrue(commands.search(newAlias, "*").size() > 0);
 	}
 
 }

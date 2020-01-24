@@ -4,12 +4,16 @@ import static com.redislabs.lettusearch.Beers.FIELD_ABV;
 import static com.redislabs.lettusearch.Beers.FIELD_NAME;
 import static com.redislabs.lettusearch.Beers.FIELD_STYLE;
 import static com.redislabs.lettusearch.Beers.INDEX;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.redislabs.lettusearch.search.HighlightOptions;
 import com.redislabs.lettusearch.search.Limit;
@@ -26,31 +30,31 @@ public class TestSearch extends AbstractBaseTest {
 	@Test
 	public void phoneticFields() {
 		SearchResults<String, String> results = commands.search(INDEX, "eldur");
-		Assert.assertEquals(7, results.count());
+		assertEquals(7, results.count());
 	}
 
 	@Test
 	public void searchNoContent() {
 		SearchResults<String, String> results = commands.search(INDEX, "Hefeweizen", SearchOptions.builder()
 				.withScores(true).noContent(true).limit(Limit.builder().num(100).build()).build());
-		Assert.assertEquals(22, results.count());
-		Assert.assertEquals(22, results.size());
-		Assert.assertEquals("1836", results.get(0).documentId());
-		Assert.assertEquals(1.2, results.get(0).score(), 0.000001);
+		assertEquals(22, results.count());
+		assertEquals(22, results.size());
+		assertEquals("1836", results.get(0).documentId());
+		assertEquals(1.2, results.get(0).score(), 0.000001);
 	}
 
 	@Test
 	public void get() {
 		Map<String, String> map = commands.get(INDEX, "1836");
-		Assert.assertEquals("Widmer Brothers Hefeweizen", map.get(FIELD_NAME));
+		assertEquals("Widmer Brothers Hefeweizen", map.get(FIELD_NAME));
 	}
 
 	@Test
 	public void mget() throws InterruptedException {
 		List<Map<String, String>> mapList = commands.ftMget(INDEX, "1836", "1837", "292929292");
-		Assert.assertEquals(3, mapList.size());
-		Assert.assertEquals("Widmer Brothers Hefeweizen", mapList.get(0).get(FIELD_NAME));
-		Assert.assertEquals("Hefe Black", mapList.get(1).get(FIELD_NAME));
+		assertEquals(3, mapList.size());
+		assertEquals("Widmer Brothers Hefeweizen", mapList.get(0).get(FIELD_NAME));
+		assertEquals("Hefe Black", mapList.get(1).get(FIELD_NAME));
 		Flux<Map<String, String>> source = connection.reactive().ftMget(INDEX, "1836", "1837");
 		StepVerifier.create(source).expectNextMatches(beer -> beer.get(FIELD_NAME).equals("Widmer Brothers Hefeweizen"))
 				.expectNextMatches(beer -> beer.get(FIELD_NAME).equals("Hefe Black")).expectComplete().verify();
@@ -59,31 +63,31 @@ public class TestSearch extends AbstractBaseTest {
 	@Test
 	public void del() {
 		boolean deleted = commands.del(INDEX, "1836", true);
-		Assert.assertTrue(deleted);
+		assertTrue(deleted);
 		Map<String, String> map = commands.get(INDEX, "1836");
-		Assert.assertNull(map);
+		assertNull(map);
 	}
 
 	@Test
 	public void searchReturn() {
 		SearchResults<String, String> results = commands.search(INDEX, "pale",
 				SearchOptions.builder().returnField(FIELD_NAME).returnField(FIELD_STYLE).build());
-		Assert.assertEquals(256, results.count());
+		assertEquals(256, results.count());
 		SearchResult<String, String> result1 = results.get(0);
-		Assert.assertNotNull(result1.get(FIELD_NAME));
-		Assert.assertNotNull(result1.get(FIELD_STYLE));
-		Assert.assertNull(result1.get(FIELD_ABV));
+		assertNotNull(result1.get(FIELD_NAME));
+		assertNotNull(result1.get(FIELD_STYLE));
+		assertNull(result1.get(FIELD_ABV));
 	}
 
 	@Test
 	public void searchInvalidReturn() {
 		SearchResults<String, String> results = commands.search(INDEX, "pale",
 				SearchOptions.builder().returnField(FIELD_NAME).returnField(FIELD_STYLE).returnField("").build());
-		Assert.assertEquals(256, results.count());
+		assertEquals(256, results.count());
 		SearchResult<String, String> result1 = results.get(0);
-		Assert.assertNotNull(result1.get(FIELD_NAME));
-		Assert.assertNotNull(result1.get(FIELD_STYLE));
-		Assert.assertNull(result1.get(FIELD_ABV));
+		assertNotNull(result1.get(FIELD_NAME));
+		assertNotNull(result1.get(FIELD_STYLE));
+		assertNull(result1.get(FIELD_ABV));
 	}
 
 	@Test
@@ -94,18 +98,18 @@ public class TestSearch extends AbstractBaseTest {
 		SearchResults<String, String> results = commands.search(INDEX, query,
 				SearchOptions.builder().highlight(HighlightOptions.builder().build()).build());
 		for (SearchResult<String, String> result : results) {
-			Assert.assertTrue(highlighted(result, FIELD_STYLE, tagOptions, term));
+			assertTrue(highlighted(result, FIELD_STYLE, tagOptions, term));
 		}
 		results = commands.search(INDEX, query,
 				SearchOptions.builder().highlight(HighlightOptions.builder().field(FIELD_NAME).build()).build());
 		for (SearchResult<String, String> result : results) {
-			Assert.assertFalse(highlighted(result, FIELD_STYLE, tagOptions, term));
+			assertFalse(highlighted(result, FIELD_STYLE, tagOptions, term));
 		}
 		tagOptions = TagOptions.builder().open("[start]").close("[end]").build();
 		results = commands.search(INDEX, query, SearchOptions.builder()
 				.highlight(HighlightOptions.builder().field(FIELD_STYLE).tags(tagOptions).build()).build());
 		for (SearchResult<String, String> result : results) {
-			Assert.assertTrue(highlighted(result, FIELD_STYLE, tagOptions, term));
+			assertTrue(highlighted(result, FIELD_STYLE, tagOptions, term));
 		}
 	}
 

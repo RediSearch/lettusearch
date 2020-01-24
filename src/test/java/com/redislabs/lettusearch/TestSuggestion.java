@@ -1,9 +1,11 @@
 package com.redislabs.lettusearch;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.List;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.suggest.SuggestGetOptions;
@@ -14,30 +16,30 @@ public class TestSuggestion extends AbstractBaseTest {
 	@Test
 	public void testPhoneticFields() {
 		SearchResults<String, String> results = commands.search(Beers.INDEX, "pail");
-		Assert.assertEquals(256, results.count());
+		assertEquals(256, results.count());
 	}
 
 	@Test
 	public void testSuggestions() {
 		List<SuggestResult<String>> results = commands.sugget(SUGINDEX, "Ame",
 				SuggestGetOptions.builder().max(1000l).withScores(true).build());
-		Assert.assertEquals(8, results.size());
-		Assert.assertEquals("American Hero", results.get(0).string());
+		assertEquals(8, results.size());
+		assertEquals("American Hero", results.get(0).string());
 	}
 
 	@Test
 	public void testSugdel() {
 		Boolean result = commands.sugdel(SUGINDEX, "American Hero");
-		Assert.assertTrue(result);
+		assertTrue(result);
 		List<SuggestResult<String>> results = commands.sugget(SUGINDEX, "Ame",
 				SuggestGetOptions.builder().max(1000l).build());
-		Assert.assertEquals(7, results.size());
+		assertEquals(7, results.size());
 	}
 
 	@Test
 	public void testSuglen() {
 		long length = commands.suglen(SUGINDEX);
-		Assert.assertEquals(2245, length);
+		assertEquals(2245, length);
 	}
 
 }

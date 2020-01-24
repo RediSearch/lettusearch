@@ -5,9 +5,9 @@ import static com.redislabs.lettusearch.Beers.FIELD_ID;
 import static com.redislabs.lettusearch.Beers.FIELD_NAME;
 import static com.redislabs.lettusearch.Beers.FIELD_STYLE;
 import static com.redislabs.lettusearch.Beers.INDEX;
-import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
@@ -19,6 +19,7 @@ import com.redislabs.lettusearch.aggregate.Order;
 import com.redislabs.lettusearch.aggregate.Sort;
 import com.redislabs.lettusearch.aggregate.SortProperty;
 import com.redislabs.lettusearch.aggregate.reducer.Avg;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestAggregate extends AbstractBaseTest {
 
@@ -26,7 +27,7 @@ public class TestAggregate extends AbstractBaseTest {
 	public void testAggregateLoad() {
 		AggregateResults<String, String> results = commands.aggregate(INDEX, "*",
 				AggregateOptions.builder().load(FIELD_NAME).load(FIELD_STYLE).build());
-		assertEquals(1, results.count());
+		Assertions.assertEquals(1, results.count());
 		assertEquals(beers.size(), results.size());
 		for (int index = 0; index < beers.size(); index++) {
 			assertEquals(beers.get(index).get(FIELD_NAME).toLowerCase(),
