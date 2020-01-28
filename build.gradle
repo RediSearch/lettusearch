@@ -101,6 +101,8 @@ publishing {
     }
 }
 
+afterReleaseBuild.dependsOn = [bintrayUpload]
+
 group = 'com.redislabs'
 description = 'Java client for RediSearch based on Lettuce'
 sourceCompatibility = '1.8'
