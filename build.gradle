@@ -102,7 +102,6 @@ publishing {
 }
 
 group = 'com.redislabs'
-version = '1.12.3'
 description = 'Java client for RediSearch based on Lettuce'
 sourceCompatibility = '1.8'
 
