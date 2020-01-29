@@ -115,7 +115,7 @@ task printVersion {
 }
 
 githubRelease {
-    token "10a3d531d972f71ad2ef0e569dff4314c3b2675a"
+    token = project.hasProperty('githubToken') ? project.property('githubToken') : System.getenv('GITHUB_TOKEN')
     owner "RediSearch"
     repo "lettusearch"
 }
