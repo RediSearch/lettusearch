@@ -4,6 +4,7 @@ plugins {
     id 'com.jfrog.bintray' version '1.8.4'
     id 'com.github.ben-manes.versions' version '0.27.0'
     id 'net.researchgate.release' version '2.6.0'
+    id 'com.github.breadmoirai.github-release' version '2.2.9'
 }
 
 repositories {
@@ -101,7 +102,7 @@ publishing {
     }
 }
 
-afterReleaseBuild.dependsOn = [bintrayUpload]
+afterReleaseBuild.dependsOn = [bintrayUpload,githubRelease]
 
 group = 'com.redislabs'
 description = 'Java client for RediSearch based on Lettuce'
@@ -111,4 +112,10 @@ task printVersion {
     doLast {
         println project.version
     }
+}
+
+githubRelease {
+    token "10a3d531d972f71ad2ef0e569dff4314c3b2675a"
+    owner "RediSearch"
+    repo "lettusearch"
 }
