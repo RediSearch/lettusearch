@@ -102,8 +102,6 @@ publishing {
     }
 }
 
-afterReleaseBuild.dependsOn = [bintrayUpload,githubRelease]
-
 group = 'com.redislabs'
 description = 'Java client for RediSearch based on Lettuce'
 sourceCompatibility = '1.8'
@@ -119,3 +117,6 @@ githubRelease {
     owner "RediSearch"
     repo "lettusearch"
 }
+
+afterReleaseBuild.dependsOn ":githubRelease"
+afterReleaseBuild.dependsOn bintrayUpload
