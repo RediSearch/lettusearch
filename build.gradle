@@ -105,7 +105,8 @@ publishing {
 
 group = 'com.redislabs'
 description = 'Java client for RediSearch based on Lettuce'
-sourceCompatibility = '1.8'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 task printVersion {
     doLast {
@@ -114,7 +115,7 @@ task printVersion {
 }
 
 githubRelease {
-    token = project.hasProperty('githubToken') ? project.property('githubToken') : System.getenv('GITHUB_TOKEN')
+    token = project.hasProperty('githubToken') ? project.property('githubToken') : ''
     owner "RediSearch"
     repo "lettusearch"
 }
