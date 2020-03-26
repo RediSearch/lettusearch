@@ -12,7 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Builder
-public @Data class SuggestGetOptions implements RediSearchArgument {
+public @Data class SuggetOptions implements RediSearchArgument {
 
 	private boolean fuzzy;
 	private boolean withScores;

@@ -15,7 +15,7 @@ public class AggregateWithCursorOutput<K, V> extends AggregateOutput<K, V, Aggre
 	@Override
 	public void set(long integer) {
 		if (getMapCount() == output.size()) {
-			output.cursor(integer);
+			((AggregateWithCursorResults<K, V>) output).setCursor(integer);
 		} else {
 			super.set(integer);
 		}

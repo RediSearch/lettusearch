@@ -4,8 +4,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.SearchOptions;
-import com.redislabs.lettusearch.search.SearchResult;
 import com.redislabs.lettusearch.search.SearchResults;
 
 import io.lettuce.core.LettuceStrings;
@@ -15,7 +15,7 @@ import io.lettuce.core.output.MapOutput;
 
 public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>> {
 
-	private SearchResult<K, V> current;
+	private Document<K, V> current;
 	private MapOutput<K, V> nested;
 	private int mapCount = -1;
 	private final List<Integer> counts = new ArrayList<>();
@@ -30,15 +30,15 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 	@Override
 	public void set(ByteBuffer bytes) {
 		if (current == null) {
-			current = new SearchResult<>();
+			current = new Document<>();
 			if (bytes != null) {
-				current.documentId(codec.decodeKey(bytes));
+				current.setId(codec.decodeKey(bytes));
 			}
 			output.add(current);
 		} else {
-			if (options != null && options.withScores() && current.score() == null) {
+			if (options != null && options.isWithScores() && current.getScore() == null) {
 				if (bytes != null) {
-					current.score(LettuceStrings.toDouble(decodeAscii(bytes)));
+					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
 				}
 			} else {
 				nested.set(bytes);
@@ -48,7 +48,7 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 
 	@Override
 	public void set(long integer) {
-		output.count(integer);
+		output.setCount(integer);
 	}
 
 	@Override

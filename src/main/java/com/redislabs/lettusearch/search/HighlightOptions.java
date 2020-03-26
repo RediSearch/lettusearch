@@ -8,11 +8,15 @@ import java.util.List;
 import com.redislabs.lettusearch.RediSearchArgument;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Singular;
 
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public @Data class HighlightOptions implements RediSearchArgument {
 
 	@Singular
@@ -28,8 +32,8 @@ public @Data class HighlightOptions implements RediSearchArgument {
 		}
 		if (tags != null) {
 			args.add(TAGS);
-			args.add(tags.open());
-			args.add(tags.close());
+			args.add(tags.getOpen());
+			args.add(tags.getClose());
 		}
 	}
 

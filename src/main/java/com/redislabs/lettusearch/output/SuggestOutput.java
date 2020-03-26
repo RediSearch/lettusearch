@@ -4,19 +4,19 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.redislabs.lettusearch.suggest.SuggestGetOptions;
-import com.redislabs.lettusearch.suggest.SuggestResult;
+import com.redislabs.lettusearch.suggest.SuggetOptions;
+import com.redislabs.lettusearch.suggest.SuggetResult;
 
 import io.lettuce.core.LettuceStrings;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.output.CommandOutput;
 
-public class SuggestOutput<K, V> extends CommandOutput<K, V, List<SuggestResult<V>>> {
+public class SuggestOutput<K, V> extends CommandOutput<K, V, List<SuggetResult<V>>> {
 
-	private SuggestResult<V> current;
-	private SuggestGetOptions options;
+	private SuggetResult<V> current;
+	private SuggetOptions options;
 
-	public SuggestOutput(RedisCodec<K, V> codec, SuggestGetOptions options) {
+	public SuggestOutput(RedisCodec<K, V> codec, SuggetOptions options) {
 		super(codec, new ArrayList<>());
 		this.options = options;
 	}
@@ -24,26 +24,26 @@ public class SuggestOutput<K, V> extends CommandOutput<K, V, List<SuggestResult<
 	@Override
 	public void set(ByteBuffer bytes) {
 		if (current == null) {
-			current = new SuggestResult<>();
+			current = new SuggetResult<>();
 			if (bytes != null) {
-				current.string(codec.decodeValue(bytes));
+				current.setString(codec.decodeValue(bytes));
 			}
 			output.add(current);
-			if (!options.withScores() && !options.withPayloads()) {
+			if (!options.isWithScores() && !options.isWithPayloads()) {
 				current = null;
 			}
 		} else {
-			if (current.score() == null && options.withScores()) {
+			if (current.getScore() == null && options.isWithScores()) {
 				if (bytes != null) {
-					current.score(LettuceStrings.toDouble(decodeAscii(bytes)));
+					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
 				}
-				if (!options.withPayloads()) {
+				if (!options.isWithPayloads()) {
 					current = null;
 				}
 			} else {
-				if (current.payload() == null && options.withPayloads()) {
+				if (current.getPayload() == null && options.isWithPayloads()) {
 					if (bytes != null) {
-						current.payload(codec.decodeValue(bytes));
+						current.setPayload(codec.decodeValue(bytes));
 					}
 					current = null;
 				}

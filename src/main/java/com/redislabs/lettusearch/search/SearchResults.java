@@ -5,12 +5,10 @@ import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
 
-public class SearchResults<K, V> extends ArrayList<SearchResult<K, V>> {
+public class SearchResults<K, V> extends ArrayList<Document<K, V>> {
 
 	private static final long serialVersionUID = 286617386389045710L;
 
-	@Getter
-	@Setter
-	private long count;
+	private @Getter @Setter long count;
 
 }

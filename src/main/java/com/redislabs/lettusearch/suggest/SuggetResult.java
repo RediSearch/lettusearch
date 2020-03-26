@@ -3,7 +3,7 @@ package com.redislabs.lettusearch.suggest;
 import lombok.Data;
 
 @Data
-public class SuggestResult<V> {
+public class SuggetResult<V> {
 
 	private V string;
 	private Double score;

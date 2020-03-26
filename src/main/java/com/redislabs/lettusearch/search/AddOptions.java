@@ -41,4 +41,5 @@ public @Data class AddOptions implements RediSearchArgument {
 			args.add(ifCondition);
 		}
 	}
+
 }

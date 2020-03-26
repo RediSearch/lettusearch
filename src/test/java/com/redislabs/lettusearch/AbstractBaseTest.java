@@ -30,8 +30,8 @@ public abstract class AbstractBaseTest {
 		commands.flushall();
 		commands.create(INDEX, UsageExample.SCHEMA);
 		for (Map<String, String> beer : beers) {
-			commands.add(INDEX, beer.get(FIELD_ID), 1, beer);
-			commands.sugadd(SUGINDEX, beer.get(FIELD_NAME), 1);
+			commands.add(INDEX, beer.get(FIELD_ID), 1, beer, null, null);
+			commands.sugadd(SUGINDEX, beer.get(FIELD_NAME), 1, false, null);
 		}
 	}
 

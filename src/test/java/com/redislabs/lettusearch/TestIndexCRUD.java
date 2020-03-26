@@ -14,10 +14,11 @@ import org.junit.jupiter.api.Test;
 import com.redislabs.lettusearch.search.CreateOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
+import com.redislabs.lettusearch.search.SearchArgs;
 import com.redislabs.lettusearch.search.SearchResults;
-import com.redislabs.lettusearch.search.field.Field;
 import com.redislabs.lettusearch.search.field.FieldOptions;
 import com.redislabs.lettusearch.search.field.FieldType;
+import com.redislabs.lettusearch.search.field.TextField;
 
 import io.lettuce.core.RedisCommandExecutionException;
 
@@ -26,7 +27,7 @@ public class TestIndexCRUD extends AbstractBaseTest {
 	@Test
 	public void testTemporaryIndex() throws InterruptedException {
 		String indexName = "temporaryIndex";
-		commands.create(indexName, Schema.builder().field(Field.text("field1")).build(),
+		commands.create(indexName, Schema.builder().field(TextField.builder().name("field1").build()).build(),
 				CreateOptions.builder().temporary(1l).build());
 		List<Object> info = commands.indexInfo(indexName);
 		assertEquals(indexName, info.get(1));
@@ -46,7 +47,7 @@ public class TestIndexCRUD extends AbstractBaseTest {
 		Map<String, String> fields = new HashMap<>();
 		fields.put("field1", "value1");
 		try {
-			commands.add(INDEX, "newDocId", 1, fields);
+			commands.add(INDEX, "newDocId", 1, fields, null, null);
 			fail("Index not dropped");
 		} catch (RedisCommandExecutionException e) {
 			// ignored, expected behavior
@@ -58,9 +59,10 @@ public class TestIndexCRUD extends AbstractBaseTest {
 		commands.alter(INDEX, "newField", FieldOptions.builder().type(FieldType.Tag).build());
 		Map<String, String> fields = new HashMap<>();
 		fields.put("newField", "value1");
-		commands.add(INDEX, "newDocId", 1, fields);
-		SearchResults<String, String> results = commands.search(INDEX, "@newField:{value1}");
-		assertEquals(1, results.count());
+		commands.add(INDEX, "newDocId", 1, fields, null, null);
+		SearchResults<String, String> results = commands.search(INDEX,
+				SearchArgs.builder().query("@newField:{value1}").build());
+		assertEquals(1, results.getCount());
 		assertEquals(fields.get("newField"), results.get(0).get("newField"));
 	}
 

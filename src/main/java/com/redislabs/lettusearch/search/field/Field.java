@@ -25,22 +25,6 @@ public abstract @Getter @Setter class Field implements RediSearchArgument {
 		this.name = name;
 	}
 
-	public static TextField text(String name) {
-		return TextField.builder().name(name).build();
-	}
-
-	public static GeoField geo(String name) {
-		return GeoField.builder().name(name).build();
-	}
-
-	public static NumericField numeric(String name) {
-		return NumericField.builder().name(name).build();
-	}
-
-	public static TagField tag(String name) {
-		return TagField.builder().name(name).build();
-	}
-
 	@Override
 	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
 		LettuceAssert.notNull(name, "name " + MUST_NOT_BE_NULL);

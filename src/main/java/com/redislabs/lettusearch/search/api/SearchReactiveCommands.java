@@ -2,8 +2,10 @@ package com.redislabs.lettusearch.search.api;
 
 import java.util.Map;
 
+import com.redislabs.lettusearch.search.AddArgs;
 import com.redislabs.lettusearch.search.AddOptions;
-import com.redislabs.lettusearch.search.SearchOptions;
+import com.redislabs.lettusearch.search.DelArgs;
+import com.redislabs.lettusearch.search.SearchArgs;
 import com.redislabs.lettusearch.search.SearchResults;
 
 import reactor.core.publisher.Flux;
@@ -19,13 +21,11 @@ import reactor.core.publisher.Mono;
  */
 public interface SearchReactiveCommands<K, V> {
 
-	Mono<String> add(String index, K docId, double score, Map<K, V> fields);
+	Mono<String> add(String index, AddArgs<K, V> args);
 
-	Mono<String> add(String index, K docId, double score, Map<K, V> fields, V payload);
+	Mono<String> add(String index, K docId, double score, Map<K, V> fields, V payload, AddOptions options);
 
-	Mono<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options);
-
-	Mono<String> add(String index, K docId, double score, Map<K, V> fields, AddOptions options, V payload);
+	Mono<Boolean> del(String index, DelArgs<K> args);
 
 	Mono<Boolean> del(String index, K docId, boolean deleteDoc);
 
@@ -35,5 +35,6 @@ public interface SearchReactiveCommands<K, V> {
 
 	Mono<SearchResults<K, V>> search(String index, String query);
 
-	Mono<SearchResults<K, V>> search(String index, String query, SearchOptions options);
+	Mono<SearchResults<K, V>> search(String index, SearchArgs args);
+
 }

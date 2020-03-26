@@ -2,8 +2,10 @@ package com.redislabs.lettusearch.suggest.api;
 
 import java.util.List;
 
-import com.redislabs.lettusearch.suggest.SuggestGetOptions;
-import com.redislabs.lettusearch.suggest.SuggestResult;
+import com.redislabs.lettusearch.suggest.SugaddArgs;
+import com.redislabs.lettusearch.suggest.SuggetArgs;
+import com.redislabs.lettusearch.suggest.SuggetOptions;
+import com.redislabs.lettusearch.suggest.SuggetResult;
 
 /**
  * Synchronously executed commands for RediSearch suggestion index.
@@ -15,15 +17,13 @@ import com.redislabs.lettusearch.suggest.SuggestResult;
  */
 public interface SuggestCommands<K, V> {
 
-	Long sugadd(K key, V string, double score);
-
-	Long sugadd(K key, V string, double score, V payload);
-
-	Long sugadd(K key, V string, double score, boolean increment);
+	Long sugadd(K key, SugaddArgs<V> args);
 
 	Long sugadd(K key, V string, double score, boolean increment, V payload);
 
-	List<SuggestResult<V>> sugget(K key, V prefix, SuggestGetOptions options);
+	List<SuggetResult<V>> sugget(K key, SuggetArgs<V> args);
+
+	List<SuggetResult<V>> sugget(K key, V prefix, SuggetOptions options);
 
 	Boolean sugdel(K key, V string);
 

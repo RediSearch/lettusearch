@@ -1,7 +1,9 @@
 package com.redislabs.lettusearch.suggest.api;
 
-import com.redislabs.lettusearch.suggest.SuggestGetOptions;
-import com.redislabs.lettusearch.suggest.SuggestResult;
+import com.redislabs.lettusearch.suggest.SugaddArgs;
+import com.redislabs.lettusearch.suggest.SuggetArgs;
+import com.redislabs.lettusearch.suggest.SuggetOptions;
+import com.redislabs.lettusearch.suggest.SuggetResult;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -16,15 +18,13 @@ import reactor.core.publisher.Mono;
  */
 public interface SuggestReactiveCommands<K, V> {
 
-	Mono<Long> sugadd(K key, V string, double score);
-
-	Mono<Long> sugadd(K key, V string, double score, V payload);
-
-	Mono<Long> sugadd(K key, V string, double score, boolean increment);
+	Mono<Long> sugadd(K key, SugaddArgs<V> args);
 
 	Mono<Long> sugadd(K key, V string, double score, boolean increment, V payload);
 
-	Flux<SuggestResult<V>> sugget(K key, V prefix, SuggestGetOptions options);
+	Flux<SuggetResult<V>> sugget(K key, SuggetArgs<V> args);
+
+	Flux<SuggetResult<V>> sugget(K key, V prefix, SuggetOptions options);
 
 	Mono<Boolean> sugdel(K key, V string);
 

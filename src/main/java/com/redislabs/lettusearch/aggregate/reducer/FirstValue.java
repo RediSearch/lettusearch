@@ -29,8 +29,8 @@ public @Getter @Setter class FirstValue extends AbstractPropertyReducer {
 		if (by != null) {
 			args.add(BY);
 			args.addProperty(property);
-			if (by.order() != null) {
-				args.add(by.order() == Order.Asc ? ASC : DESC);
+			if (by.getOrder() != null) {
+				args.add(by.getOrder() == Order.Asc ? ASC : DESC);
 			}
 		}
 	}
@@ -38,7 +38,7 @@ public @Getter @Setter class FirstValue extends AbstractPropertyReducer {
 	private int getNumberOfArgs() {
 		int nargs = 1;
 		if (by != null) {
-			nargs += by.order() == null ? 2 : 3;
+			nargs += by.getOrder() == null ? 2 : 3;
 		}
 		return nargs;
 	}

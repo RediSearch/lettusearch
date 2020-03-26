@@ -2,8 +2,10 @@ package com.redislabs.lettusearch.suggest.api;
 
 import java.util.List;
 
-import com.redislabs.lettusearch.suggest.SuggestGetOptions;
-import com.redislabs.lettusearch.suggest.SuggestResult;
+import com.redislabs.lettusearch.suggest.SugaddArgs;
+import com.redislabs.lettusearch.suggest.SuggetArgs;
+import com.redislabs.lettusearch.suggest.SuggetOptions;
+import com.redislabs.lettusearch.suggest.SuggetResult;
 
 import io.lettuce.core.RedisFuture;
 
@@ -17,15 +19,13 @@ import io.lettuce.core.RedisFuture;
  */
 public interface SuggestAsyncCommands<K, V> {
 
-	RedisFuture<Long> sugadd(K key, V string, double score);
-
-	RedisFuture<Long> sugadd(K key, V string, double score, boolean increment);
-
-	RedisFuture<Long> sugadd(K key, V string, double score, V payload);
+	RedisFuture<Long> sugadd(K key, SugaddArgs<V> args);
 
 	RedisFuture<Long> sugadd(K key, V string, double score, boolean increment, V payload);
 
-	RedisFuture<List<SuggestResult<V>>> sugget(K key, V prefix, SuggestGetOptions options);
+	RedisFuture<List<SuggetResult<V>>> sugget(K key, SuggetArgs<V> args);
+
+	RedisFuture<List<SuggetResult<V>>> sugget(K key, V prefix, SuggetOptions options);
 
 	RedisFuture<Boolean> sugdel(K key, V string);
 

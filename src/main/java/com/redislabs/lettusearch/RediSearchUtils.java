@@ -12,6 +12,9 @@ import java.util.Map;
 import com.redislabs.lettusearch.index.IndexInfo;
 import com.redislabs.lettusearch.protocol.CommandKeyword;
 import com.redislabs.lettusearch.search.field.Field;
+import com.redislabs.lettusearch.search.field.GeoField;
+import com.redislabs.lettusearch.search.field.NumericField;
+import com.redislabs.lettusearch.search.field.TagField;
 import com.redislabs.lettusearch.search.field.TextField;
 
 public class RediSearchUtils {
@@ -64,10 +67,10 @@ public class RediSearchUtils {
 			Field field = field(name, type, info);
 			for (Object attribute : info.subList(3, info.size())) {
 				if (NOINDEX.name().equals(attribute)) {
-					field.noIndex(true);
+					field.setNoIndex(true);
 				}
 				if (SORTABLE.name().equals(attribute)) {
-					field.sortable(true);
+					field.setSortable(true);
 				}
 			}
 			fields.add(field);
@@ -78,17 +81,14 @@ public class RediSearchUtils {
 	private static Field field(String name, CommandKeyword type, List<Object> info) {
 		switch (type) {
 		case GEO:
-			return Field.geo(name);
+			return GeoField.builder().name(name).build();
 		case NUMERIC:
-			return Field.numeric(name);
+			return NumericField.builder().name(name).build();
 		case TAG:
-			return Field.tag(name).separator((String) info.get(4));
+			return TagField.builder().name(name).separator((String) info.get(4)).build();
 		default:
-			TextField text = Field.text(name).weight(Double.parseDouble((String) info.get(4)));
-			if (NOSTEM.name().equals(info.get(info.size() - 1))) {
-				text.noStem(true);
-			}
-			return text;
+			return TextField.builder().name(name).weight(Double.parseDouble((String) info.get(4)))
+					.noStem(NOSTEM.name().equals(info.get(info.size() - 1))).build();
 		}
 	}
 

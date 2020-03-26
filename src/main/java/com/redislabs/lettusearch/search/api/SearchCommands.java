@@ -3,13 +3,11 @@ package com.redislabs.lettusearch.search.api;
 import java.util.List;
 import java.util.Map;
 
+import com.redislabs.lettusearch.search.AddArgs;
 import com.redislabs.lettusearch.search.AddOptions;
-import com.redislabs.lettusearch.search.CreateOptions;
-import com.redislabs.lettusearch.search.DropOptions;
-import com.redislabs.lettusearch.search.Schema;
-import com.redislabs.lettusearch.search.SearchOptions;
+import com.redislabs.lettusearch.search.DelArgs;
+import com.redislabs.lettusearch.search.SearchArgs;
 import com.redislabs.lettusearch.search.SearchResults;
-import com.redislabs.lettusearch.search.field.FieldOptions;
 
 /**
  * Synchronously executed commands for RediSearch search index.
@@ -21,31 +19,11 @@ import com.redislabs.lettusearch.search.field.FieldOptions;
  */
 public interface SearchCommands<K, V> {
 
-	String create(String index, Schema schema);
+	String add(String index, AddArgs<K, V> args);
 
-	String create(String index, Schema schema, CreateOptions options);
+	String add(String index, K docId, double score, Map<K, V> fields, V payload, AddOptions options);
 
-	String drop(String index);
-
-	String drop(String index, DropOptions options);
-
-	String alter(String index, K field, FieldOptions options);
-
-	List<Object> indexInfo(String index);
-
-	String aliasAdd(String name, String index);
-
-	String aliasUpdate(String name, String index);
-
-	String aliasDel(String name);
-
-	String add(String index, K docId, double score, Map<K, V> fields);
-
-	String add(String index, K docId, double score, Map<K, V> fields, V payload);
-
-	String add(String index, K docId, double score, Map<K, V> fields, AddOptions options);
-
-	String add(String index, K docId, double score, Map<K, V> fields, AddOptions options, V payload);
+	boolean del(String index, DelArgs<K> args);
 
 	boolean del(String index, K docId, boolean deleteDoc);
 
@@ -55,6 +33,6 @@ public interface SearchCommands<K, V> {
 
 	SearchResults<K, V> search(String index, String query);
 
-	SearchResults<K, V> search(String index, String query, SearchOptions options);
+	SearchResults<K, V> search(String index, SearchArgs args);
 
 }
