@@ -3,10 +3,8 @@ package com.redislabs.lettusearch.search.api;
 import java.util.List;
 import java.util.Map;
 
-import com.redislabs.lettusearch.search.AddArgs;
 import com.redislabs.lettusearch.search.AddOptions;
-import com.redislabs.lettusearch.search.DelArgs;
-import com.redislabs.lettusearch.search.SearchArgs;
+import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 
 /**
@@ -19,11 +17,7 @@ import com.redislabs.lettusearch.search.SearchResults;
  */
 public interface SearchCommands<K, V> {
 
-	String add(String index, AddArgs<K, V> args);
-
 	String add(String index, K docId, double score, Map<K, V> fields, V payload, AddOptions options);
-
-	boolean del(String index, DelArgs<K> args);
 
 	boolean del(String index, K docId, boolean deleteDoc);
 
@@ -31,8 +25,8 @@ public interface SearchCommands<K, V> {
 
 	List<Map<K, V>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds);
 
-	SearchResults<K, V> search(String index, String query);
+	SearchResults<K, V> search(String index, String query, Object... options);
 
-	SearchResults<K, V> search(String index, SearchArgs args);
+	SearchResults<K, V> search(String index, String query, SearchOptions options);
 
 }

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.redislabs.lettusearch.search.Document;
-import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 
 import io.lettuce.core.LettuceStrings;
@@ -19,12 +18,12 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 	private MapOutput<K, V> nested;
 	private int mapCount = -1;
 	private final List<Integer> counts = new ArrayList<>();
-	private SearchOptions options;
+	private boolean withScores;
 
-	public SearchOutput(RedisCodec<K, V> codec, SearchOptions options) {
+	public SearchOutput(RedisCodec<K, V> codec, boolean withScores) {
 		super(codec, new SearchResults<>());
 		nested = new MapOutput<>(codec);
-		this.options = options;
+		this.withScores = withScores;
 	}
 
 	@Override
@@ -36,7 +35,7 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 			}
 			output.add(current);
 		} else {
-			if (options != null && options.isWithScores() && current.getScore() == null) {
+			if (withScores && current.getScore() == null) {
 				if (bytes != null) {
 					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
 				}

@@ -3,7 +3,6 @@ package com.redislabs.lettusearch.output;
 import java.nio.ByteBuffer;
 
 import com.redislabs.lettusearch.search.Document;
-import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 
 import io.lettuce.core.LettuceStrings;
@@ -13,11 +12,11 @@ import io.lettuce.core.output.CommandOutput;
 public class SearchNoContentOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>> {
 
 	private Document<K, V> current;
-	private SearchOptions options;
+	private boolean withScores;
 
-	public SearchNoContentOutput(RedisCodec<K, V> codec, SearchOptions options) {
+	public SearchNoContentOutput(RedisCodec<K, V> codec, boolean withScores) {
 		super(codec, new SearchResults<>());
-		this.options = options;
+		this.withScores = withScores;
 	}
 
 	@Override
@@ -28,11 +27,11 @@ public class SearchNoContentOutput<K, V> extends CommandOutput<K, V, SearchResul
 				current.setId(codec.decodeKey(bytes));
 			}
 			output.add(current);
-			if (!options.isWithScores()) {
+			if (!withScores) {
 				current = null;
 			}
 		} else {
-			if (options.isWithScores()) {
+			if (withScores) {
 				if (bytes != null) {
 					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
 				}

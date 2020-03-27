@@ -5,18 +5,15 @@ import java.util.Map;
 import com.redislabs.lettusearch.RediSearchCommandBuilder;
 import com.redislabs.lettusearch.RediSearchReactiveCommands;
 import com.redislabs.lettusearch.StatefulRediSearchConnection;
-import com.redislabs.lettusearch.aggregate.AggregateArgs;
+import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
 import com.redislabs.lettusearch.aggregate.Cursor;
-import com.redislabs.lettusearch.aggregate.CursorArgs;
-import com.redislabs.lettusearch.search.AddArgs;
 import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.CreateOptions;
-import com.redislabs.lettusearch.search.DelArgs;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
-import com.redislabs.lettusearch.search.SearchArgs;
+import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.field.FieldOptions;
 import com.redislabs.lettusearch.suggest.SugaddArgs;
@@ -44,12 +41,6 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	@Override
 	public StatefulRediSearchConnection<K, V> getStatefulConnection() {
 		return connection;
-	}
-
-	@Override
-	public Mono<String> add(String index, AddArgs<K, V> args) {
-		return add(index, args.getDocument().getId(), args.getDocument().getScore(), args.getDocument().getFields(),
-				args.getPayload(), args.getOptions());
 	}
 
 	@Override
@@ -93,38 +84,45 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<Boolean> del(String index, DelArgs<K> args) {
-		return del(index, args.getDocumentId(), args.isDeleteDocument());
-	}
-
-	@Override
 	public Mono<Boolean> del(String index, K docId, boolean deleteDoc) {
 		return createMono(() -> commandBuilder.del(index, docId, deleteDoc));
 	}
+
+	@Override
+	public Mono<SearchResults<K, V>> search(String index, String query, SearchOptions options) {
+		return createMono(() -> commandBuilder.search(index, query, options));
+	}
 	
 	@Override
-	public Mono<SearchResults<K, V>> search(String index, String query) {
-		return search(index, SearchArgs.builder().query(query).build());
+	public Mono<SearchResults<K, V>> search(String index, String query, Object... options) {
+		return createMono(() -> commandBuilder.search(index, query, options));
 	}
 
 	@Override
-	public Mono<SearchResults<K, V>> search(String index, SearchArgs args) {
-		return createMono(() -> commandBuilder.search(index, args.getQuery(), args.getOptions()));
+	public Mono<AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options) {
+		return createMono(() -> commandBuilder.aggregate(index, query, options));
 	}
 
 	@Override
-	public Mono<AggregateResults<K, V>> aggregate(String index, AggregateArgs args) {
-		return createMono(() -> commandBuilder.aggregate(index, args.getQuery(), args.getOptions()));
+	public Mono<AggregateResults<K, V>> aggregate(String index, String query, Object... options) {
+		return createMono(() -> commandBuilder.aggregate(index, query, options));
 	}
 
 	@Override
-	public Mono<AggregateWithCursorResults<K, V>> aggregate(String index, AggregateArgs args, Cursor cursor) {
-		return createMono(() -> commandBuilder.aggregate(index, args.getQuery(), args.getOptions(), cursor));
+	public Mono<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
+			AggregateOptions options) {
+		return createMono(() -> commandBuilder.aggregate(index, query, cursor, options));
 	}
 
 	@Override
-	public Mono<AggregateWithCursorResults<K, V>> cursorRead(String index, CursorArgs args) {
-		return createMono(() -> commandBuilder.cursorRead(index, args.getCursor(), args.getCount()));
+	public Mono<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
+			Object... options) {
+		return createMono(() -> commandBuilder.aggregate(index, query, cursor, options));
+	}
+
+	@Override
+	public Mono<AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor, Long count) {
+		return createMono(() -> commandBuilder.cursorRead(index, cursor, count));
 	}
 
 	@Override

@@ -34,8 +34,12 @@ public class RediSearchCommandArgs<K, V> extends CommandArgs<K, V> {
 	}
 
 	public RediSearchCommandArgs<K, V> addProperty(String property) {
-		add(PREFIX + property);
+		add(property(property));
 		return this;
+	}
+
+	public static String property(String name) {
+		return PREFIX + name;
 	}
 
 	@Override

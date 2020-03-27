@@ -7,6 +7,8 @@ import static com.redislabs.lettusearch.protocol.CommandKeyword.PAYLOAD;
 import static com.redislabs.lettusearch.protocol.CommandKeyword.READ;
 import static com.redislabs.lettusearch.protocol.CommandKeyword.SCHEMA;
 import static com.redislabs.lettusearch.protocol.CommandKeyword.WITHCURSOR;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.WITHSCORES;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NOCONTENT;
 import static com.redislabs.lettusearch.protocol.CommandType.ADD;
 import static com.redislabs.lettusearch.protocol.CommandType.AGGREGATE;
 import static com.redislabs.lettusearch.protocol.CommandType.ALIASADD;
@@ -140,7 +142,9 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		args.add(SCHEMA);
 		args.add(com.redislabs.lettusearch.protocol.CommandKeyword.ADD);
 		args.addKey(field);
-		options.build(args);
+		if (options != null) {
+			options.build(args);
+		}
 		return createCommand(ALTER, new StatusOutput<>(codec), args);
 	}
 
@@ -156,14 +160,36 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		if (options != null) {
 			options.build(commandArgs);
 		}
-		return createCommand(SEARCH, getSearchOutput(codec, options), commandArgs);
+		return createCommand(SEARCH, getSearchOutput(codec, options != null && options.isNoContent(),
+				options != null && options.isWithScores()), commandArgs);
 	}
 
-	private CommandOutput<K, V, SearchResults<K, V>> getSearchOutput(RedisCodec<K, V> codec, SearchOptions options) {
-		if (options != null && options.isNoContent()) {
-			return new SearchNoContentOutput<>(codec, options);
+	public Command<K, V, SearchResults<K, V>> search(String index, String query, Object... options) {
+		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
+		LettuceAssert.notNull(query, "query " + MUST_NOT_BE_NULL);
+		RediSearchCommandArgs<K, V> commandArgs = createArgs(index);
+		commandArgs.add(query);
+		boolean noContent = false;
+		boolean withScores = false;
+		for (Object option : options) {
+			String optionString = String.valueOf(option);
+			if (WITHSCORES.name().equalsIgnoreCase(optionString)) {
+				withScores = true;
+			}
+			if (NOCONTENT.name().equalsIgnoreCase(optionString)) {
+				noContent = true;
+			}
+			commandArgs.add(optionString);
 		}
-		return new SearchOutput<>(codec, options);
+		return createCommand(SEARCH, getSearchOutput(codec, noContent, withScores), commandArgs);
+	}
+
+	private CommandOutput<K, V, SearchResults<K, V>> getSearchOutput(RedisCodec<K, V> codec, boolean noContent,
+			boolean withScores) {
+		if (noContent) {
+			return new SearchNoContentOutput<>(codec, withScores);
+		}
+		return new SearchOutput<>(codec, withScores);
 	}
 
 	public Command<K, V, AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options) {
@@ -171,19 +197,52 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 		LettuceAssert.notNull(query, "query " + MUST_NOT_BE_NULL);
 		RediSearchCommandArgs<K, V> args = createArgs(index);
 		args.add(query);
-		options.build(args);
+		if (options != null) {
+			options.build(args);
+		}
 		return createCommand(AGGREGATE, new AggregateOutput<>(codec, new AggregateResults<>()), args);
 	}
 
-	public Command<K, V, AggregateWithCursorResults<K, V>> aggregate(String index, String query,
-			AggregateOptions options, Cursor cursor) {
+	public Command<K, V, AggregateResults<K, V>> aggregate(String index, String query, Object... options) {
 		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
 		LettuceAssert.notNull(query, "query " + MUST_NOT_BE_NULL);
 		RediSearchCommandArgs<K, V> args = createArgs(index);
 		args.add(query);
-		options.build(args);
+		for (Object option : options) {
+			args.add(String.valueOf(option));
+		}
+		return createCommand(AGGREGATE, new AggregateOutput<>(codec, new AggregateResults<>()), args);
+	}
+
+	public Command<K, V, AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
+			AggregateOptions options) {
+		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
+		LettuceAssert.notNull(query, "query " + MUST_NOT_BE_NULL);
+		RediSearchCommandArgs<K, V> args = createArgs(index);
+		args.add(query);
+		if (options != null) {
+			options.build(args);
+		}
 		args.add(WITHCURSOR);
-		cursor.build(args);
+		if (cursor != null) {
+			cursor.build(args);
+		}
+		return createCommand(AGGREGATE, new AggregateWithCursorOutput<>(codec), args);
+	}
+
+	public Command<K, V, AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
+			Object... options) {
+		LettuceAssert.notNull(index, "index " + MUST_NOT_BE_NULL);
+		LettuceAssert.notNull(query, "query " + MUST_NOT_BE_NULL);
+		RediSearchCommandArgs<K, V> args = createArgs(index);
+		args.add(query);
+		for (Object option : options) {
+			args.add(String.valueOf(option));
+		}
+		args.add(WITHCURSOR);
+		if (cursor != null) {
+			cursor.build(args);
+		}
 		return createCommand(AGGREGATE, new AggregateWithCursorOutput<>(codec), args);
 	}
 

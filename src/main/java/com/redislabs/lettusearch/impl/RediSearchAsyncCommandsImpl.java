@@ -6,18 +6,15 @@ import java.util.Map;
 import com.redislabs.lettusearch.RediSearchAsyncCommands;
 import com.redislabs.lettusearch.RediSearchCommandBuilder;
 import com.redislabs.lettusearch.StatefulRediSearchConnection;
-import com.redislabs.lettusearch.aggregate.AggregateArgs;
+import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
 import com.redislabs.lettusearch.aggregate.Cursor;
-import com.redislabs.lettusearch.aggregate.CursorArgs;
-import com.redislabs.lettusearch.search.AddArgs;
 import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.CreateOptions;
-import com.redislabs.lettusearch.search.DelArgs;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
-import com.redislabs.lettusearch.search.SearchArgs;
+import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.field.FieldOptions;
 import com.redislabs.lettusearch.suggest.SugaddArgs;
@@ -44,12 +41,6 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	@Override
 	public StatefulRediSearchConnection<K, V> getStatefulConnection() {
 		return connection;
-	}
-
-	@Override
-	public RedisFuture<String> add(String index, AddArgs<K, V> args) {
-		return add(index, args.getDocument().getId(), args.getDocument().getScore(), args.getDocument().getFields(),
-				args.getPayload(), args.getOptions());
 	}
 
 	@Override
@@ -84,28 +75,40 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
-	public RedisFuture<SearchResults<K, V>> search(String index, String query) {
-		return search(index, SearchArgs.builder().query(query).build());
+	public RedisFuture<SearchResults<K, V>> search(String index, String query, SearchOptions options) {
+		return dispatch(commandBuilder.search(index, query, options));
+	}
+	
+	@Override
+	public RedisFuture<SearchResults<K, V>> search(String index, String query, Object... options) {
+		return dispatch(commandBuilder.search(index, query, options));
 	}
 
 	@Override
-	public RedisFuture<SearchResults<K, V>> search(String index, SearchArgs args) {
-		return dispatch(commandBuilder.search(index, args.getQuery(), args.getOptions()));
+	public RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
+			AggregateOptions options) {
+		return dispatch(commandBuilder.aggregate(index, query, cursor, options));
 	}
 
 	@Override
-	public RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, AggregateArgs args, Cursor cursor) {
-		return dispatch(commandBuilder.aggregate(index, args.getQuery(), args.getOptions(), cursor));
+	public RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
+			Object... options) {
+		return dispatch(commandBuilder.aggregate(index, query, cursor, options));
 	}
 
 	@Override
-	public RedisFuture<AggregateResults<K, V>> aggregate(String index, AggregateArgs args) {
-		return dispatch(commandBuilder.aggregate(index, args.getQuery(), args.getOptions()));
+	public RedisFuture<AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options) {
+		return dispatch(commandBuilder.aggregate(index, query, options));
 	}
 
 	@Override
-	public RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(String index, CursorArgs args) {
-		return dispatch(commandBuilder.cursorRead(index, args.getCursor(), args.getCount()));
+	public RedisFuture<AggregateResults<K, V>> aggregate(String index, String query, Object... options) {
+		return dispatch(commandBuilder.aggregate(index, query, options));
+	}
+
+	@Override
+	public RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor, Long count) {
+		return dispatch(commandBuilder.cursorRead(index, cursor, count));
 	}
 
 	@Override
@@ -151,11 +154,6 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	@Override
 	public RedisFuture<List<Map<K, V>>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds) {
 		return dispatch(commandBuilder.mget(index, docIds));
-	}
-
-	@Override
-	public RedisFuture<Boolean> del(String index, DelArgs<K> args) {
-		return del(index, args.getDocumentId(), args.isDeleteDocument());
 	}
 
 	@Override

@@ -1,10 +1,9 @@
 package com.redislabs.lettusearch.aggregate.api;
 
-import com.redislabs.lettusearch.aggregate.AggregateArgs;
+import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
 import com.redislabs.lettusearch.aggregate.Cursor;
-import com.redislabs.lettusearch.aggregate.CursorArgs;
 
 /**
  * Synchronously executed commands for RediSearch search index.
@@ -16,11 +15,15 @@ import com.redislabs.lettusearch.aggregate.CursorArgs;
  */
 public interface AggregateCommands<K, V> {
 
-	AggregateResults<K, V> aggregate(String index, AggregateArgs args);
+	AggregateResults<K, V> aggregate(String index, String query, AggregateOptions options);
 
-	AggregateWithCursorResults<K, V> aggregate(String index, AggregateArgs args, Cursor cursor);
+	AggregateResults<K, V> aggregate(String index, String query, Object... options);
 
-	AggregateWithCursorResults<K, V> cursorRead(String index, CursorArgs args);
+	AggregateWithCursorResults<K, V> aggregate(String index, String query, Cursor cursor, AggregateOptions options);
+
+	AggregateWithCursorResults<K, V> aggregate(String index, String query, Cursor cursor, Object... options);
+
+	AggregateWithCursorResults<K, V> cursorRead(String index, long cursor, Long count);
 
 	String cursorDelete(String index, long cursor);
 

@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.HighlightOptions;
 import com.redislabs.lettusearch.search.Limit;
-import com.redislabs.lettusearch.search.SearchArgs;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.TagOptions;
@@ -30,15 +29,14 @@ public class TestSearch extends AbstractBaseTest {
 
 	@Test
 	public void phoneticFields() {
-		SearchResults<String, String> results = commands.search(INDEX, SearchArgs.builder().query("eldur").build());
+		SearchResults<String, String> results = commands.search(INDEX, "eldur");
 		assertEquals(7, results.getCount());
 	}
 
 	@Test
 	public void searchNoContent() {
-		SearchResults<String, String> results = commands.search(INDEX,
-				SearchArgs.builder().query("Hefeweizen").options(SearchOptions.builder().withScores(true)
-						.noContent(true).limit(Limit.builder().num(100).build()).build()).build());
+		SearchResults<String, String> results = commands.search(INDEX, "Hefeweizen", SearchOptions.builder()
+				.withScores(true).noContent(true).limit(Limit.builder().num(100).build()).build());
 		assertEquals(22, results.getCount());
 		assertEquals(22, results.size());
 		assertEquals("1836", results.get(0).getId());
@@ -72,8 +70,8 @@ public class TestSearch extends AbstractBaseTest {
 
 	@Test
 	public void searchReturn() {
-		SearchResults<String, String> results = commands.search(INDEX, SearchArgs.builder().query("pale")
-				.options(SearchOptions.builder().returnField(FIELD_NAME).returnField(FIELD_STYLE).build()).build());
+		SearchResults<String, String> results = commands.search(INDEX, "pale",
+				SearchOptions.builder().returnField(FIELD_NAME).returnField(FIELD_STYLE).build());
 		assertEquals(256, results.getCount());
 		Document<String, String> result1 = results.get(0);
 		assertNotNull(result1.get(FIELD_NAME));
@@ -83,9 +81,8 @@ public class TestSearch extends AbstractBaseTest {
 
 	@Test
 	public void searchInvalidReturn() {
-		SearchResults<String, String> results = commands.search(INDEX, SearchArgs.builder().query("pale").options(
-				SearchOptions.builder().returnField(FIELD_NAME).returnField(FIELD_STYLE).returnField("").build())
-				.build());
+		SearchResults<String, String> results = commands.search(INDEX, "pale",
+				SearchOptions.builder().returnField(FIELD_NAME).returnField(FIELD_STYLE).returnField("").build());
 		assertEquals(256, results.getCount());
 		Document<String, String> result1 = results.get(0);
 		assertNotNull(result1.get(FIELD_NAME));
@@ -98,23 +95,19 @@ public class TestSearch extends AbstractBaseTest {
 		String term = "pale";
 		String query = "@style:" + term;
 		TagOptions tagOptions = TagOptions.builder().open("<b>").close("</b>").build();
-		SearchResults<String, String> results = commands.search(INDEX, SearchArgs.builder().query(query)
-				.options(SearchOptions.builder().highlight(HighlightOptions.builder().build()).build()).build());
+		SearchResults<String, String> results = commands.search(INDEX, query,
+				SearchOptions.builder().highlight(HighlightOptions.builder().build()).build());
 		for (Document<String, String> result : results) {
 			assertTrue(highlighted(result, FIELD_STYLE, tagOptions, term));
 		}
-		results = commands.search(INDEX,
-				SearchArgs.builder().query(query).options(
-						SearchOptions.builder().highlight(HighlightOptions.builder().field(FIELD_NAME).build()).build())
-						.build());
+		results = commands.search(INDEX, query,
+				SearchOptions.builder().highlight(HighlightOptions.builder().field(FIELD_NAME).build()).build());
 		for (Document<String, String> result : results) {
 			assertFalse(highlighted(result, FIELD_STYLE, tagOptions, term));
 		}
 		tagOptions = TagOptions.builder().open("[start]").close("[end]").build();
-		results = commands.search(INDEX,
-				SearchArgs.builder().query(query).options(SearchOptions.builder()
-						.highlight(HighlightOptions.builder().field(FIELD_STYLE).tags(tagOptions).build()).build())
-						.build());
+		results = commands.search(INDEX, query, SearchOptions.builder()
+				.highlight(HighlightOptions.builder().field(FIELD_STYLE).tags(tagOptions).build()).build());
 		for (Document<String, String> result : results) {
 			assertTrue(highlighted(result, FIELD_STYLE, tagOptions, term));
 		}

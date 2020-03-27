@@ -1,10 +1,9 @@
 package com.redislabs.lettusearch.aggregate.api;
 
-import com.redislabs.lettusearch.aggregate.AggregateArgs;
+import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
 import com.redislabs.lettusearch.aggregate.Cursor;
-import com.redislabs.lettusearch.aggregate.CursorArgs;
 
 import io.lettuce.core.RedisFuture;
 
@@ -18,11 +17,17 @@ import io.lettuce.core.RedisFuture;
  */
 public interface AggregateAsyncCommands<K, V> {
 
-	RedisFuture<AggregateResults<K, V>> aggregate(String index, AggregateArgs args);
+	RedisFuture<AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options);
 
-	RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, AggregateArgs args, Cursor cursor);
+	RedisFuture<AggregateResults<K, V>> aggregate(String index, String query, Object... options);
 
-	RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(String index, CursorArgs args);
+	RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
+			AggregateOptions options);
+
+	RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
+			Object... options);
+
+	RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor, Long count);
 
 	RedisFuture<String> cursorDelete(String index, long cursor);
 

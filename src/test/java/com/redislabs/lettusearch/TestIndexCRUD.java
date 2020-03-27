@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import com.redislabs.lettusearch.search.CreateOptions;
 import com.redislabs.lettusearch.search.DropOptions;
 import com.redislabs.lettusearch.search.Schema;
-import com.redislabs.lettusearch.search.SearchArgs;
+import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.field.FieldOptions;
 import com.redislabs.lettusearch.search.field.FieldType;
@@ -60,8 +60,7 @@ public class TestIndexCRUD extends AbstractBaseTest {
 		Map<String, String> fields = new HashMap<>();
 		fields.put("newField", "value1");
 		commands.add(INDEX, "newDocId", 1, fields, null, null);
-		SearchResults<String, String> results = commands.search(INDEX,
-				SearchArgs.builder().query("@newField:{value1}").build());
+		SearchResults<String, String> results = commands.search(INDEX, "@newField:{value1}");
 		assertEquals(1, results.getCount());
 		assertEquals(fields.get("newField"), results.get(0).get("newField"));
 	}

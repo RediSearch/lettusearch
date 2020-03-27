@@ -1,10 +1,9 @@
 package com.redislabs.lettusearch.aggregate.api;
 
-import com.redislabs.lettusearch.aggregate.AggregateArgs;
+import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
 import com.redislabs.lettusearch.aggregate.Cursor;
-import com.redislabs.lettusearch.aggregate.CursorArgs;
 
 import reactor.core.publisher.Mono;
 
@@ -18,11 +17,16 @@ import reactor.core.publisher.Mono;
  */
 public interface AggregateReactiveCommands<K, V> {
 
-	Mono<AggregateResults<K, V>> aggregate(String index, AggregateArgs args);
+	Mono<AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options);
 
-	Mono<AggregateWithCursorResults<K, V>> aggregate(String index, AggregateArgs args, Cursor cursor);
+	Mono<AggregateResults<K, V>> aggregate(String index, String query, Object... options);
 
-	Mono<AggregateWithCursorResults<K, V>> cursorRead(String index, CursorArgs args);
+	Mono<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
+			AggregateOptions options);
+
+	Mono<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor, Object... options);
+
+	Mono<AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor, Long count);
 
 	Mono<String> cursorDelete(String index, long cursor);
 
