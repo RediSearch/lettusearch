@@ -9,15 +9,13 @@ import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
 import com.redislabs.lettusearch.aggregate.Cursor;
+import com.redislabs.lettusearch.index.CreateOptions;
+import com.redislabs.lettusearch.index.DropOptions;
+import com.redislabs.lettusearch.index.Schema;
+import com.redislabs.lettusearch.index.field.FieldOptions;
 import com.redislabs.lettusearch.search.AddOptions;
-import com.redislabs.lettusearch.search.CreateOptions;
-import com.redislabs.lettusearch.search.DropOptions;
-import com.redislabs.lettusearch.search.Schema;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
-import com.redislabs.lettusearch.search.field.FieldOptions;
-import com.redislabs.lettusearch.suggest.SugaddArgs;
-import com.redislabs.lettusearch.suggest.SuggetArgs;
 import com.redislabs.lettusearch.suggest.SuggetOptions;
 import com.redislabs.lettusearch.suggest.SuggetResult;
 
@@ -69,7 +67,7 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Flux<Object> indexInfo(String index) {
+	public Flux<Object> ftInfo(String index) {
 		return createDissolvingFlux(() -> commandBuilder.info(index));
 	}
 
@@ -92,7 +90,7 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	public Mono<SearchResults<K, V>> search(String index, String query, SearchOptions options) {
 		return createMono(() -> commandBuilder.search(index, query, options));
 	}
-	
+
 	@Override
 	public Mono<SearchResults<K, V>> search(String index, String query, Object... options) {
 		return createMono(() -> commandBuilder.search(index, query, options));
@@ -131,18 +129,8 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<Long> sugadd(K key, SugaddArgs<V> args) {
-		return sugadd(key, args.getString(), args.getScore(), args.isIncrement(), args.getPayload());
-	}
-
-	@Override
 	public Mono<Long> sugadd(K key, V string, double score, boolean increment, V payload) {
 		return createMono(() -> commandBuilder.sugadd(key, string, score, increment, payload));
-	}
-
-	@Override
-	public Flux<SuggetResult<V>> sugget(K key, SuggetArgs<V> args) {
-		return sugget(key, args.getPrefix(), args.getOptions());
 	}
 
 	@Override

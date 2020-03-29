@@ -2,10 +2,10 @@ package com.redislabs.lettusearch.index.api;
 
 import java.util.List;
 
-import com.redislabs.lettusearch.search.CreateOptions;
-import com.redislabs.lettusearch.search.DropOptions;
-import com.redislabs.lettusearch.search.Schema;
-import com.redislabs.lettusearch.search.field.FieldOptions;
+import com.redislabs.lettusearch.index.CreateOptions;
+import com.redislabs.lettusearch.index.DropOptions;
+import com.redislabs.lettusearch.index.Schema;
+import com.redislabs.lettusearch.index.field.FieldOptions;
 
 /**
  * Synchronously-executed index admin commands for RediSearch.
@@ -27,7 +27,7 @@ public interface IndexCommands<K, V> {
 
 	String alter(String index, K field, FieldOptions options);
 
-	List<Object> indexInfo(String index);
+	List<Object> ftInfo(String index);
 
 	String aliasAdd(String name, String index);
 

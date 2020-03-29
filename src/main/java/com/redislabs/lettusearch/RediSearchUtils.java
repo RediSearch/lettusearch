@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.redislabs.lettusearch.index.IndexInfo;
+import com.redislabs.lettusearch.index.field.Field;
+import com.redislabs.lettusearch.index.field.GeoField;
+import com.redislabs.lettusearch.index.field.NumericField;
+import com.redislabs.lettusearch.index.field.TagField;
+import com.redislabs.lettusearch.index.field.TextField;
 import com.redislabs.lettusearch.protocol.CommandKeyword;
-import com.redislabs.lettusearch.search.field.Field;
-import com.redislabs.lettusearch.search.field.GeoField;
-import com.redislabs.lettusearch.search.field.NumericField;
-import com.redislabs.lettusearch.search.field.TagField;
-import com.redislabs.lettusearch.search.field.TextField;
 
 public class RediSearchUtils {
 

@@ -2,10 +2,10 @@ package com.redislabs.lettusearch.index.api;
 
 import java.util.List;
 
-import com.redislabs.lettusearch.search.CreateOptions;
-import com.redislabs.lettusearch.search.DropOptions;
-import com.redislabs.lettusearch.search.Schema;
-import com.redislabs.lettusearch.search.field.FieldOptions;
+import com.redislabs.lettusearch.index.CreateOptions;
+import com.redislabs.lettusearch.index.DropOptions;
+import com.redislabs.lettusearch.index.Schema;
+import com.redislabs.lettusearch.index.field.FieldOptions;
 
 import io.lettuce.core.RedisFuture;
 
@@ -29,7 +29,7 @@ public interface IndexAsyncCommands<K, V> {
 
 	RedisFuture<String> alter(String index, K field, FieldOptions options);
 
-	RedisFuture<List<Object>> indexInfo(String index);
+	RedisFuture<List<Object>> ftInfo(String index);
 
 	RedisFuture<String> aliasAdd(String name, String index);
 

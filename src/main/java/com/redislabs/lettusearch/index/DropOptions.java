@@ -1,4 +1,4 @@
-package com.redislabs.lettusearch.search;
+package com.redislabs.lettusearch.index;
 
 import static com.redislabs.lettusearch.protocol.CommandKeyword.KEEPDOCS;
 

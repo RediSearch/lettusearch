@@ -1,4 +1,4 @@
-package com.redislabs.lettusearch.search.field;
+package com.redislabs.lettusearch.index.field;
 
 import static com.redislabs.lettusearch.protocol.CommandKeyword.NOINDEX;
 import static com.redislabs.lettusearch.protocol.CommandKeyword.NOSTEM;

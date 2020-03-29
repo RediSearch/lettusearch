@@ -11,14 +11,13 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import com.redislabs.lettusearch.search.CreateOptions;
-import com.redislabs.lettusearch.search.DropOptions;
-import com.redislabs.lettusearch.search.Schema;
-import com.redislabs.lettusearch.search.SearchOptions;
+import com.redislabs.lettusearch.index.CreateOptions;
+import com.redislabs.lettusearch.index.DropOptions;
+import com.redislabs.lettusearch.index.Schema;
+import com.redislabs.lettusearch.index.field.FieldOptions;
+import com.redislabs.lettusearch.index.field.FieldType;
+import com.redislabs.lettusearch.index.field.TextField;
 import com.redislabs.lettusearch.search.SearchResults;
-import com.redislabs.lettusearch.search.field.FieldOptions;
-import com.redislabs.lettusearch.search.field.FieldType;
-import com.redislabs.lettusearch.search.field.TextField;
 
 import io.lettuce.core.RedisCommandExecutionException;
 
@@ -29,11 +28,11 @@ public class TestIndexCRUD extends AbstractBaseTest {
 		String indexName = "temporaryIndex";
 		commands.create(indexName, Schema.builder().field(TextField.builder().name("field1").build()).build(),
 				CreateOptions.builder().temporary(1l).build());
-		List<Object> info = commands.indexInfo(indexName);
+		List<Object> info = commands.ftInfo(indexName);
 		assertEquals(indexName, info.get(1));
 		Thread.sleep(1001);
 		try {
-			info = commands.indexInfo(indexName);
+			info = commands.ftInfo(indexName);
 		} catch (RedisCommandExecutionException e) {
 			assertEquals("Unknown Index name", e.getMessage());
 			return;
@@ -67,7 +66,7 @@ public class TestIndexCRUD extends AbstractBaseTest {
 
 	@Test
 	public void testIndexInfo() {
-		Map<String, Object> indexInfo = toMap(commands.indexInfo(INDEX));
+		Map<String, Object> indexInfo = toMap(commands.ftInfo(INDEX));
 		assertEquals(INDEX, indexInfo.get("index_name"));
 	}
 

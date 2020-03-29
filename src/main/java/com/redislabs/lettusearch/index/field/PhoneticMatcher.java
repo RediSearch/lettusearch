@@ -1,4 +1,4 @@
-package com.redislabs.lettusearch.search.field;
+package com.redislabs.lettusearch.index.field;
 
 public enum PhoneticMatcher {
 

@@ -7,12 +7,12 @@ import static com.redislabs.lettusearch.Beers.FIELD_STYLE;
 import static com.redislabs.lettusearch.Beers.INDEX;
 import static com.redislabs.lettusearch.Beers.load;
 
-import com.redislabs.lettusearch.search.Schema;
+import com.redislabs.lettusearch.index.Schema;
+import com.redislabs.lettusearch.index.field.NumericField;
+import com.redislabs.lettusearch.index.field.PhoneticMatcher;
+import com.redislabs.lettusearch.index.field.TagField;
+import com.redislabs.lettusearch.index.field.TextField;
 import com.redislabs.lettusearch.search.SearchResults;
-import com.redislabs.lettusearch.search.field.NumericField;
-import com.redislabs.lettusearch.search.field.PhoneticMatcher;
-import com.redislabs.lettusearch.search.field.TagField;
-import com.redislabs.lettusearch.search.field.TextField;
 
 public class UsageExample {
 

@@ -2,8 +2,6 @@ package com.redislabs.lettusearch.suggest.api;
 
 import java.util.List;
 
-import com.redislabs.lettusearch.suggest.SugaddArgs;
-import com.redislabs.lettusearch.suggest.SuggetArgs;
 import com.redislabs.lettusearch.suggest.SuggetOptions;
 import com.redislabs.lettusearch.suggest.SuggetResult;
 
@@ -17,11 +15,7 @@ import com.redislabs.lettusearch.suggest.SuggetResult;
  */
 public interface SuggestCommands<K, V> {
 
-	Long sugadd(K key, SugaddArgs<V> args);
-
 	Long sugadd(K key, V string, double score, boolean increment, V payload);
-
-	List<SuggetResult<V>> sugget(K key, SuggetArgs<V> args);
 
 	List<SuggetResult<V>> sugget(K key, V prefix, SuggetOptions options);
 

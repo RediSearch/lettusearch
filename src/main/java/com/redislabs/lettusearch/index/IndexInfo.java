@@ -2,7 +2,7 @@ package com.redislabs.lettusearch.index;
 
 import java.util.List;
 
-import com.redislabs.lettusearch.search.field.Field;
+import com.redislabs.lettusearch.index.field.Field;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.redislabs.lettusearch.search.field;
+package com.redislabs.lettusearch.index.field;
 
 import static com.redislabs.lettusearch.protocol.CommandKeyword.SEPARATOR;
 import static com.redislabs.lettusearch.protocol.CommandKeyword.TAG;

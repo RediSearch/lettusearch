@@ -1,12 +1,12 @@
-package com.redislabs.lettusearch.search;
+package com.redislabs.lettusearch.index;
 
 import static com.redislabs.lettusearch.protocol.CommandKeyword.SCHEMA;
 
 import java.util.List;
 
 import com.redislabs.lettusearch.RediSearchArgument;
+import com.redislabs.lettusearch.index.field.Field;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
-import com.redislabs.lettusearch.search.field.Field;
 
 import io.lettuce.core.internal.LettuceAssert;
 import lombok.Builder;
@@ -20,11 +20,6 @@ public @Data class Schema implements RediSearchArgument {
 
 	@Singular
 	private List<Field> fields;
-
-	public Schema field(Field field) {
-		fields.add(field);
-		return this;
-	}
 
 	@Override
 	public <K, V> void build(RediSearchCommandArgs<K, V> args) {

@@ -1,9 +1,9 @@
 package com.redislabs.lettusearch.index.api;
 
-import com.redislabs.lettusearch.search.CreateOptions;
-import com.redislabs.lettusearch.search.DropOptions;
-import com.redislabs.lettusearch.search.Schema;
-import com.redislabs.lettusearch.search.field.FieldOptions;
+import com.redislabs.lettusearch.index.CreateOptions;
+import com.redislabs.lettusearch.index.DropOptions;
+import com.redislabs.lettusearch.index.Schema;
+import com.redislabs.lettusearch.index.field.FieldOptions;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -28,7 +28,7 @@ public interface IndexReactiveCommands<K, V> {
 
 	Mono<String> alter(String index, K field, FieldOptions options);
 
-	Flux<Object> indexInfo(String index);
+	Flux<Object> ftInfo(String index);
 
 	Mono<String> aliasAdd(String name, String index);
 

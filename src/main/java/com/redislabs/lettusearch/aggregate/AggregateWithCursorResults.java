@@ -8,6 +8,6 @@ public @Data class AggregateWithCursorResults<K, V> extends AggregateResults<K, 
 
 	private static final long serialVersionUID = 4898688115426436989L;
 
-	private Long cursor;
+	private long cursor;
 
 }

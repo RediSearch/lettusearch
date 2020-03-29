@@ -7,9 +7,9 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.redislabs.lettusearch.index.IndexInfo;
-import com.redislabs.lettusearch.search.field.Field;
-import com.redislabs.lettusearch.search.field.TagField;
-import com.redislabs.lettusearch.search.field.TextField;
+import com.redislabs.lettusearch.index.field.Field;
+import com.redislabs.lettusearch.index.field.TagField;
+import com.redislabs.lettusearch.index.field.TextField;
 
 import io.lettuce.core.RedisURI;
 
@@ -17,7 +17,7 @@ public class TestUtils extends AbstractBaseTest {
 
 	@Test
 	public void testFtInfo() {
-		List<Object> infoList = commands.indexInfo(Beers.INDEX);
+		List<Object> infoList = commands.ftInfo(Beers.INDEX);
 		IndexInfo info = RediSearchUtils.getInfo(infoList);
 		assertEquals((Long) 2348l, info.getNumDocs());
 		List<Field> fields = info.getFields();
@@ -35,7 +35,7 @@ public class TestUtils extends AbstractBaseTest {
 	public void testEnterpriseFtInfo() {
 		RediSearchClient client = RediSearchClient.create(RedisURI.create("redis-15322.jrx.demo.redislabs.com", 15322));
 		RediSearchCommands<String, String> commands = client.connect().sync();
-		List<Object> indexInfo = commands.indexInfo("IDXUTSEARCH");
+		List<Object> indexInfo = commands.ftInfo("IDXUTSEARCH");
 		RediSearchUtils.getInfo(indexInfo);
 	}
 
