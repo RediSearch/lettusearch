@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.redislabs.lettusearch.suggest.SuggetOptions;
-import com.redislabs.lettusearch.suggest.SuggetResult;
+import com.redislabs.lettusearch.suggest.Suggestion;
 
 import io.lettuce.core.LettuceStrings;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.output.CommandOutput;
 
-public class SuggestOutput<K, V> extends CommandOutput<K, V, List<SuggetResult<V>>> {
+public class SuggestOutput<K, V> extends CommandOutput<K, V, List<Suggestion<V>>> {
 
-	private SuggetResult<V> current;
+	private Suggestion<V> current;
 	private SuggetOptions options;
 
 	public SuggestOutput(RedisCodec<K, V> codec, SuggetOptions options) {
@@ -24,7 +24,7 @@ public class SuggestOutput<K, V> extends CommandOutput<K, V, List<SuggetResult<V
 	@Override
 	public void set(ByteBuffer bytes) {
 		if (current == null) {
-			current = new SuggetResult<>();
+			current = new Suggestion<>();
 			if (bytes != null) {
 				current.setString(codec.decodeValue(bytes));
 			}

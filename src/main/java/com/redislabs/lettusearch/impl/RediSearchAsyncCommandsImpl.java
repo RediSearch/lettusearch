@@ -15,10 +15,11 @@ import com.redislabs.lettusearch.index.DropOptions;
 import com.redislabs.lettusearch.index.Schema;
 import com.redislabs.lettusearch.index.field.FieldOptions;
 import com.redislabs.lettusearch.search.AddOptions;
+import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.suggest.Suggestion;
 import com.redislabs.lettusearch.suggest.SuggetOptions;
-import com.redislabs.lettusearch.suggest.SuggetResult;
 
 import io.lettuce.core.RedisAsyncCommandsImpl;
 import io.lettuce.core.RedisFuture;
@@ -42,24 +43,13 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
-	public RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields, V payload,
-			AddOptions options) {
-		return dispatch(commandBuilder.add(index, docId, score, fields, payload, options));
-	}
-
-	@Override
-	public RedisFuture<String> create(String index, Schema schema) {
-		return create(index, schema, null);
+	public RedisFuture<String> add(String index, Document<K, V> document, AddOptions options) {
+		return dispatch(commandBuilder.add(index, document, options));
 	}
 
 	@Override
 	public RedisFuture<String> create(String index, Schema schema, CreateOptions options) {
 		return dispatch(commandBuilder.create(index, schema, options));
-	}
-
-	@Override
-	public RedisFuture<String> drop(String index) {
-		return drop(index, null);
 	}
 
 	@Override
@@ -115,12 +105,12 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
-	public RedisFuture<Long> sugadd(K key, V string, double score, boolean increment, V payload) {
-		return dispatch(commandBuilder.sugadd(key, string, score, increment, payload));
+	public RedisFuture<Long> sugadd(K key, Suggestion<V> suggestion, boolean increment) {
+		return dispatch(commandBuilder.sugadd(key, suggestion, increment));
 	}
 
 	@Override
-	public RedisFuture<List<SuggetResult<V>>> sugget(K key, V prefix, SuggetOptions options) {
+	public RedisFuture<List<Suggestion<V>>> sugget(K key, V prefix, SuggetOptions options) {
 		return dispatch(commandBuilder.sugget(key, prefix, options));
 	}
 

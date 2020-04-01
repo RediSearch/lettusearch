@@ -14,10 +14,11 @@ import com.redislabs.lettusearch.index.DropOptions;
 import com.redislabs.lettusearch.index.Schema;
 import com.redislabs.lettusearch.index.field.FieldOptions;
 import com.redislabs.lettusearch.search.AddOptions;
+import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.suggest.Suggestion;
 import com.redislabs.lettusearch.suggest.SuggetOptions;
-import com.redislabs.lettusearch.suggest.SuggetResult;
 
 import io.lettuce.core.RedisReactiveCommandsImpl;
 import io.lettuce.core.codec.RedisCodec;
@@ -42,23 +43,13 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<String> add(String index, K docId, double score, Map<K, V> fields, V payload, AddOptions options) {
-		return createMono(() -> commandBuilder.add(index, docId, score, fields, payload, options));
-	}
-
-	@Override
-	public Mono<String> create(String index, Schema schema) {
-		return create(index, schema, null);
+	public Mono<String> add(String index, Document<K, V> document, AddOptions options) {
+		return createMono(() -> commandBuilder.add(index, document, options));
 	}
 
 	@Override
 	public Mono<String> create(String index, Schema schema, CreateOptions options) {
 		return createMono(() -> commandBuilder.create(index, schema, options));
-	}
-
-	@Override
-	public Mono<String> drop(String index) {
-		return drop(index, null);
 	}
 
 	@Override
@@ -129,12 +120,12 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<Long> sugadd(K key, V string, double score, boolean increment, V payload) {
-		return createMono(() -> commandBuilder.sugadd(key, string, score, increment, payload));
+	public Mono<Long> sugadd(K key, Suggestion<V> suggestion, boolean increment) {
+		return createMono(() -> commandBuilder.sugadd(key, suggestion, increment));
 	}
 
 	@Override
-	public Flux<SuggetResult<V>> sugget(K key, V prefix, SuggetOptions options) {
+	public Flux<Suggestion<V>> sugget(K key, V prefix, SuggetOptions options) {
 		return createDissolvingFlux(() -> commandBuilder.sugget(key, prefix, options));
 	}
 

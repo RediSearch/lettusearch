@@ -34,16 +34,6 @@ public class TestSearch extends AbstractBaseTest {
 	}
 
 	@Test
-	public void searchNoContent() {
-		SearchResults<String, String> results = commands.search(INDEX, "Hefeweizen", SearchOptions.builder()
-				.withScores(true).noContent(true).limit(Limit.builder().num(100).build()).build());
-		assertEquals(22, results.getCount());
-		assertEquals(22, results.size());
-		assertEquals("1836", results.get(0).getId());
-		assertEquals(1.2, results.get(0).getScore(), 0.000001);
-	}
-
-	@Test
 	public void get() {
 		Map<String, String> map = commands.get(INDEX, "1836");
 		assertEquals("Widmer Brothers Hefeweizen", map.get(FIELD_NAME));
@@ -66,6 +56,27 @@ public class TestSearch extends AbstractBaseTest {
 		assertTrue(deleted);
 		Map<String, String> map = commands.get(INDEX, "1836");
 		assertNull(map);
+	}
+
+	@Test
+	public void searchNoContent() {
+		SearchResults<String, String> results = commands.search(INDEX, "Hefeweizen", SearchOptions.builder()
+				.withScores(true).noContent(true).limit(Limit.builder().num(100).build()).build());
+		assertEquals(22, results.getCount());
+		assertEquals(22, results.size());
+		assertEquals("1836", results.get(0).getId());
+		assertEquals(1.2, results.get(0).getScore(), 0.000001);
+	}
+
+	@Test
+	public void searchWithPayloads() {
+		SearchResults<String, String> results = commands.search(INDEX, "pale",
+				SearchOptions.builder().withPayloads(true).build());
+		assertEquals(256, results.getCount());
+		Document<String, String> result1 = results.get(0);
+		assertNotNull(result1.get(FIELD_NAME));
+		assertNotNull(result1.getPayload());
+		assertEquals(result1.get(FIELD_NAME), result1.getPayload());
 	}
 
 	@Test

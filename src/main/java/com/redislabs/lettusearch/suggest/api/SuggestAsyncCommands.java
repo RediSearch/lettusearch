@@ -2,8 +2,8 @@ package com.redislabs.lettusearch.suggest.api;
 
 import java.util.List;
 
+import com.redislabs.lettusearch.suggest.Suggestion;
 import com.redislabs.lettusearch.suggest.SuggetOptions;
-import com.redislabs.lettusearch.suggest.SuggetResult;
 
 import io.lettuce.core.RedisFuture;
 
@@ -17,9 +17,9 @@ import io.lettuce.core.RedisFuture;
  */
 public interface SuggestAsyncCommands<K, V> {
 
-	RedisFuture<Long> sugadd(K key, V string, double score, boolean increment, V payload);
+	RedisFuture<Long> sugadd(K key, Suggestion<V> suggestion, boolean increment);
 
-	RedisFuture<List<SuggetResult<V>>> sugget(K key, V prefix, SuggetOptions options);
+	RedisFuture<List<Suggestion<V>>> sugget(K key, V prefix, SuggetOptions options);
 
 	RedisFuture<Boolean> sugdel(K key, V string);
 

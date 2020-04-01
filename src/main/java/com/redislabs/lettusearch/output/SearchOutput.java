@@ -19,11 +19,13 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 	private int mapCount = -1;
 	private final List<Integer> counts = new ArrayList<>();
 	private boolean withScores;
+	private boolean withPayloads;
 
-	public SearchOutput(RedisCodec<K, V> codec, boolean withScores) {
+	public SearchOutput(RedisCodec<K, V> codec, boolean withScores, boolean withPayloads) {
 		super(codec, new SearchResults<>());
 		nested = new MapOutput<>(codec);
 		this.withScores = withScores;
+		this.withPayloads = withPayloads;
 	}
 
 	@Override
@@ -40,7 +42,13 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
 				}
 			} else {
-				nested.set(bytes);
+				if (withPayloads && current.getPayload() == null) {
+					if (bytes != null) {
+						current.setPayload(codec.decodeValue(bytes));
+					}
+				} else {
+					nested.set(bytes);
+				}
 			}
 		}
 	}

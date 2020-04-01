@@ -1,7 +1,6 @@
 package com.redislabs.lettusearch.search;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,5 +18,5 @@ public @Data class Document<K, V> extends LinkedHashMap<K, V> {
 
 	private K id;
 	private Double score;
-	private Map<K, V> fields;
+	private V payload;
 }
