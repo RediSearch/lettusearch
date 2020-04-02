@@ -41,7 +41,7 @@ public class StatefulRediSearchSentinelConnectionImpl<K, V> extends StatefulRedi
 		super(writer, codec, timeout);
 		this.async = new RediSearchSentinelAsyncCommandsImpl<>(this, codec);
 		this.sync = syncHandler(async, RediSearchSentinelCommands.class);
-		this.reactive = new RediSearchSentinelReactiveCommandsImpl<K, V>(this, codec);
+		this.reactive = new RediSearchSentinelReactiveCommandsImpl<>(this, codec);
 	}
 
 	@Override

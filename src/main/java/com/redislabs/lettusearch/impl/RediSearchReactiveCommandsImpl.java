@@ -47,18 +47,8 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<String> create(String index, Schema schema) {
-		return create(index, schema, null);
-	}
-
-	@Override
 	public Mono<String> create(String index, Schema schema, CreateOptions options) {
 		return createMono(() -> commandBuilder.create(index, schema, options));
-	}
-
-	@Override
-	public Mono<String> drop(String index) {
-		return drop(index, null);
 	}
 
 	@Override
@@ -76,8 +66,9 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 		return createMono(() -> commandBuilder.get(index, docId));
 	}
 
+	@SafeVarargs
 	@Override
-	public Flux<Map<K, V>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds) {
+	public final Flux<Map<K, V>> ftMget(String index, K... docIds) {
 		return createDissolvingFlux(() -> commandBuilder.mget(index, docIds));
 	}
 

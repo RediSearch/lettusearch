@@ -25,7 +25,7 @@ public interface SearchReactiveCommands<K, V> {
 
 	Mono<Map<K, V>> get(String index, K docId);
 
-	Flux<Map<K, V>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds);
+	Flux<Map<K, V>> ftMget(String index, K... docIds);
 
 	Mono<SearchResults<K, V>> search(String index, String query, Object... options);
 

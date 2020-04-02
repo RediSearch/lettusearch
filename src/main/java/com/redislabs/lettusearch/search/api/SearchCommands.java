@@ -23,7 +23,7 @@ public interface SearchCommands<K, V> {
 
 	Map<K, V> get(String index, K docId);
 
-	List<Map<K, V>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds);
+	List<Map<K, V>> ftMget(String index, K... docIds);
 
 	SearchResults<K, V> search(String index, String query, Object... options);
 

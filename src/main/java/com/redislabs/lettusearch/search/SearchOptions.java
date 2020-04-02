@@ -62,12 +62,12 @@ public @Data class SearchOptions implements RediSearchArgument {
 		if (!inFields.isEmpty()) {
 			args.add(INFIELDS);
 			args.add(inFields.size());
-			inFields.forEach(f -> args.add(f));
+			inFields.forEach(args::add);
 		}
 		if (!returnFields.isEmpty()) {
 			args.add(RETURN);
 			args.add(returnFields.size());
-			returnFields.forEach(f -> args.add(f));
+			returnFields.forEach(args::add);
 		}
 		if (highlight != null) {
 			args.add(HIGHLIGHT);

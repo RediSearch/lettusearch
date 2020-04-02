@@ -19,7 +19,7 @@ import com.redislabs.lettusearch.protocol.CommandKeyword;
 
 public class RediSearchUtils {
 
-	private final static Long ZERO = 0l;
+	private final static Long ZERO = 0L;
 
 	@SuppressWarnings("unchecked")
 	public static IndexInfo getInfo(List<Object> infoList) {

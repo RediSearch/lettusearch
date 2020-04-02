@@ -27,7 +27,7 @@ public class TestIndexCRUD extends AbstractBaseTest {
 	public void testTemporaryIndex() throws InterruptedException {
 		String indexName = "temporaryIndex";
 		commands.create(indexName, Schema.builder().field(TextField.builder().name("field1").build()).build(),
-				CreateOptions.builder().temporary(1l).build());
+				CreateOptions.builder().temporary(1L).build());
 		List<Object> info = commands.ftInfo(indexName);
 		assertEquals(indexName, info.get(1));
 		Thread.sleep(1001);

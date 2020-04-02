@@ -28,7 +28,7 @@ public @Data class HighlightOptions implements RediSearchArgument {
 		if (fields.size() > 0) {
 			args.add(FIELDS);
 			args.add(fields.size());
-			fields.forEach(f -> args.add(f));
+			fields.forEach(args::add);
 		}
 		if (tags != null) {
 			args.add(TAGS);

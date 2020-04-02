@@ -18,7 +18,7 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 	private MapOutput<K, V> nested;
 	private int mapCount = -1;
 	private final List<Integer> counts = new ArrayList<>();
-	private boolean withScores;
+	private final boolean withScores;
 
 	public SearchOutput(RedisCodec<K, V> codec, boolean withScores) {
 		super(codec, new SearchResults<>());

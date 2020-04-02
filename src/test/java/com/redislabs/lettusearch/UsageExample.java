@@ -25,9 +25,9 @@ public class UsageExample {
 		RediSearchClient client = RediSearchClient.create("redis://localhost");
 		StatefulRediSearchConnection<String, String> conn = client.connect();
 		RediSearchCommands<String, String> commands = conn.sync();
-		commands.create(Beers.INDEX, SCHEMA);
+		commands.create(Beers.INDEX, SCHEMA, null);
 		load().forEach(d -> commands.add(Beers.INDEX, d.get(FIELD_ID), 1, d, null, null));
 		SearchResults<String, String> results = commands.search(INDEX, "sculpin");
-		results.forEach(r -> System.out.println(r));
+		results.forEach(System.out::println);
 	}
 }

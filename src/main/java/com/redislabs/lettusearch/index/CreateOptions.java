@@ -54,7 +54,7 @@ public @Data class CreateOptions implements RediSearchArgument {
 		if (stopWords != null) {
 			args.add(STOPWORDS);
 			args.add(stopWords.size());
-			stopWords.forEach(stopWord -> args.add(stopWord));
+			stopWords.forEach(args::add);
 		}
 	}
 

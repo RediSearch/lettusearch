@@ -12,7 +12,7 @@ import io.lettuce.core.output.CommandOutput;
 public class SearchNoContentOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>> {
 
 	private Document<K, V> current;
-	private boolean withScores;
+	private final boolean withScores;
 
 	public SearchNoContentOutput(RedisCodec<K, V> codec, boolean withScores) {
 		super(codec, new SearchResults<>());

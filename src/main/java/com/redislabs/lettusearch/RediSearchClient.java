@@ -183,8 +183,7 @@ public class RediSearchClient extends AbstractRedisClient {
 			}
 		}
 
-		ConnectionFuture<RedisChannelHandler<K, V>> future = initializeChannelAsync(connectionBuilder);
-		ConnectionFuture<?> sync = future;
+		ConnectionFuture<?> sync = initializeChannelAsync(connectionBuilder);
 
 		if (!clientOptions.isPingBeforeActivateConnection() && hasPassword(redisURI)) {
 

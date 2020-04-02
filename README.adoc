@@ -1,3 +1,4 @@
+// suppress inspection "SyntaxError" for whole file
 = LettuSearch
 :source-highlighter: coderay
 // Metadata

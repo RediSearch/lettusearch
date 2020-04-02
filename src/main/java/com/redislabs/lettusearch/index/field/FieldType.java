@@ -11,7 +11,7 @@ public enum FieldType {
 
 	Text(TEXT), Numeric(NUMERIC), Geo(GEO), Tag(TAG);
 
-	private CommandKeyword keyword;
+	private final CommandKeyword keyword;
 
 	FieldType(CommandKeyword keyword) {
 		this.keyword = keyword;

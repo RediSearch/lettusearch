@@ -14,7 +14,7 @@ import io.lettuce.core.output.CommandOutput;
 public class SuggestOutput<K, V> extends CommandOutput<K, V, List<SuggetResult<V>>> {
 
 	private SuggetResult<V> current;
-	private SuggetOptions options;
+	private final SuggetOptions options;
 
 	public SuggestOutput(RedisCodec<K, V> codec, SuggetOptions options) {
 		super(codec, new ArrayList<>());

@@ -19,7 +19,7 @@ public class TestUtils extends AbstractBaseTest {
 	public void testFtInfo() {
 		List<Object> infoList = commands.ftInfo(Beers.INDEX);
 		IndexInfo info = RediSearchUtils.getInfo(infoList);
-		assertEquals((Long) 2348l, info.getNumDocs());
+		assertEquals((Long) 2348L, info.getNumDocs());
 		List<Field> fields = info.getFields();
 		TextField nameField = (TextField) fields.get(0);
 		assertEquals(Beers.FIELD_NAME, nameField.getName());

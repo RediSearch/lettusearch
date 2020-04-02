@@ -48,18 +48,8 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
-	public RedisFuture<String> create(String index, Schema schema) {
-		return create(index, schema, null);
-	}
-
-	@Override
 	public RedisFuture<String> create(String index, Schema schema, CreateOptions options) {
 		return dispatch(commandBuilder.create(index, schema, options));
-	}
-
-	@Override
-	public RedisFuture<String> drop(String index) {
-		return drop(index, null);
 	}
 
 	@Override
@@ -139,8 +129,9 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 		return dispatch(commandBuilder.get(index, docId));
 	}
 
+	@SafeVarargs
 	@Override
-	public RedisFuture<List<Map<K, V>>> ftMget(String index, @SuppressWarnings("unchecked") K... docIds) {
+	public final RedisFuture<List<Map<K, V>>> ftMget(String index, K... docIds) {
 		return dispatch(commandBuilder.mget(index, docIds));
 	}
 

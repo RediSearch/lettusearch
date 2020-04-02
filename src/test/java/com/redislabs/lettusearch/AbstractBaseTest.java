@@ -28,7 +28,7 @@ public abstract class AbstractBaseTest {
 		connection = client.connect();
 		commands = connection.sync();
 		commands.flushall();
-		commands.create(INDEX, UsageExample.SCHEMA);
+		commands.create(INDEX, UsageExample.SCHEMA, null);
 		for (Map<String, String> beer : beers) {
 			commands.add(INDEX, beer.get(FIELD_ID), 1, beer, null, null);
 			commands.sugadd(SUGINDEX, beer.get(FIELD_NAME), 1, false, null);

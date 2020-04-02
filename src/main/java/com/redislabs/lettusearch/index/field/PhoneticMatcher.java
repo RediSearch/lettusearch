@@ -4,7 +4,7 @@ public enum PhoneticMatcher {
 
 	English("dm:en"), French("dm:fr"), Portuguese("dm:pt"), Spanish("dm:es");
 
-	private String code;
+	private final String code;
 
 	PhoneticMatcher(String code) {
 		this.code = code;

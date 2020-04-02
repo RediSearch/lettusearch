@@ -13,7 +13,7 @@ import io.lettuce.core.output.MapOutput;
 
 public class AggregateOutput<K, V, R extends AggregateResults<K, V>> extends CommandOutput<K, V, R> {
 
-	private MapOutput<K, V> nested;
+	private final MapOutput<K, V> nested;
 	private int mapCount = -1;
 	private final List<Integer> counts = new ArrayList<>();
 

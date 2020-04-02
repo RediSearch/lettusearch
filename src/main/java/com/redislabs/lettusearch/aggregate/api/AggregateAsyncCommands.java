@@ -17,18 +17,18 @@ import io.lettuce.core.RedisFuture;
  */
 public interface AggregateAsyncCommands<K, V> {
 
-	RedisFuture<AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options);
+    RedisFuture<AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options);
 
-	RedisFuture<AggregateResults<K, V>> aggregate(String index, String query, Object... options);
+    RedisFuture<AggregateResults<K, V>> aggregate(String index, String query, Object... options);
 
-	RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
-			AggregateOptions options);
+    RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
+                                                            AggregateOptions options);
 
-	RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
-			Object... options);
+    RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
+                                                            Object... options);
 
-	RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor, Long count);
+    RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor, Long count);
 
-	RedisFuture<String> cursorDelete(String index, long cursor);
+    RedisFuture<String> cursorDelete(String index, long cursor);
 
 }
