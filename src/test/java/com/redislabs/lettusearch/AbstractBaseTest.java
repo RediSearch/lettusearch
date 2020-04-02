@@ -1,16 +1,17 @@
 package com.redislabs.lettusearch;
 
-import static com.redislabs.lettusearch.Beers.FIELD_ID;
 import static com.redislabs.lettusearch.Beers.FIELD_NAME;
 import static com.redislabs.lettusearch.Beers.INDEX;
 import static com.redislabs.lettusearch.Beers.load;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+
+import com.redislabs.lettusearch.search.Document;
+import com.redislabs.lettusearch.suggest.Suggestion;
 
 public abstract class AbstractBaseTest {
 
@@ -18,7 +19,7 @@ public abstract class AbstractBaseTest {
 
 	private RediSearchClient client;
 	protected StatefulRediSearchConnection<String, String> connection;
-	protected List<Map<String, String>> beers;
+	protected List<Document<String, String>> beers;
 	protected RediSearchCommands<String, String> commands;
 
 	@BeforeEach
@@ -29,9 +30,10 @@ public abstract class AbstractBaseTest {
 		commands = connection.sync();
 		commands.flushall();
 		commands.create(INDEX, UsageExample.SCHEMA, null);
-		for (Map<String, String> beer : beers) {
-			commands.add(INDEX, beer.get(FIELD_ID), 1, beer, null, null);
-			commands.sugadd(SUGINDEX, beer.get(FIELD_NAME), 1, false, null);
+		for (Document<String, String> beer : beers) {
+			commands.add(INDEX, beer, null);
+			commands.sugadd(SUGINDEX, Suggestion.<String>builder().string(beer.get(FIELD_NAME)).score(1d).build(),
+					false);
 		}
 	}
 

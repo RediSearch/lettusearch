@@ -20,7 +20,6 @@ import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ConnectionBuilder;
 import io.lettuce.core.ConnectionFuture;
 import io.lettuce.core.LettuceStrings;
-import io.lettuce.core.RedisChannelHandler;
 import io.lettuce.core.RedisChannelWriter;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisConnectionException;

@@ -17,6 +17,7 @@ import com.redislabs.lettusearch.index.Schema;
 import com.redislabs.lettusearch.index.field.FieldOptions;
 import com.redislabs.lettusearch.index.field.FieldType;
 import com.redislabs.lettusearch.index.field.TextField;
+import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.SearchResults;
 
 import io.lettuce.core.RedisCommandExecutionException;
@@ -43,10 +44,10 @@ public class TestIndexCRUD extends AbstractBaseTest {
 	@Test
 	public void testDrop() {
 		commands.drop(INDEX, DropOptions.builder().keepDocs(false).build());
-		Map<String, String> fields = new HashMap<>();
-		fields.put("field1", "value1");
+		Document<String, String> doc = Document.<String, String>builder().id("newDocId").score(1d).build();
+		doc.put("field1", "value1");
 		try {
-			commands.add(INDEX, "newDocId", 1, fields, null, null);
+			commands.add(INDEX, doc, null);
 			fail("Index not dropped");
 		} catch (RedisCommandExecutionException e) {
 			// ignored, expected behavior
@@ -56,12 +57,12 @@ public class TestIndexCRUD extends AbstractBaseTest {
 	@Test
 	public void testAlter() {
 		commands.alter(INDEX, "newField", FieldOptions.builder().type(FieldType.Tag).build());
-		Map<String, String> fields = new HashMap<>();
-		fields.put("newField", "value1");
-		commands.add(INDEX, "newDocId", 1, fields, null, null);
+		Document<String, String> doc = Document.<String, String>builder().id("newDocId").score(1d).build();
+		doc.put("newField", "value1");
+		commands.add(INDEX, doc, null);
 		SearchResults<String, String> results = commands.search(INDEX, "@newField:{value1}");
 		assertEquals(1, results.getCount());
-		assertEquals(fields.get("newField"), results.get(0).get("newField"));
+		assertEquals(doc.get("newField"), results.get(0).get("newField"));
 	}
 
 	@Test

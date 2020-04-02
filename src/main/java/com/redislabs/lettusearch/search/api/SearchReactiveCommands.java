@@ -3,6 +3,7 @@ package com.redislabs.lettusearch.search.api;
 import java.util.Map;
 
 import com.redislabs.lettusearch.search.AddOptions;
+import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 
@@ -19,7 +20,7 @@ import reactor.core.publisher.Mono;
  */
 public interface SearchReactiveCommands<K, V> {
 
-	Mono<String> add(String index, K docId, double score, Map<K, V> fields, V payload, AddOptions options);
+	Mono<String> add(String index, Document<K, V> document, AddOptions options);
 
 	Mono<Boolean> del(String index, K docId, boolean deleteDoc);
 

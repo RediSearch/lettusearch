@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.redislabs.lettusearch.search.AddOptions;
+import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 
@@ -17,7 +18,7 @@ import com.redislabs.lettusearch.search.SearchResults;
  */
 public interface SearchCommands<K, V> {
 
-	String add(String index, K docId, double score, Map<K, V> fields, V payload, AddOptions options);
+	String add(String index, Document<K, V> document, AddOptions options);
 
 	boolean del(String index, K docId, boolean deleteDoc);
 

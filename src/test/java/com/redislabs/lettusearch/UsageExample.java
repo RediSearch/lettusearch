@@ -1,7 +1,6 @@
 package com.redislabs.lettusearch;
 
 import static com.redislabs.lettusearch.Beers.FIELD_ABV;
-import static com.redislabs.lettusearch.Beers.FIELD_ID;
 import static com.redislabs.lettusearch.Beers.FIELD_NAME;
 import static com.redislabs.lettusearch.Beers.FIELD_STYLE;
 import static com.redislabs.lettusearch.Beers.INDEX;
@@ -26,7 +25,7 @@ public class UsageExample {
 		StatefulRediSearchConnection<String, String> conn = client.connect();
 		RediSearchCommands<String, String> commands = conn.sync();
 		commands.create(Beers.INDEX, SCHEMA, null);
-		load().forEach(d -> commands.add(Beers.INDEX, d.get(FIELD_ID), 1, d, null, null));
+		load().forEach(d -> commands.add(Beers.INDEX, d, null));
 		SearchResults<String, String> results = commands.search(INDEX, "sculpin");
 		results.forEach(System.out::println);
 	}

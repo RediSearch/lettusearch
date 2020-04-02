@@ -15,10 +15,11 @@ import com.redislabs.lettusearch.index.DropOptions;
 import com.redislabs.lettusearch.index.Schema;
 import com.redislabs.lettusearch.index.field.FieldOptions;
 import com.redislabs.lettusearch.search.AddOptions;
+import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.suggest.Suggestion;
 import com.redislabs.lettusearch.suggest.SuggetOptions;
-import com.redislabs.lettusearch.suggest.SuggetResult;
 
 import io.lettuce.core.RedisAsyncCommandsImpl;
 import io.lettuce.core.RedisFuture;
@@ -42,9 +43,8 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
-	public RedisFuture<String> add(String index, K docId, double score, Map<K, V> fields, V payload,
-			AddOptions options) {
-		return dispatch(commandBuilder.add(index, docId, score, fields, payload, options));
+	public RedisFuture<String> add(String index, Document<K, V> document, AddOptions options) {
+		return dispatch(commandBuilder.add(index, document, options));
 	}
 
 	@Override
@@ -74,13 +74,13 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 
 	@Override
 	public RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
-			AggregateOptions options) {
+																   AggregateOptions options) {
 		return dispatch(commandBuilder.aggregate(index, query, cursor, options));
 	}
 
 	@Override
 	public RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
-			Object... options) {
+																   Object... options) {
 		return dispatch(commandBuilder.aggregate(index, query, cursor, options));
 	}
 
@@ -105,12 +105,12 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
-	public RedisFuture<Long> sugadd(K key, V string, double score, boolean increment, V payload) {
-		return dispatch(commandBuilder.sugadd(key, string, score, increment, payload));
+	public RedisFuture<Long> sugadd(K key, Suggestion<V> suggestion, boolean increment) {
+		return dispatch(commandBuilder.sugadd(key, suggestion, increment));
 	}
 
 	@Override
-	public RedisFuture<List<SuggetResult<V>>> sugget(K key, V prefix, SuggetOptions options) {
+	public RedisFuture<List<Suggestion<V>>> sugget(K key, V prefix, SuggetOptions options) {
 		return dispatch(commandBuilder.sugget(key, prefix, options));
 	}
 
@@ -129,9 +129,8 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 		return dispatch(commandBuilder.get(index, docId));
 	}
 
-	@SafeVarargs
 	@Override
-	public final RedisFuture<List<Map<K, V>>> ftMget(String index, K... docIds) {
+	public RedisFuture<List<Map<K, V>>> ftMget(String index, K... docIds) {
 		return dispatch(commandBuilder.mget(index, docIds));
 	}
 
