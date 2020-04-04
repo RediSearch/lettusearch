@@ -17,18 +17,18 @@ import com.redislabs.lettusearch.index.field.FieldOptions;
  */
 public interface IndexCommands<K, V> {
 
-	String create(String index, Schema schema, CreateOptions options);
+	String create(K index, Schema schema, CreateOptions options);
 
-	String drop(String index, DropOptions options);
+	String drop(K index, DropOptions options);
 
-	String alter(String index, K field, FieldOptions options);
+	String alter(K index, K field, FieldOptions options);
 
-	List<Object> ftInfo(String index);
+	List<Object> ftInfo(K index);
 
-	String aliasAdd(String name, String index);
+	String aliasAdd(K name, K index);
 
-	String aliasUpdate(String name, String index);
+	String aliasUpdate(K name, K index);
 
-	String aliasDel(String name);
+	String aliasDel(K name);
 
 }

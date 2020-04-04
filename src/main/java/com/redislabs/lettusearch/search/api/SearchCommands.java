@@ -18,16 +18,16 @@ import com.redislabs.lettusearch.search.SearchResults;
  */
 public interface SearchCommands<K, V> {
 
-	String add(String index, Document<K, V> document, AddOptions options);
+	String add(K index, Document<K, V> document, AddOptions options);
 
-	boolean del(String index, K docId, boolean deleteDoc);
+	boolean del(K index, K docId, boolean deleteDoc);
 
-	Map<K, V> get(String index, K docId);
+	Map<K, V> get(K index, K docId);
 
-	List<Map<K, V>> ftMget(String index, K... docIds);
+	List<Map<K, V>> ftMget(K index, K... docIds);
 
-	SearchResults<K, V> search(String index, String query, Object... options);
+	SearchResults<K, V> search(K index, V query, Object... options);
 
-	SearchResults<K, V> search(String index, String query, SearchOptions options);
+	SearchResults<K, V> search(K index, V query, SearchOptions options);
 
 }

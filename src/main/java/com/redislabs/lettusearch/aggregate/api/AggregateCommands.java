@@ -15,16 +15,16 @@ import com.redislabs.lettusearch.aggregate.Cursor;
  */
 public interface AggregateCommands<K, V> {
 
-	AggregateResults<K, V> aggregate(String index, String query, AggregateOptions options);
+	AggregateResults<K, V> aggregate(K index, V query, AggregateOptions options);
 
-	AggregateResults<K, V> aggregate(String index, String query, Object... options);
+	AggregateResults<K, V> aggregate(K index, V query, Object... options);
 
-	AggregateWithCursorResults<K, V> aggregate(String index, String query, Cursor cursor, AggregateOptions options);
+	AggregateWithCursorResults<K, V> aggregate(K index, V query, Cursor cursor, AggregateOptions options);
 
-	AggregateWithCursorResults<K, V> aggregate(String index, String query, Cursor cursor, Object... options);
+	AggregateWithCursorResults<K, V> aggregate(K index, V query, Cursor cursor, Object... options);
 
-	AggregateWithCursorResults<K, V> cursorRead(String index, long cursor, Long count);
+	AggregateWithCursorResults<K, V> cursorRead(K index, long cursor, Long count);
 
-	String cursorDelete(String index, long cursor);
+	String cursorDelete(K index, long cursor);
 
 }

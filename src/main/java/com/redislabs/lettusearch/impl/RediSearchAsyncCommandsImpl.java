@@ -43,64 +43,64 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
-	public RedisFuture<String> add(String index, Document<K, V> document, AddOptions options) {
+	public RedisFuture<String> add(K index, Document<K, V> document, AddOptions options) {
 		return dispatch(commandBuilder.add(index, document, options));
 	}
 
 	@Override
-	public RedisFuture<String> create(String index, Schema schema, CreateOptions options) {
+	public RedisFuture<String> create(K index, Schema schema, CreateOptions options) {
 		return dispatch(commandBuilder.create(index, schema, options));
 	}
 
 	@Override
-	public RedisFuture<String> drop(String index, DropOptions options) {
+	public RedisFuture<String> drop(K index, DropOptions options) {
 		return dispatch(commandBuilder.drop(index, options));
 	}
 
 	@Override
-	public RedisFuture<List<Object>> ftInfo(String index) {
+	public RedisFuture<List<Object>> ftInfo(K index) {
 		return dispatch(commandBuilder.info(index));
 	}
 
 	@Override
-	public RedisFuture<SearchResults<K, V>> search(String index, String query, SearchOptions options) {
+	public RedisFuture<SearchResults<K, V>> search(K index, V query, SearchOptions options) {
 		return dispatch(commandBuilder.search(index, query, options));
 	}
 
 	@Override
-	public RedisFuture<SearchResults<K, V>> search(String index, String query, Object... options) {
+	public RedisFuture<SearchResults<K, V>> search(K index, V query, Object... options) {
 		return dispatch(commandBuilder.search(index, query, options));
 	}
 
 	@Override
-	public RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
+	public RedisFuture<AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor,
 																   AggregateOptions options) {
 		return dispatch(commandBuilder.aggregate(index, query, cursor, options));
 	}
 
 	@Override
-	public RedisFuture<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
+	public RedisFuture<AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor,
 																   Object... options) {
 		return dispatch(commandBuilder.aggregate(index, query, cursor, options));
 	}
 
 	@Override
-	public RedisFuture<AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options) {
+	public RedisFuture<AggregateResults<K, V>> aggregate(K index, V query, AggregateOptions options) {
 		return dispatch(commandBuilder.aggregate(index, query, options));
 	}
 
 	@Override
-	public RedisFuture<AggregateResults<K, V>> aggregate(String index, String query, Object... options) {
+	public RedisFuture<AggregateResults<K, V>> aggregate(K index, V query, Object... options) {
 		return dispatch(commandBuilder.aggregate(index, query, options));
 	}
 
 	@Override
-	public RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor, Long count) {
+	public RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, Long count) {
 		return dispatch(commandBuilder.cursorRead(index, cursor, count));
 	}
 
 	@Override
-	public RedisFuture<String> cursorDelete(String index, long cursor) {
+	public RedisFuture<String> cursorDelete(K index, long cursor) {
 		return dispatch(commandBuilder.cursorDelete(index, cursor));
 	}
 
@@ -125,37 +125,37 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 	}
 
 	@Override
-	public RedisFuture<Map<K, V>> get(String index, K docId) {
+	public RedisFuture<Map<K, V>> get(K index, K docId) {
 		return dispatch(commandBuilder.get(index, docId));
 	}
 
 	@Override
-	public RedisFuture<List<Map<K, V>>> ftMget(String index, K... docIds) {
+	public RedisFuture<List<Map<K, V>>> ftMget(K index, K... docIds) {
 		return dispatch(commandBuilder.mget(index, docIds));
 	}
 
 	@Override
-	public RedisFuture<Boolean> del(String index, K docId, boolean deleteDoc) {
+	public RedisFuture<Boolean> del(K index, K docId, boolean deleteDoc) {
 		return dispatch(commandBuilder.del(index, docId, deleteDoc));
 	}
 
 	@Override
-	public RedisFuture<String> alter(String index, K field, FieldOptions options) {
+	public RedisFuture<String> alter(K index, K field, FieldOptions options) {
 		return dispatch(commandBuilder.alter(index, field, options));
 	}
 
 	@Override
-	public RedisFuture<String> aliasAdd(String name, String index) {
+	public RedisFuture<String> aliasAdd(K name, K index) {
 		return dispatch(commandBuilder.aliasAdd(name, index));
 	}
 
 	@Override
-	public RedisFuture<String> aliasDel(String name) {
+	public RedisFuture<String> aliasDel(K name) {
 		return dispatch(commandBuilder.aliasDel(name));
 	}
 
 	@Override
-	public RedisFuture<String> aliasUpdate(String name, String index) {
+	public RedisFuture<String> aliasUpdate(K name, K index) {
 		return dispatch(commandBuilder.aliasUpdate(name, index));
 	}
 

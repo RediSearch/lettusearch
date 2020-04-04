@@ -18,18 +18,18 @@ import reactor.core.publisher.Mono;
  */
 public interface IndexReactiveCommands<K, V> {
 
-	Mono<String> create(String index, Schema schema, CreateOptions options);
+	Mono<String> create(K index, Schema schema, CreateOptions options);
 
-	Mono<String> drop(String index, DropOptions options);
+	Mono<String> drop(K index, DropOptions options);
 
-	Mono<String> alter(String index, K field, FieldOptions options);
+	Mono<String> alter(K index, K field, FieldOptions options);
 
-	Flux<Object> ftInfo(String index);
+	Flux<Object> ftInfo(K index);
 
-	Mono<String> aliasAdd(String name, String index);
+	Mono<String> aliasAdd(K name, K index);
 
-	Mono<String> aliasUpdate(String name, String index);
+	Mono<String> aliasUpdate(K name, K index);
 
-	Mono<String> aliasDel(String name);
+	Mono<String> aliasDel(K name);
 
 }

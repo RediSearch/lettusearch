@@ -43,80 +43,80 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<String> add(String index, Document<K, V> document, AddOptions options) {
+	public Mono<String> add(K index, Document<K, V> document, AddOptions options) {
 		return createMono(() -> commandBuilder.add(index, document, options));
 	}
 
 	@Override
-	public Mono<String> create(String index, Schema schema, CreateOptions options) {
+	public Mono<String> create(K index, Schema schema, CreateOptions options) {
 		return createMono(() -> commandBuilder.create(index, schema, options));
 	}
 
 	@Override
-	public Mono<String> drop(String index, DropOptions options) {
+	public Mono<String> drop(K index, DropOptions options) {
 		return createMono(() -> commandBuilder.drop(index, options));
 	}
 
 	@Override
-	public Flux<Object> ftInfo(String index) {
+	public Flux<Object> ftInfo(K index) {
 		return createDissolvingFlux(() -> commandBuilder.info(index));
 	}
 
 	@Override
-	public Mono<Map<K, V>> get(String index, K docId) {
+	public Mono<Map<K, V>> get(K index, K docId) {
 		return createMono(() -> commandBuilder.get(index, docId));
 	}
 
 	@SafeVarargs
 	@Override
-	public final Flux<Map<K, V>> ftMget(String index, K... docIds) {
+	public final Flux<Map<K, V>> ftMget(K index, K... docIds) {
 		return createDissolvingFlux(() -> commandBuilder.mget(index, docIds));
 	}
 
 	@Override
-	public Mono<Boolean> del(String index, K docId, boolean deleteDoc) {
+	public Mono<Boolean> del(K index, K docId, boolean deleteDoc) {
 		return createMono(() -> commandBuilder.del(index, docId, deleteDoc));
 	}
 
 	@Override
-	public Mono<SearchResults<K, V>> search(String index, String query, SearchOptions options) {
+	public Mono<SearchResults<K, V>> search(K index, V query, SearchOptions options) {
 		return createMono(() -> commandBuilder.search(index, query, options));
 	}
 
 	@Override
-	public Mono<SearchResults<K, V>> search(String index, String query, Object... options) {
+	public Mono<SearchResults<K, V>> search(K index, V query, Object... options) {
 		return createMono(() -> commandBuilder.search(index, query, options));
 	}
 
 	@Override
-	public Mono<AggregateResults<K, V>> aggregate(String index, String query, AggregateOptions options) {
+	public Mono<AggregateResults<K, V>> aggregate(K index, V query, AggregateOptions options) {
 		return createMono(() -> commandBuilder.aggregate(index, query, options));
 	}
 
 	@Override
-	public Mono<AggregateResults<K, V>> aggregate(String index, String query, Object... options) {
+	public Mono<AggregateResults<K, V>> aggregate(K index, V query, Object... options) {
 		return createMono(() -> commandBuilder.aggregate(index, query, options));
 	}
 
 	@Override
-	public Mono<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
+	public Mono<AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor,
 			AggregateOptions options) {
 		return createMono(() -> commandBuilder.aggregate(index, query, cursor, options));
 	}
 
 	@Override
-	public Mono<AggregateWithCursorResults<K, V>> aggregate(String index, String query, Cursor cursor,
+	public Mono<AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor,
 			Object... options) {
 		return createMono(() -> commandBuilder.aggregate(index, query, cursor, options));
 	}
 
 	@Override
-	public Mono<AggregateWithCursorResults<K, V>> cursorRead(String index, long cursor, Long count) {
+	public Mono<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, Long count) {
 		return createMono(() -> commandBuilder.cursorRead(index, cursor, count));
 	}
 
 	@Override
-	public Mono<String> cursorDelete(String index, long cursor) {
+	public Mono<String> cursorDelete(K index, long cursor) {
 		return createMono(() -> commandBuilder.cursorDelete(index, cursor));
 	}
 
@@ -141,22 +141,22 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 	}
 
 	@Override
-	public Mono<String> alter(String index, K field, FieldOptions options) {
+	public Mono<String> alter(K index, K field, FieldOptions options) {
 		return createMono(() -> commandBuilder.alter(index, field, options));
 	}
 
 	@Override
-	public Mono<String> aliasAdd(String name, String index) {
+	public Mono<String> aliasAdd(K name, K index) {
 		return createMono(() -> commandBuilder.aliasAdd(name, index));
 	}
 
 	@Override
-	public Mono<String> aliasUpdate(String name, String index) {
+	public Mono<String> aliasUpdate(K name, K index) {
 		return createMono(() -> commandBuilder.aliasUpdate(name, index));
 	}
 
 	@Override
-	public Mono<String> aliasDel(String name) {
+	public Mono<String> aliasDel(K name) {
 		return createMono(() -> commandBuilder.aliasDel(name));
 	}
 

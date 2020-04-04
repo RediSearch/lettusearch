@@ -19,18 +19,18 @@ import io.lettuce.core.RedisFuture;
  */
 public interface IndexAsyncCommands<K, V> {
 
-	RedisFuture<String> create(String index, Schema schema, CreateOptions options);
+	RedisFuture<String> create(K index, Schema schema, CreateOptions options);
 
-	RedisFuture<String> drop(String index, DropOptions options);
+	RedisFuture<String> drop(K index, DropOptions options);
 
-	RedisFuture<String> alter(String index, K field, FieldOptions options);
+	RedisFuture<String> alter(K index, K field, FieldOptions options);
 
-	RedisFuture<List<Object>> ftInfo(String index);
+	RedisFuture<List<Object>> ftInfo(K index);
 
-	RedisFuture<String> aliasAdd(String name, String index);
+	RedisFuture<String> aliasAdd(K name, K index);
 
-	RedisFuture<String> aliasUpdate(String name, String index);
+	RedisFuture<String> aliasUpdate(K name, K index);
 
-	RedisFuture<String> aliasDel(String name);
+	RedisFuture<String> aliasDel(K name);
 
 }
