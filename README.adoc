@@ -45,11 +45,22 @@ LettuSearch implements RediSearch commands using the https://lettuce.io/core/5.0
 == Building
 [source,shell]
 ----
-$ mvn clean install
+$ gradle build
 ----
 
 == Usage
-Add LettuSearch to your application dependencies, e.g. with Maven:
+
+Add LettuSearch to your application dependencies:
+
+.Gradle
+[source,groovy]
+----
+dependencies {
+	api 'com.redislabs:lettusearch:x.y.x'
+}
+----
+
+.Maven
 [source,xml]
 ----
 <dependency>
@@ -59,14 +70,14 @@ Add LettuSearch to your application dependencies, e.g. with Maven:
 </dependency>
 ----
 
-.Java example
+Example usage:
 [source,java]
 ----
 RediSearchClient client = RediSearchClient.create("redis://localhost"); //<1>
 StatefulRediSearchConnection<String, String> conn = client.connect(); //<2>
 RediSearchCommands<String, String> commands = connection.sync(); //<3>
-Schema schema = Schema.builder().field(TextField.name("field1").build())...build(); //<4>
-CreateOptions options = CreateOptions.builder()...build();
+Schema schema = Schema.builder().field(TextField.name("field1").build())….build(); //<4>
+CreateOptions options = CreateOptions.builder()….build();
 ft.create("beerIdx", schema, options); //<5>
 Document<String, String> doc = Document.<String, String>builder().id("123").score(1D).build(); //<6>
 doc.put("name", "La Chouffe");
