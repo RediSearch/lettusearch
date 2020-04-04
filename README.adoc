@@ -39,16 +39,7 @@ endif::[]
 
 Java client for https://redisearch.io[RediSearch] based on https://lettuce.io[Lettuce]
 
-== Architecture
-LettuSearch implements RediSearch commands using the https://lettuce.io/core/5.0.1.RELEASE/reference/#_custom_commands[Command abstraction] provided by Lettuce.
-
-== Building
-[source,shell]
-----
-$ gradle build
-----
-
-== Usage
+== Getting Started
 
 Add LettuSearch to your application dependencies:
 
@@ -70,7 +61,7 @@ dependencies {
 </dependency>
 ----
 
-Example usage:
+Usage example:
 [source,java]
 ----
 RediSearchClient client = RediSearchClient.create("redis://localhost"); //<1>
@@ -92,3 +83,12 @@ SearchResults<String, String> results = ft.search("beerIdx", "chou*"); //<8>
 <6> Create a document
 <7> Add document to the index
 <8> Search the index
+
+== Architecture
+LettuSearch implements RediSearch commands using the https://lettuce.io/core/5.0.1.RELEASE/reference/#_custom_commands[Command abstraction] provided by Lettuce.
+
+== Building
+[source,shell]
+----
+$ gradle build
+----
