@@ -62,20 +62,22 @@ Add LettuSearch to your application dependencies, e.g. with Maven:
 .Java example
 [source,java]
 ----
-StatefulRediSearchConnection<String, String> conn = RediSearchClient.create("redis://localhost").connect(); //<1>
-RediSearchCommands<String, String> commands = connection.sync(); //<2>
-Schema schema = Schema.builder().field(TextField.name("field1").build())...build(); //<3>
+RediSearchClient client = RediSearchClient.create("redis://localhost"); //<1>
+StatefulRediSearchConnection<String, String> conn = client.connect(); //<2>
+RediSearchCommands<String, String> commands = connection.sync(); //<3>
+Schema schema = Schema.builder().field(TextField.name("field1").build())...build(); //<4>
 CreateOptions options = CreateOptions.builder()...build();
-ft.create("beerIdx", schema, options); //<4>
-Document<String, String> doc = Document.<String, String>builder().id("123").score(1D).build(); //<5>
+ft.create("beerIdx", schema, options); //<5>
+Document<String, String> doc = Document.<String, String>builder().id("123").score(1D).build(); //<6>
 doc.put("name", "La Chouffe");
-ft.add("beerIdx", doc); //<6>
-SearchResults<String, String> results = ft.search("beerIdx", "chou*"); //<7>
+ft.add("beerIdx", doc); //<7>
+SearchResults<String, String> results = ft.search("beerIdx", "chou*"); //<8>
 ----
-<1> Establish a connection to RediSearch
-<2> Use _sync_, _async_, or _reactive_ API
-<3> Create a schema
-<4> Create an index with the schema
-<5> Create a document
-<6> Add document to the index
-<7> Search the index
+<1> Create a RediSearch client
+<2> Establish a connection to RediSearch
+<3> Use _sync_, _async_, or _reactive_ API
+<4> Create a schema
+<5> Create an index with the schema
+<6> Create a document
+<7> Add document to the index
+<8> Search the index
