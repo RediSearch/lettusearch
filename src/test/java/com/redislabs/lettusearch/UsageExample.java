@@ -6,12 +6,16 @@ import static com.redislabs.lettusearch.Beers.FIELD_STYLE;
 import static com.redislabs.lettusearch.Beers.INDEX;
 import static com.redislabs.lettusearch.Beers.load;
 
+import com.redislabs.lettusearch.index.CreateOptions;
 import com.redislabs.lettusearch.index.Schema;
 import com.redislabs.lettusearch.index.field.NumericField;
 import com.redislabs.lettusearch.index.field.PhoneticMatcher;
 import com.redislabs.lettusearch.index.field.TagField;
 import com.redislabs.lettusearch.index.field.TextField;
+import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.SearchResults;
+
+import java.util.Map;
 
 public class UsageExample {
 
@@ -21,12 +25,11 @@ public class UsageExample {
 			.field(NumericField.builder().name(FIELD_ABV).sortable(true).build()).build();
 
 	public static void main(String[] args) throws Exception {
-		RediSearchClient client = RediSearchClient.create("redis://localhost");
-		StatefulRediSearchConnection<String, String> conn = client.connect();
+		StatefulRediSearchConnection<String, String> conn = RediSearchClient.create("redis://localhost").connect();
 		RediSearchCommands<String, String> commands = conn.sync();
-		commands.create(Beers.INDEX, SCHEMA, null);
+		commands.create(Beers.INDEX, SCHEMA, CreateOptions.builder().build());
 		load().forEach(d -> commands.add(Beers.INDEX, d, null));
-		SearchResults<String, String> results = commands.search(INDEX, "sculpin");
+		SearchResults<String, String> results = commands.search(INDEX, "chouf*");
 		results.forEach(System.out::println);
 	}
 }
