@@ -56,7 +56,7 @@ Add LettuSearch to your application dependencies:
 [source,groovy]
 ----
 dependencies {
-	api 'com.redislabs:lettusearch:x.y.x'
+    implementation 'com.redislabs:lettusearch:x.y.x'
 }
 ----
 
