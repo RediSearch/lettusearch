@@ -118,6 +118,7 @@ githubRelease {
     token = project.hasProperty('githubToken') ? project.property('githubToken') : ''
     owner "RediSearch"
     repo "lettusearch"
+    body changelog()
 }
 
 afterReleaseBuild.dependsOn ":githubRelease"
