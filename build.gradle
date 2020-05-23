@@ -122,22 +122,5 @@ githubRelease {
     body changelog()
 }
 
-task writePom {
-    doLast {
-        pom {
-            project {
-                inceptionYear '2019'
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution 'repo'
-                    }
-                }
-            }
-        }.writeTo("pom.xml")
-    }
-}
-
 afterReleaseBuild.dependsOn ":githubRelease"
 afterReleaseBuild.dependsOn bintrayUpload
