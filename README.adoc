@@ -55,9 +55,9 @@ dependencies {
 [source,xml]
 ----
 <dependency>
-	<groupId>com.redislabs</groupId>
-	<artifactId>lettusearch</artifactId>
-	<version>x.y.z</version>
+    <groupId>com.redislabs</groupId>
+    <artifactId>lettusearch</artifactId>
+    <version>x.y.z</version>
 </dependency>
 ----
 
@@ -65,15 +65,15 @@ Usage example:
 [source,java]
 ----
 RediSearchClient client = RediSearchClient.create("redis://localhost"); //<1>
-StatefulRediSearchConnection<String, String> conn = client.connect(); //<2>
+StatefulRediSearchConnection<String, String> connection = client.connect(); //<2>
 RediSearchCommands<String, String> commands = connection.sync(); //<3>
-Schema schema = Schema.builder().field(TextField.name("field1").build())….build(); //<4>
+Schema schema = Schema.builder().field(TextField.builder().name("field1").build())….build(); //<4>
 CreateOptions options = CreateOptions.builder()….build();
-ft.create("beerIdx", schema, options); //<5>
+commands.create("beerIdx", schema, options); //<5>
 Document<String, String> doc = Document.<String, String>builder().id("123").score(1D).build(); //<6>
 doc.put("name", "La Chouffe");
-ft.add("beerIdx", doc); //<7>
-SearchResults<String, String> results = ft.search("beerIdx", "chou*"); //<8>
+commands.add("beerIdx", doc, AddOptions.builder().build()); //<7>
+SearchResults<String, String> results = commands.search("beerIdx", "chou*"); //<8>
 ----
 <1> Create a RediSearch client
 <2> Establish a connection to RediSearch
