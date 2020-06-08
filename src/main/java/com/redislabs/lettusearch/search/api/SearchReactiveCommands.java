@@ -20,13 +20,19 @@ import reactor.core.publisher.Mono;
  */
 public interface SearchReactiveCommands<K, V> {
 
+	Mono<String> add(K index, Document<K, V> document);
+
 	Mono<String> add(K index, Document<K, V> document, AddOptions options);
+
+	Mono<Boolean> del(K index, K docId);
 
 	Mono<Boolean> del(K index, K docId, boolean deleteDoc);
 
 	Mono<Map<K, V>> get(K index, K docId);
 
 	Flux<Map<K, V>> ftMget(K index, K... docIds);
+
+	Mono<SearchResults<K, V>> search(K index, V query);
 
 	Mono<SearchResults<K, V>> search(K index, V query, Object... options);
 

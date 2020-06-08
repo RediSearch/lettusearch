@@ -17,7 +17,11 @@ import com.redislabs.lettusearch.index.field.FieldOptions;
  */
 public interface IndexCommands<K, V> {
 
+	String create(K index, Schema schema);
+
 	String create(K index, Schema schema, CreateOptions options);
+
+	String drop(K index);
 
 	String drop(K index, DropOptions options);
 

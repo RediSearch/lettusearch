@@ -17,74 +17,74 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TestAggregate extends AbstractBaseTest {
 
     @Test
-    public void testAggregateLoad() {
+    public void aggregateLoad() {
         AggregateResults<String, String> results = commands.aggregate(INDEX, "*",
-                AggregateOptions.builder().load(FIELD_NAME).load(FIELD_STYLE).build());
+                AggregateOptions.builder().load(NAME).load(STYLE).build());
         Assertions.assertEquals(1, results.getCount());
         assertEquals(beers.size(), results.size());
         for (int index = 0; index < beers.size(); index++) {
-            assertEquals(beers.get(index).get(FIELD_NAME).toLowerCase(),
-                    results.get(index).get(FIELD_NAME).toLowerCase());
-            String style = beers.get(index).get(FIELD_STYLE);
+            assertEquals(beers.get(index).get(NAME).toLowerCase(),
+                    results.get(index).get(NAME).toLowerCase());
+            String style = beers.get(index).get(STYLE);
             if (style != null) {
-                assertEquals(style.toLowerCase(), results.get(index).get(FIELD_STYLE).toLowerCase());
+                assertEquals(style.toLowerCase(), results.get(index).get(STYLE).toLowerCase());
             }
         }
     }
 
     @Test
-    public void testAggregateRaw() {
+    public void aggregateRaw() {
         AggregateResults<String, String> results = commands.aggregate(INDEX, "*", CommandKeyword.LOAD, 2,
-                property(FIELD_NAME), property(FIELD_STYLE));
+                property(NAME), property(STYLE));
         Assertions.assertEquals(1, results.getCount());
         assertEquals(beers.size(), results.size());
         for (int index = 0; index < beers.size(); index++) {
-            assertEquals(beers.get(index).get(FIELD_NAME).toLowerCase(),
-                    results.get(index).get(FIELD_NAME).toLowerCase());
-            String style = beers.get(index).get(FIELD_STYLE);
+            assertEquals(beers.get(index).get(NAME).toLowerCase(),
+                    results.get(index).get(NAME).toLowerCase());
+            String style = beers.get(index).get(STYLE);
             if (style != null) {
-                assertEquals(style.toLowerCase(), results.get(index).get(FIELD_STYLE).toLowerCase());
+                assertEquals(style.toLowerCase(), results.get(index).get(STYLE).toLowerCase());
             }
         }
     }
 
     @Test
-    public void testAggregateGroup() {
+    public void aggregateGroup() {
         AggregateResults<String, String> results = commands.aggregate(INDEX, "*", AggregateOptions.builder()
-                .operation(Group.builder().property(FIELD_STYLE)
-                        .reducer(Avg.builder().property(FIELD_ABV).as(FIELD_ABV).build()).build())
-                .operation(Sort.builder().property(SortProperty.builder().property(FIELD_ABV).order(Order.Desc).build())
+                .operation(Group.builder().property(STYLE)
+                        .reducer(Avg.builder().property(ABV).as(ABV).build()).build())
+                .operation(Sort.builder().property(SortProperty.builder().property(ABV).order(Order.Desc).build())
                         .build())
                 .operation(Limit.builder().num(20).offset(0).build()).build());
         assertEquals(100, results.getCount());
-        List<Double> abvs = results.stream().map(r -> Double.parseDouble(r.get(FIELD_ABV))).collect(Collectors.toList());
+        List<Double> abvs = results.stream().map(r -> Double.parseDouble(r.get(ABV))).collect(Collectors.toList());
         assertTrue(abvs.get(0) > abvs.get(abvs.size() - 1));
         assertEquals(20, results.size());
     }
 
     @Test
-    public void testAggregateWithCursor() {
+    public void aggregateWithCursor() {
         AggregateWithCursorResults<String, String> results = commands.aggregate(INDEX, "*", Cursor.builder().build(),
-                AggregateOptions.builder().load(FIELD_ID).load(FIELD_NAME).load(FIELD_ABV).build());
+                AggregateOptions.builder().load(ID).load(NAME).load(ABV).build());
         assertEquals(1, results.getCount());
         assertEquals(1000, results.size());
         assertEquals("harpoon ipa (2010)", results.get(999).get("name").toLowerCase());
         assertEquals("0.086", results.get(9).get("abv"));
-        results = commands.cursorRead(INDEX, results.getCursor(), null);
+        results = commands.cursorRead(INDEX, results.getCursor());
         assertEquals(1000, results.size());
         String deleteStatus = commands.cursorDelete(INDEX, results.getCursor());
         assertEquals("OK", deleteStatus);
     }
 
     @Test
-    public void testAggregateWithCursorRaw() {
+    public void aggregateWithCursorRaw() {
         AggregateWithCursorResults<String, String> results = commands.aggregate(INDEX, "*", Cursor.builder().build(),
-                CommandKeyword.LOAD, 3, property(FIELD_ID), property(FIELD_NAME), property(FIELD_ABV));
+                CommandKeyword.LOAD, 3, property(ID), property(NAME), property(ABV));
         assertEquals(1, results.getCount());
         assertEquals(1000, results.size());
         assertEquals("harpoon ipa (2010)", results.get(999).get("name").toLowerCase());
         assertEquals("0.086", results.get(9).get("abv"));
-        results = commands.cursorRead(INDEX, results.getCursor(), null);
+        results = commands.cursorRead(INDEX, results.getCursor());
         assertEquals(1000, results.size());
         String deleteStatus = commands.cursorDelete(INDEX, results.getCursor());
         assertEquals("OK", deleteStatus);

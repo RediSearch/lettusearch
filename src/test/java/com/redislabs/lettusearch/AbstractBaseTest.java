@@ -1,6 +1,6 @@
 package com.redislabs.lettusearch;
 
-import static com.redislabs.lettusearch.Beers.FIELD_NAME;
+import static com.redislabs.lettusearch.Beers.NAME;
 import static com.redislabs.lettusearch.Beers.INDEX;
 import static com.redislabs.lettusearch.Beers.load;
 
@@ -32,7 +32,7 @@ public abstract class AbstractBaseTest {
 		commands.create(INDEX, UsageExample.SCHEMA, null);
 		for (Document<String, String> beer : beers) {
 			commands.add(INDEX, beer, null);
-			commands.sugadd(SUGINDEX, Suggestion.<String>builder().string(beer.get(FIELD_NAME)).score(1d).build(),
+			commands.sugadd(SUGINDEX, Suggestion.<String>builder().string(beer.get(NAME)).score(1d).build(),
 					false);
 		}
 	}

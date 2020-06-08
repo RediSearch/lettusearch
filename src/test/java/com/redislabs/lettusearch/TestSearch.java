@@ -1,8 +1,8 @@
 package com.redislabs.lettusearch;
 
-import static com.redislabs.lettusearch.Beers.FIELD_ABV;
-import static com.redislabs.lettusearch.Beers.FIELD_NAME;
-import static com.redislabs.lettusearch.Beers.FIELD_STYLE;
+import static com.redislabs.lettusearch.Beers.ABV;
+import static com.redislabs.lettusearch.Beers.NAME;
+import static com.redislabs.lettusearch.Beers.STYLE;
 import static com.redislabs.lettusearch.Beers.INDEX;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -22,9 +22,7 @@ import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.search.TagOptions;
 
-import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 public class TestSearch extends AbstractBaseTest {
@@ -38,18 +36,18 @@ public class TestSearch extends AbstractBaseTest {
     @Test
     public void get() {
         Map<String, String> map = commands.get(INDEX, "1836");
-        assertEquals("Widmer Brothers Hefeweizen", map.get(FIELD_NAME));
+        assertEquals("Widmer Brothers Hefeweizen", map.get(NAME));
     }
 
     @Test
-    public void mget() throws InterruptedException {
+    public void mget() {
         List<Map<String, String>> mapList = commands.ftMget(INDEX, "1836", "1837", "292929292");
         assertEquals(3, mapList.size());
-        assertEquals("Widmer Brothers Hefeweizen", mapList.get(0).get(FIELD_NAME));
-        assertEquals("Hefe Black", mapList.get(1).get(FIELD_NAME));
+        assertEquals("Widmer Brothers Hefeweizen", mapList.get(0).get(NAME));
+        assertEquals("Hefe Black", mapList.get(1).get(NAME));
         Flux<Map<String, String>> source = connection.reactive().ftMget(INDEX, "1836", "1837");
-        StepVerifier.create(source).expectNextMatches(beer -> beer.get(FIELD_NAME).equals("Widmer Brothers Hefeweizen"))
-                .expectNextMatches(beer -> beer.get(FIELD_NAME).equals("Hefe Black")).expectComplete().verify();
+        StepVerifier.create(source).expectNextMatches(beer -> beer.get(NAME).equals("Widmer Brothers Hefeweizen"))
+                .expectNextMatches(beer -> beer.get(NAME).equals("Hefe Black")).expectComplete().verify();
     }
 
     @Test
@@ -76,31 +74,31 @@ public class TestSearch extends AbstractBaseTest {
                 SearchOptions.builder().withPayloads(true).build());
         assertEquals(256, results.getCount());
         Document<String, String> result1 = results.get(0);
-        assertNotNull(result1.get(FIELD_NAME));
+        assertNotNull(result1.get(NAME));
         assertNotNull(result1.getPayload());
-        assertEquals(result1.get(FIELD_NAME), result1.getPayload());
+        assertEquals(result1.get(NAME), result1.getPayload());
     }
 
     @Test
     public void searchReturn() {
         SearchResults<String, String> results = commands.search(INDEX, "pale",
-                SearchOptions.builder().returnField(FIELD_NAME).returnField(FIELD_STYLE).build());
+                SearchOptions.builder().returnField(NAME).returnField(STYLE).build());
         assertEquals(256, results.getCount());
         Document<String, String> result1 = results.get(0);
-        assertNotNull(result1.get(FIELD_NAME));
-        assertNotNull(result1.get(FIELD_STYLE));
-        assertNull(result1.get(FIELD_ABV));
+        assertNotNull(result1.get(NAME));
+        assertNotNull(result1.get(STYLE));
+        assertNull(result1.get(ABV));
     }
 
     @Test
     public void searchInvalidReturn() {
         SearchResults<String, String> results = commands.search(INDEX, "pale",
-                SearchOptions.builder().returnField(FIELD_NAME).returnField(FIELD_STYLE).returnField("").build());
+                SearchOptions.builder().returnField(NAME).returnField(STYLE).returnField("").build());
         assertEquals(256, results.getCount());
         Document<String, String> result1 = results.get(0);
-        assertNotNull(result1.get(FIELD_NAME));
-        assertNotNull(result1.get(FIELD_STYLE));
-        assertNull(result1.get(FIELD_ABV));
+        assertNotNull(result1.get(NAME));
+        assertNotNull(result1.get(STYLE));
+        assertNull(result1.get(ABV));
     }
 
     @Test
@@ -111,18 +109,18 @@ public class TestSearch extends AbstractBaseTest {
         SearchResults<String, String> results = commands.search(INDEX, query,
                 SearchOptions.builder().highlight(HighlightOptions.builder().build()).build());
         for (Document<String, String> result : results) {
-            assertTrue(highlighted(result, FIELD_STYLE, tagOptions, term));
+            assertTrue(highlighted(result, STYLE, tagOptions, term));
         }
         results = commands.search(INDEX, query,
-                SearchOptions.builder().highlight(HighlightOptions.builder().field(FIELD_NAME).build()).build());
+                SearchOptions.builder().highlight(HighlightOptions.builder().field(NAME).build()).build());
         for (Document<String, String> result : results) {
-            assertFalse(highlighted(result, FIELD_STYLE, tagOptions, term));
+            assertFalse(highlighted(result, STYLE, tagOptions, term));
         }
         tagOptions = TagOptions.builder().open("[start]").close("[end]").build();
         results = commands.search(INDEX, query, SearchOptions.builder()
-                .highlight(HighlightOptions.builder().field(FIELD_STYLE).tags(tagOptions).build()).build());
+                .highlight(HighlightOptions.builder().field(STYLE).tags(tagOptions).build()).build());
         for (Document<String, String> result : results) {
-            assertTrue(highlighted(result, FIELD_STYLE, tagOptions, term));
+            assertTrue(highlighted(result, STYLE, tagOptions, term));
         }
     }
 
@@ -137,9 +135,9 @@ public class TestSearch extends AbstractBaseTest {
                 SearchOptions.builder().limit(Limit.builder().num(100).offset(200).build()).build()).block();
         assertEquals(256, results.getCount());
         Document<String, String> result1 = results.get(0);
-        assertNotNull(result1.get(FIELD_NAME));
-        assertNotNull(result1.get(FIELD_STYLE));
-        assertNotNull(result1.get(FIELD_ABV));
+        assertNotNull(result1.get(NAME));
+        assertNotNull(result1.get(STYLE));
+        assertNotNull(result1.get(ABV));
     }
 
 }

@@ -15,15 +15,15 @@ public class TestAlias extends AbstractBaseTest {
 	private final static String ALIAS = "alias123";
 
 	@Test
-	public void testAddAlias() {
+	public void aliasAdd() {
 		commands.aliasAdd(ALIAS, INDEX);
 		SearchResults<String, String> results = commands.search(ALIAS, "*");
 		assertTrue(results.size() > 0);
 	}
 
 	@Test
-	public void testDelAlias() {
-		testAddAlias();
+	public void aliasDel() {
+		aliasAdd();
 		commands.aliasDel(ALIAS);
 		try {
 			commands.search(ALIAS, "*");
@@ -34,8 +34,8 @@ public class TestAlias extends AbstractBaseTest {
 	}
 
 	@Test
-	public void testUpdateAlias() {
-		testAddAlias();
+	public void aliasUpdate() {
+		aliasAdd();
 		String newAlias = "alias456";
 		commands.aliasUpdate(newAlias, INDEX);
 		assertTrue(commands.search(newAlias, "*").size() > 0);

@@ -1,38 +1,5 @@
 package com.redislabs.lettusearch;
 
-import static com.redislabs.lettusearch.protocol.CommandKeyword.COUNT;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.DD;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.INCR;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.NOCONTENT;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.PAYLOAD;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.READ;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.SCHEMA;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.WITHCURSOR;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.WITHPAYLOADS;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.WITHSCORES;
-import static com.redislabs.lettusearch.protocol.CommandType.ADD;
-import static com.redislabs.lettusearch.protocol.CommandType.AGGREGATE;
-import static com.redislabs.lettusearch.protocol.CommandType.ALIASADD;
-import static com.redislabs.lettusearch.protocol.CommandType.ALIASDEL;
-import static com.redislabs.lettusearch.protocol.CommandType.ALIASUPDATE;
-import static com.redislabs.lettusearch.protocol.CommandType.ALTER;
-import static com.redislabs.lettusearch.protocol.CommandType.CREATE;
-import static com.redislabs.lettusearch.protocol.CommandType.CURSOR;
-import static com.redislabs.lettusearch.protocol.CommandType.DEL;
-import static com.redislabs.lettusearch.protocol.CommandType.DROP;
-import static com.redislabs.lettusearch.protocol.CommandType.GET;
-import static com.redislabs.lettusearch.protocol.CommandType.INFO;
-import static com.redislabs.lettusearch.protocol.CommandType.MGET;
-import static com.redislabs.lettusearch.protocol.CommandType.SEARCH;
-import static com.redislabs.lettusearch.protocol.CommandType.SUGADD;
-import static com.redislabs.lettusearch.protocol.CommandType.SUGDEL;
-import static com.redislabs.lettusearch.protocol.CommandType.SUGGET;
-import static com.redislabs.lettusearch.protocol.CommandType.SUGLEN;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import com.redislabs.lettusearch.aggregate.AggregateOptions;
 import com.redislabs.lettusearch.aggregate.AggregateResults;
 import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
@@ -41,12 +8,7 @@ import com.redislabs.lettusearch.index.CreateOptions;
 import com.redislabs.lettusearch.index.DropOptions;
 import com.redislabs.lettusearch.index.Schema;
 import com.redislabs.lettusearch.index.field.FieldOptions;
-import com.redislabs.lettusearch.output.AggregateOutput;
-import com.redislabs.lettusearch.output.AggregateWithCursorOutput;
-import com.redislabs.lettusearch.output.MapListOutput;
-import com.redislabs.lettusearch.output.SearchNoContentOutput;
-import com.redislabs.lettusearch.output.SearchOutput;
-import com.redislabs.lettusearch.output.SuggestOutput;
+import com.redislabs.lettusearch.output.*;
 import com.redislabs.lettusearch.protocol.CommandKeyword;
 import com.redislabs.lettusearch.protocol.CommandType;
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
@@ -56,18 +18,21 @@ import com.redislabs.lettusearch.search.SearchOptions;
 import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.suggest.Suggestion;
 import com.redislabs.lettusearch.suggest.SuggetOptions;
-
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.LettuceAssert;
-import io.lettuce.core.output.BooleanOutput;
-import io.lettuce.core.output.CommandOutput;
-import io.lettuce.core.output.IntegerOutput;
-import io.lettuce.core.output.MapOutput;
-import io.lettuce.core.output.NestedMultiOutput;
-import io.lettuce.core.output.StatusOutput;
+import io.lettuce.core.output.*;
 import io.lettuce.core.protocol.BaseRedisCommandBuilder;
 import io.lettuce.core.protocol.Command;
 import io.lettuce.core.protocol.CommandArgs;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import static com.redislabs.lettusearch.protocol.CommandKeyword.*;
+import static com.redislabs.lettusearch.protocol.CommandType.ADD;
+import static com.redislabs.lettusearch.protocol.CommandType.DEL;
+import static com.redislabs.lettusearch.protocol.CommandType.*;
 
 /**
  * Dedicated pub/sub command builder to build pub/sub commands.
@@ -83,7 +48,11 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 
     protected <A, B, T> Command<A, B, T> createCommand(CommandType type, CommandOutput<A, B, T> output,
                                                        CommandArgs<A, B> args) {
-        return new Command<A, B, T>(type, output, args);
+        return new Command<>(type, output, args);
+    }
+
+    public Command<K, V, String> add(K index, Document<K, V> document) {
+        return add(index, document, null);
     }
 
     public Command<K, V, String> add(K index, Document<K, V> document, AddOptions options) {
@@ -110,6 +79,10 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         return createCommand(ADD, new StatusOutput<>(codec), args);
     }
 
+    public Command<K, V, String> create(K index, Schema schema) {
+        return create(index, schema, null);
+    }
+
     public Command<K, V, String> create(K index, Schema schema, CreateOptions options) {
         assertNotNull(index, "index");
         assertNotNull(schema, "schema");
@@ -119,6 +92,10 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         }
         schema.build(args);
         return createCommand(CREATE, new StatusOutput<>(codec), args);
+    }
+
+    public Command<K, V, String> drop(K index) {
+        return drop(index, null);
     }
 
     public Command<K, V, String> drop(K index, DropOptions options) {
@@ -150,6 +127,10 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 
     private RediSearchCommandArgs<K, V> createArgs(K index) {
         return new RediSearchCommandArgs<>(codec).addKey(index);
+    }
+
+    public Command<K, V, SearchResults<K, V>> search(K index, V query) {
+        return search(index, query, (SearchOptions) null);
     }
 
     public Command<K, V, SearchResults<K, V>> search(K index, V query, SearchOptions options) {
@@ -195,12 +176,15 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         return createCommand(SEARCH, getSearchOutput(codec, noContent, withScores, withPayloads), commandArgs);
     }
 
-    private CommandOutput<K, V, SearchResults<K, V>> getSearchOutput(RedisCodec<K, V> codec, boolean noContent,
-                                                                     boolean withScores, boolean withPayloads) {
+    private CommandOutput<K, V, SearchResults<K, V>> getSearchOutput(RedisCodec<K, V> codec, boolean noContent, boolean withScores, boolean withPayloads) {
         if (noContent) {
             return new SearchNoContentOutput<>(codec, withScores);
         }
         return new SearchOutput<>(codec, withScores, withPayloads);
+    }
+
+    public Command<K, V, AggregateResults<K, V>> aggregate(K index, V query) {
+        return aggregate(index, query, (AggregateOptions) null);
     }
 
     public Command<K, V, AggregateResults<K, V>> aggregate(K index, V query, AggregateOptions options) {
@@ -257,6 +241,14 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         return createCommand(AGGREGATE, new AggregateWithCursorOutput<>(codec), args);
     }
 
+    public Command<K, V, AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor) {
+        return cursorRead(index, cursor, null);
+    }
+
+    public Command<K, V, AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, long count) {
+        return cursorRead(index, cursor, (Long) count);
+    }
+
     public Command<K, V, AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, Long count) {
         assertNotNull(index, "index");
         RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec);
@@ -279,6 +271,10 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         return createCommand(CURSOR, new StatusOutput<>(codec), args);
     }
 
+    public Command<K, V, Long> sugadd(K key, Suggestion<V> suggestion) {
+        return sugadd(key, suggestion, false);
+    }
+
     public Command<K, V, Long> sugadd(K key, Suggestion<V> suggestion, boolean increment) {
         assertNotNull(key, "key");
         assertNotNull(suggestion.getString(), "suggestion string");
@@ -295,6 +291,10 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
             args.addValue(suggestion.getPayload());
         }
         return createCommand(SUGADD, new IntegerOutput<>(codec), args);
+    }
+
+    public Command<K, V, List<Suggestion<V>>> sugget(K key, V prefix) {
+        return sugget(key, prefix, null);
     }
 
     public Command<K, V, List<Suggestion<V>>> sugget(K key, V prefix, SuggetOptions options) {
@@ -340,6 +340,10 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 
     private void assertNotNull(Object arg, String name) {
         LettuceAssert.notNull(arg, name + " " + MUST_NOT_BE_NULL);
+    }
+
+    public Command<K, V, Boolean> del(K index, K docId) {
+        return del(index, docId, false);
     }
 
     public Command<K, V, Boolean> del(K index, K docId, boolean deleteDoc) {

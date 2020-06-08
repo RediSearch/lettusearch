@@ -17,15 +17,23 @@ import reactor.core.publisher.Mono;
  */
 public interface AggregateReactiveCommands<K, V> {
 
+    Mono<AggregateResults<K, V>> aggregate(K index, V query);
+
     Mono<AggregateResults<K, V>> aggregate(K index, V query, AggregateOptions options);
 
     Mono<AggregateResults<K, V>> aggregate(K index, V query, Object... options);
 
-    Mono<AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor,
-                                                     AggregateOptions options);
+    Mono<AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor);
+
+    Mono<AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor, AggregateOptions options);
 
     Mono<AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor, Object... options);
 
+    Mono<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor);
+
+    Mono<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, long count);
+
+    @Deprecated
     Mono<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, Long count);
 
     Mono<String> cursorDelete(K index, long cursor);

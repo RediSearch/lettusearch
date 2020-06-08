@@ -8,8 +8,9 @@ import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 import lombok.Builder;
 import lombok.Data;
 
+@Data
 @Builder
-public @Data class Limit implements RediSearchArgument {
+public class Limit implements RediSearchArgument {
 
 	public final static long DEFAULT_OFFSET = 0;
 	public final static long DEFAULT_NUM = 10;

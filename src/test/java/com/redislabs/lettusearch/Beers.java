@@ -12,11 +12,11 @@ import com.redislabs.lettusearch.search.Document;
 
 public class Beers {
 
-	public final static String FIELD_ABV = "abv";
-	public final static String FIELD_ID = "id";
-	public final static String FIELD_NAME = "name";
-	public final static String FIELD_STYLE = "style";
-	public final static String FIELD_OUNCES = "ounces";
+	public final static String ABV = "abv";
+	public final static String ID = "id";
+	public final static String NAME = "name";
+	public final static String STYLE = "style";
+	public final static String OUNCES = "ounces";
 	public final static String INDEX = "beers";
 	private static final String BEERS_FILENAME = "beers.csv";
 
@@ -28,10 +28,10 @@ public class Beers {
 				.readValues(inputStream);
 		List<Document<String, String>> beers = new ArrayList<>();
 		iterator.forEachRemaining(b -> {
-			if (b.get(FIELD_ABV) != null) {
-				b.setId(b.get(FIELD_ID));
+			if (b.get(ABV) != null) {
+				b.setId(b.get(ID));
 				b.setScore(1d);
-				b.setPayload(b.get(FIELD_NAME));
+				b.setPayload(b.get(NAME));
 				beers.add(b);
 			}
 		});

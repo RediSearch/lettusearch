@@ -25,7 +25,7 @@ import io.lettuce.core.RedisCommandExecutionException;
 public class TestIndexCRUD extends AbstractBaseTest {
 
 	@Test
-	public void testTemporaryIndex() throws InterruptedException {
+	public void temporaryIndex() throws InterruptedException {
 		String indexName = "temporaryIndex";
 		commands.create(indexName, Schema.builder().field(TextField.builder().name("field1").build()).build(),
 				CreateOptions.builder().temporary(1L).build());
@@ -33,7 +33,7 @@ public class TestIndexCRUD extends AbstractBaseTest {
 		assertEquals(indexName, info.get(1));
 		Thread.sleep(1001);
 		try {
-			info = commands.ftInfo(indexName);
+			commands.ftInfo(indexName);
 		} catch (RedisCommandExecutionException e) {
 			assertEquals("Unknown Index name", e.getMessage());
 			return;
@@ -42,7 +42,7 @@ public class TestIndexCRUD extends AbstractBaseTest {
 	}
 
 	@Test
-	public void testDrop() {
+	public void drop() {
 		commands.drop(INDEX, DropOptions.builder().keepDocs(false).build());
 		Document<String, String> doc = Document.<String, String>builder().id("newDocId").score(1d).build();
 		doc.put("field1", "value1");
@@ -55,7 +55,7 @@ public class TestIndexCRUD extends AbstractBaseTest {
 	}
 
 	@Test
-	public void testAlter() {
+	public void alter() {
 		commands.alter(INDEX, "newField", FieldOptions.builder().type(FieldType.Tag).build());
 		Document<String, String> doc = Document.<String, String>builder().id("newDocId").score(1d).build();
 		doc.put("newField", "value1");
@@ -66,7 +66,7 @@ public class TestIndexCRUD extends AbstractBaseTest {
 	}
 
 	@Test
-	public void testIndexInfo() {
+	public void ftInfo() {
 		Map<String, Object> indexInfo = toMap(commands.ftInfo(INDEX));
 		assertEquals(INDEX, indexInfo.get("index_name"));
 	}

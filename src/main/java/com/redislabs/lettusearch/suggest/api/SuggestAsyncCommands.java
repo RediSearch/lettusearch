@@ -17,7 +17,11 @@ import io.lettuce.core.RedisFuture;
  */
 public interface SuggestAsyncCommands<K, V> {
 
+	RedisFuture<Long> sugadd(K key, Suggestion<V> suggestion);
+
 	RedisFuture<Long> sugadd(K key, Suggestion<V> suggestion, boolean increment);
+
+	RedisFuture<List<Suggestion<V>>> sugget(K key, V prefix);
 
 	RedisFuture<List<Suggestion<V>>> sugget(K key, V prefix, SuggetOptions options);
 

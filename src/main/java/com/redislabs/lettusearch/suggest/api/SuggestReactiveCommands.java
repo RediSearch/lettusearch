@@ -16,7 +16,11 @@ import reactor.core.publisher.Mono;
  */
 public interface SuggestReactiveCommands<K, V> {
 
+	Mono<Long> sugadd(K key, Suggestion<V> suggestion);
+
 	Mono<Long> sugadd(K key, Suggestion<V> suggestion, boolean increment);
+
+	Flux<Suggestion<V>> sugget(K key, V prefix);
 
 	Flux<Suggestion<V>> sugget(K key, V prefix, SuggetOptions options);
 

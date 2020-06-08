@@ -15,7 +15,11 @@ import com.redislabs.lettusearch.suggest.Suggestion;
  */
 public interface SuggestCommands<K, V> {
 
+	Long sugadd(K key, Suggestion<V> suggestion);
+
 	Long sugadd(K key, Suggestion<V> suggestion, boolean increment);
+
+	List<Suggestion<V>> sugget(K key, V prefix);
 
 	List<Suggestion<V>> sugget(K key, V prefix, SuggetOptions options);
 

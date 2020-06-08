@@ -20,13 +20,19 @@ import io.lettuce.core.RedisFuture;
  */
 public interface SearchAsyncCommands<K, V> {
 
+	RedisFuture<String> add(K index, Document<K, V> document);
+
 	RedisFuture<String> add(K index, Document<K, V> document, AddOptions options);
+
+	RedisFuture<Boolean> del(K index, K docId);
 
 	RedisFuture<Boolean> del(K index, K docId, boolean deleteDoc);
 
 	RedisFuture<Map<K, V>> get(K index, K docId);
 
 	RedisFuture<List<Map<K, V>>> ftMget(K index, K... docIds);
+
+	RedisFuture<SearchResults<K, V>> search(K index, V query);
 
 	RedisFuture<SearchResults<K, V>> search(K index, V query, Object... options);
 

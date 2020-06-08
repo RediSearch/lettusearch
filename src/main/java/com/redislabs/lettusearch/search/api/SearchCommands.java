@@ -18,13 +18,19 @@ import com.redislabs.lettusearch.search.SearchResults;
  */
 public interface SearchCommands<K, V> {
 
+	String add(K index, Document<K, V> document);
+
 	String add(K index, Document<K, V> document, AddOptions options);
+
+	boolean del(K index, K docId);
 
 	boolean del(K index, K docId, boolean deleteDoc);
 
 	Map<K, V> get(K index, K docId);
 
 	List<Map<K, V>> ftMget(K index, K... docIds);
+
+	SearchResults<K, V> search(K index, V query);
 
 	SearchResults<K, V> search(K index, V query, Object... options);
 

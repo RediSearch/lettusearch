@@ -19,7 +19,11 @@ import io.lettuce.core.RedisFuture;
  */
 public interface IndexAsyncCommands<K, V> {
 
+	RedisFuture<String> create(K index, Schema schema);
+
 	RedisFuture<String> create(K index, Schema schema, CreateOptions options);
+
+	RedisFuture<String> drop(K index);
 
 	RedisFuture<String> drop(K index, DropOptions options);
 

@@ -18,7 +18,11 @@ import reactor.core.publisher.Mono;
  */
 public interface IndexReactiveCommands<K, V> {
 
+	Mono<String> create(K index, Schema schema);
+
 	Mono<String> create(K index, Schema schema, CreateOptions options);
+
+	Mono<String> drop(K index);
 
 	Mono<String> drop(K index, DropOptions options);
 

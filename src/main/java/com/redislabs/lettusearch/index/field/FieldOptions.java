@@ -14,42 +14,43 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Data;
 
+@Data
 @Builder
-public @Data class FieldOptions implements RediSearchArgument {
+public class FieldOptions implements RediSearchArgument {
 
-	@Default
-	private FieldType type = FieldType.Text;
-	private boolean sortable;
-	private boolean noIndex;
-	private Double weight;
-	private boolean noStem;
-	private PhoneticMatcher matcher;
-	private String separator;
+    @Default
+    private FieldType type = FieldType.Text;
+    private boolean sortable;
+    private boolean noIndex;
+    private Double weight;
+    private boolean noStem;
+    private PhoneticMatcher matcher;
+    private String separator;
 
-	@Override
-	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
-		args.add(type.getKeyword());
-		if (noStem) {
-			args.add(NOSTEM);
-		}
-		if (weight != null) {
-			args.add(WEIGHT);
-			args.add(weight);
-		}
-		if (matcher != null) {
-			args.add(PHONETIC);
-			args.add(matcher.getCode());
-		}
-		if (separator != null) {
-			args.add(SEPARATOR);
-			args.add(separator);
-		}
-		if (sortable) {
-			args.add(SORTABLE);
-		}
-		if (noIndex) {
-			args.add(NOINDEX);
-		}
-	}
+    @Override
+    public <K, V> void build(RediSearchCommandArgs<K, V> args) {
+        args.add(type.getKeyword());
+        if (noStem) {
+            args.add(NOSTEM);
+        }
+        if (weight != null) {
+            args.add(WEIGHT);
+            args.add(weight);
+        }
+        if (matcher != null) {
+            args.add(PHONETIC);
+            args.add(matcher.getCode());
+        }
+        if (separator != null) {
+            args.add(SEPARATOR);
+            args.add(separator);
+        }
+        if (sortable) {
+            args.add(SORTABLE);
+        }
+        if (noIndex) {
+            args.add(NOINDEX);
+        }
+    }
 
 }

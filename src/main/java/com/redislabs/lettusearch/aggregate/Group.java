@@ -22,7 +22,7 @@ public @Data class Group implements Operation {
 	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
 		args.add(GROUPBY);
 		args.add(properties.size());
-		properties.forEach(property -> args.addProperty(property));
+		properties.forEach(args::addProperty);
 		reducers.forEach(reducer -> reducer.build(args));
 	}
 
