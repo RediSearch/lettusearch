@@ -16,46 +16,47 @@ import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 import lombok.Builder;
 import lombok.Data;
 
+@Data
 @Builder
-public @Data class CreateOptions implements RediSearchArgument {
+public class CreateOptions implements RediSearchArgument {
 
-	private boolean maxTextFields;
-	private Long temporary;
-	private boolean noOffsets;
-	private boolean noHL;
-	private boolean noFields;
-	private boolean noFreqs;
-	/**
-	 * set to empty list for STOPWORDS 0
-	 */
-	private List<String> stopWords;
+    private boolean maxTextFields;
+    private Long temporary;
+    private boolean noOffsets;
+    private boolean noHL;
+    private boolean noFields;
+    private boolean noFreqs;
+    /**
+     * set to empty list for STOPWORDS 0
+     */
+    private List<String> stopWords;
 
-	@Override
-	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
-		if (maxTextFields) {
-			args.add(MAXTEXTFIELDS);
-		}
-		if (temporary != null) {
-			args.add(TEMPORARY);
-			args.add(temporary);
-		}
-		if (noOffsets) {
-			args.add(NOOFFSETS);
-		}
-		if (noHL) {
-			args.add(NOHL);
-		}
-		if (noFields) {
-			args.add(NOFIELDS);
-		}
-		if (noFreqs) {
-			args.add(NOFREQS);
-		}
-		if (stopWords != null) {
-			args.add(STOPWORDS);
-			args.add(stopWords.size());
-			stopWords.forEach(args::add);
-		}
-	}
+    @Override
+    public <K, V> void build(RediSearchCommandArgs<K, V> args) {
+        if (maxTextFields) {
+            args.add(MAXTEXTFIELDS);
+        }
+        if (temporary != null) {
+            args.add(TEMPORARY);
+            args.add(temporary);
+        }
+        if (noOffsets) {
+            args.add(NOOFFSETS);
+        }
+        if (noHL) {
+            args.add(NOHL);
+        }
+        if (noFields) {
+            args.add(NOFIELDS);
+        }
+        if (noFreqs) {
+            args.add(NOFREQS);
+        }
+        if (stopWords != null) {
+            args.add(STOPWORDS);
+            args.add(stopWords.size());
+            stopWords.forEach(args::add);
+        }
+    }
 
 }

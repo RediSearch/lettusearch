@@ -14,10 +14,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Singular;
 
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public @Data class HighlightOptions implements RediSearchArgument {
+public class HighlightOptions implements RediSearchArgument {
 
 	@Singular
 	private List<String> fields;

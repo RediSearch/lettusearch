@@ -1,9 +1,6 @@
 package com.redislabs.lettusearch;
 
 import com.redislabs.lettusearch.index.Schema;
-import com.redislabs.lettusearch.index.field.NumericField;
-import com.redislabs.lettusearch.index.field.PhoneticMatcher;
-import com.redislabs.lettusearch.index.field.TagField;
 import com.redislabs.lettusearch.index.field.TextField;
 import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.SearchResults;
@@ -11,8 +8,6 @@ import com.redislabs.lettusearch.search.SearchResults;
 import static com.redislabs.lettusearch.Beers.*;
 
 public class UsageExample {
-
-    public final static Schema SCHEMA = Schema.builder().field(TextField.builder().name(NAME).matcher(PhoneticMatcher.English).build()).field(TagField.builder().name(STYLE).sortable(true).build()).field(NumericField.builder().name(ABV).sortable(true).build()).build();
 
     public static void main(String[] args) {
         RediSearchClient client = RediSearchClient.create("redis://localhost"); //<1>

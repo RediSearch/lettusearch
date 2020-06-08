@@ -10,8 +10,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
 
+@Data
 @Builder
-public @Data class Group implements Operation {
+public class Group implements Operation {
 
 	@Singular
 	private List<String> properties;

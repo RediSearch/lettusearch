@@ -13,8 +13,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
 
+@Data
 @Builder
-public @Data class Schema implements RediSearchArgument {
+public class Schema implements RediSearchArgument {
 
 	static final String MUST_NOT_BE_EMPTY = "must not be empty";
 

@@ -7,8 +7,9 @@ import com.redislabs.lettusearch.index.field.Field;
 import lombok.Builder;
 import lombok.Data;
 
+@Data
 @Builder
-public @Data class IndexInfo {
+public class IndexInfo {
 	private String indexName;
 	private Long numDocs;
 	private List<Object> indexOptions;

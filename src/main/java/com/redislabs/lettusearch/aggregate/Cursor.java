@@ -8,8 +8,9 @@ import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 import lombok.Builder;
 import lombok.Data;
 
+@Data
 @Builder
-public @Data class Cursor {
+public class Cursor {
 
 	private Long count;
 	private Long maxIdle;

@@ -7,8 +7,9 @@ import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 import lombok.Builder;
 import lombok.Data;
 
+@Data
 @Builder
-public @Data class Filter implements Operation {
+public class Filter implements Operation {
 
 	private String expression;
 

@@ -8,16 +8,17 @@ import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 import lombok.Builder;
 import lombok.Data;
 
+@Data
 @Builder
-public @Data class DropOptions implements RediSearchArgument {
+public class DropOptions implements RediSearchArgument {
 
-	private boolean keepDocs;
+    private boolean keepDocs;
 
-	@Override
-	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
-		if (keepDocs) {
-			args.add(KEEPDOCS);
-		}
-	}
+    @Override
+    public <K, V> void build(RediSearchCommandArgs<K, V> args) {
+        if (keepDocs) {
+            args.add(KEEPDOCS);
+        }
+    }
 
 }

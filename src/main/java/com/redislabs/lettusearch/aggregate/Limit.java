@@ -7,8 +7,9 @@ import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 import lombok.Builder;
 import lombok.Data;
 
+@Data
 @Builder
-public @Data class Limit implements Operation {
+public class Limit implements Operation {
 
 	private long offset;
 	private long num;

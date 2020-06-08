@@ -9,8 +9,9 @@ import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 import lombok.Builder;
 import lombok.Data;
 
+@Data
 @Builder
-public @Data class SortProperty implements RediSearchArgument {
+public class SortProperty implements RediSearchArgument {
 
 	public final static Order DEFAULT_ORDER = Order.Asc;
 

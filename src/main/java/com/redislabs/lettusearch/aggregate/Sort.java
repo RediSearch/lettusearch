@@ -11,8 +11,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
 
+@Data
 @Builder
-public @Data class Sort implements Operation {
+public class Sort implements Operation {
 
 	@Singular
 	private List<SortProperty> properties;

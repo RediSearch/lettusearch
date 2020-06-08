@@ -3,8 +3,9 @@ package com.redislabs.lettusearch.aggregate.reducer;
 import lombok.Builder;
 import lombok.Data;
 
+@Data
 @Builder
-public @Data class By {
+public class By {
 
 	private String property;
 	private Order order;

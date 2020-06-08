@@ -2,6 +2,7 @@ package com.redislabs.lettusearch;
 
 import static com.redislabs.lettusearch.Beers.NAME;
 import static com.redislabs.lettusearch.Beers.INDEX;
+import static com.redislabs.lettusearch.Beers.SCHEMA;
 import static com.redislabs.lettusearch.Beers.load;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ public abstract class AbstractBaseTest {
 		connection = client.connect();
 		commands = connection.sync();
 		commands.flushall();
-		commands.create(INDEX, UsageExample.SCHEMA, null);
+		commands.create(INDEX, SCHEMA, null);
 		for (Document<String, String> beer : beers) {
 			commands.add(INDEX, beer, null);
 			commands.sugadd(SUGINDEX, Suggestion.<String>builder().string(beer.get(NAME)).score(1d).build(),

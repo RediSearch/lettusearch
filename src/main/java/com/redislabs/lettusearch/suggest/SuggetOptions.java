@@ -11,8 +11,9 @@ import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 import lombok.Builder;
 import lombok.Data;
 
+@Data
 @Builder
-public @Data class SuggetOptions implements RediSearchArgument {
+public class SuggetOptions implements RediSearchArgument {
 
 	private boolean fuzzy;
 	private boolean withScores;

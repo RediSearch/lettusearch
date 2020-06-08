@@ -10,8 +10,9 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.Data;
 
+@Data
 @Builder
-public @Data class SortBy implements RediSearchArgument {
+public class SortBy implements RediSearchArgument {
 
 	public final static Direction DEFAULT_DIRECTION = Direction.Ascending;
 
