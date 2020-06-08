@@ -115,11 +115,6 @@ task printVersion {
     }
 }
 
-task changelog {
-    doLast {}
-    println
-}
-
 githubRelease {
     token = project.hasProperty('githubToken') ? project.property('githubToken') : ''
     owner "RediSearch"
