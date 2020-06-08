@@ -35,7 +35,7 @@ bintray {
     publish = true
     pkg {
         repo = 'maven'
-        name = 'com.redislabs:lettusearch'
+        name = 'lettusearch'
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/RediSearch/lettusearch.git'
 	    version {
