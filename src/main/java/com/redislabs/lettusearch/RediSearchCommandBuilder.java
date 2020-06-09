@@ -46,8 +46,7 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         super(codec);
     }
 
-    protected <A, B, T> Command<A, B, T> createCommand(CommandType type, CommandOutput<A, B, T> output,
-                                                       CommandArgs<A, B> args) {
+    protected <A, B, T> Command<A, B, T> createCommand(CommandType type, CommandOutput<A, B, T> output, CommandArgs<A, B> args) {
         return new Command<>(type, output, args);
     }
 
@@ -209,8 +208,7 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         return createCommand(AGGREGATE, new AggregateOutput<>(codec, new AggregateResults<>()), args);
     }
 
-    public Command<K, V, AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor,
-                                                                     AggregateOptions options) {
+    public Command<K, V, AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor, AggregateOptions options) {
         assertNotNull(index, "index");
         assertNotNull(query, "query");
         RediSearchCommandArgs<K, V> args = createArgs(index);
@@ -225,8 +223,7 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         return createCommand(AGGREGATE, new AggregateWithCursorOutput<>(codec), args);
     }
 
-    public Command<K, V, AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor,
-                                                                     Object... options) {
+    public Command<K, V, AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor, Object... options) {
         assertNotNull(index, "index");
         assertNotNull(query, "query");
         RediSearchCommandArgs<K, V> args = createArgs(index);
