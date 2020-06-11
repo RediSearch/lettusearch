@@ -149,11 +149,6 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
     }
 
     @Override
-    public Mono<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, long count) {
-        return createMono(() -> commandBuilder.cursorRead(index, cursor, count));
-    }
-
-    @Override
     public Mono<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, Long count) {
         return createMono(() -> commandBuilder.cursorRead(index, cursor, count));
     }

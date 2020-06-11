@@ -242,10 +242,6 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         return cursorRead(index, cursor, null);
     }
 
-    public Command<K, V, AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, long count) {
-        return cursorRead(index, cursor, (Long) count);
-    }
-
     public Command<K, V, AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, Long count) {
         assertNotNull(index, "index");
         RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec);

@@ -128,11 +128,6 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
     }
 
     @Override
-    public RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, long count) {
-        return dispatch(commandBuilder.cursorRead(index, cursor, count));
-    }
-
-    @Override
     public RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, Long count) {
         return dispatch(commandBuilder.cursorRead(index, cursor, count));
     }

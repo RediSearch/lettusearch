@@ -29,9 +29,6 @@ public interface AggregateCommands<K, V> {
 
 	AggregateWithCursorResults<K, V> cursorRead(K index, long cursor);
 
-	AggregateWithCursorResults<K, V> cursorRead(K index, long cursor, long count);
-
-	@Deprecated
 	AggregateWithCursorResults<K, V> cursorRead(K index, long cursor, Long count);
 
 	String cursorDelete(K index, long cursor);

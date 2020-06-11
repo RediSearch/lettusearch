@@ -31,9 +31,6 @@ public interface AggregateAsyncCommands<K, V> {
 
     RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor);
 
-    RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, long count);
-
-    @Deprecated
     RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, Long count);
 
     RedisFuture<String> cursorDelete(K index, long cursor);

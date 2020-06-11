@@ -31,9 +31,6 @@ public interface AggregateReactiveCommands<K, V> {
 
     Mono<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor);
 
-    Mono<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, long count);
-
-    @Deprecated
     Mono<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, Long count);
 
     Mono<String> cursorDelete(K index, long cursor);
