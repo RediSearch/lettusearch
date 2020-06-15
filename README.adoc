@@ -39,6 +39,8 @@ endif::[]
 
 Java client for https://redisearch.io[RediSearch] based on https://lettuce.io[Lettuce]
 
+Latest release: https://github.com/RediSearch/lettusearch/releases/latest
+
 == Getting Started
 
 Add LettuSearch to your application dependencies:
