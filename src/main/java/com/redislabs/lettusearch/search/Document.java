@@ -8,18 +8,15 @@ import io.lettuce.core.internal.LettuceAssert;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+@Getter
+@Setter
 public class Document<K, V> extends LinkedHashMap<K, V> {
 
     private static final long serialVersionUID = 8972665675834263492L;
 
-    @Getter
-    @Setter
     private K id;
-    @Getter
-    @Setter
     private Double score;
-    @Getter
-    @Setter
+    private V sortKey;
     private V payload;
 
     public static DocumentBuilder builder() {

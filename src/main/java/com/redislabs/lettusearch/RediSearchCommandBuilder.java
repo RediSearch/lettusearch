@@ -141,14 +141,16 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
             options.build(commandArgs);
         }
         boolean withScores = false;
+        boolean withSortKeys = false;
         boolean withPayloads = false;
         boolean noContent = false;
         if (options != null) {
             withScores = options.isWithScores();
+            withSortKeys = options.isWithSortKeys();
             withPayloads = options.isWithPayloads();
             noContent = options.isNoContent();
         }
-        return createCommand(SEARCH, getSearchOutput(codec, noContent, withScores, withPayloads), commandArgs);
+        return createCommand(SEARCH, getSearchOutput(codec, noContent, withScores, withSortKeys, withPayloads), commandArgs);
     }
 
     public Command<K, V, SearchResults<K, V>> search(K index, V query, Object... options) {
@@ -158,11 +160,15 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         commandArgs.addValue(query);
         boolean noContent = false;
         boolean withScores = false;
+        boolean withSortKeys = false;
         boolean withPayloads = false;
         for (Object option : options) {
             String optionString = String.valueOf(option);
             if (WITHSCORES.name().equalsIgnoreCase(optionString)) {
                 withScores = true;
+            }
+            if (WITHSORTKEYS.name().equalsIgnoreCase(optionString)) {
+                withSortKeys = true;
             }
             if (WITHPAYLOADS.name().equalsIgnoreCase(optionString)) {
                 withPayloads = true;
@@ -172,14 +178,14 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
             }
             commandArgs.add(optionString);
         }
-        return createCommand(SEARCH, getSearchOutput(codec, noContent, withScores, withPayloads), commandArgs);
+        return createCommand(SEARCH, getSearchOutput(codec, noContent, withScores, withSortKeys, withPayloads), commandArgs);
     }
 
-    private CommandOutput<K, V, SearchResults<K, V>> getSearchOutput(RedisCodec<K, V> codec, boolean noContent, boolean withScores, boolean withPayloads) {
+    private CommandOutput<K, V, SearchResults<K, V>> getSearchOutput(RedisCodec<K, V> codec, boolean noContent, boolean withScores, boolean withSortKeys, boolean withPayloads) {
         if (noContent) {
             return new SearchNoContentOutput<>(codec, withScores);
         }
-        return new SearchOutput<>(codec, withScores, withPayloads);
+        return new SearchOutput<>(codec, withScores, withSortKeys, withPayloads);
     }
 
     public Command<K, V, AggregateResults<K, V>> aggregate(K index, V query) {

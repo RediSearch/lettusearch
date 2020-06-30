@@ -73,6 +73,17 @@ public class TestSearch extends AbstractBaseTest {
         assertNull(result1.get(ABV));
     }
 
+    @Test
+    public void allOptions() {
+        SearchOptions options = SearchOptions.builder().withPayloads(true).noStopWords(true).limit(Limit.builder().num(100).offset(10).build()).withScores(true).highlight(HighlightOptions.builder().field(NAME).tags(TagOptions.builder().open("<TAG>").close("</TAG>").build()).build()).language(Language.English.name()).noContent(false).sortBy(SortBy.builder().direction(Direction.Ascending).field(NAME).build()).verbatim(false).withSortKeys(true).returnField(NAME).returnField(STYLE).build();
+        SearchResults<String, String> results = sync.search(INDEX, "pale", options);
+        assertEquals(256, results.getCount());
+        Document<String, String> result1 = results.get(0);
+        assertNotNull(result1.get(NAME));
+        assertNotNull(result1.get(STYLE));
+        assertNull(result1.get(ABV));
+    }
+
 
     @Test
     public void invalidReturnField() {
