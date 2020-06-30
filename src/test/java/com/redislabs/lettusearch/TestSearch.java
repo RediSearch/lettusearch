@@ -16,19 +16,19 @@ public class TestSearch extends AbstractBaseTest {
 
     @Test
     public void phoneticFields() {
-        SearchResults<String, String> results = commands.search(INDEX, "eldur");
+        SearchResults<String, String> results = sync.search(INDEX, "eldur");
         assertEquals(7, results.getCount());
     }
 
     @Test
     public void get() {
-        Map<String, String> map = commands.get(INDEX, "1836");
+        Map<String, String> map = sync.get(INDEX, "1836");
         assertEquals("Widmer Brothers Hefeweizen", map.get(NAME));
     }
 
     @Test
     public void mget() {
-        List<Map<String, String>> mapList = commands.ftMget(INDEX, "1836", "1837", "292929292");
+        List<Map<String, String>> mapList = sync.ftMget(INDEX, "1836", "1837", "292929292");
         assertEquals(3, mapList.size());
         assertEquals("Widmer Brothers Hefeweizen", mapList.get(0).get(NAME));
         assertEquals("Hefe Black", mapList.get(1).get(NAME));
@@ -38,15 +38,15 @@ public class TestSearch extends AbstractBaseTest {
 
     @Test
     public void del() {
-        boolean deleted = commands.del(INDEX, "1836", true);
+        boolean deleted = sync.del(INDEX, "1836", true);
         assertTrue(deleted);
-        Map<String, String> map = commands.get(INDEX, "1836");
+        Map<String, String> map = sync.get(INDEX, "1836");
         assertNull(map);
     }
 
     @Test
     public void noContent() {
-        SearchResults<String, String> results = commands.search(INDEX, "Hefeweizen", SearchOptions.builder().withScores(true).noContent(true).limit(Limit.builder().num(100).build()).build());
+        SearchResults<String, String> results = sync.search(INDEX, "Hefeweizen", SearchOptions.builder().withScores(true).noContent(true).limit(Limit.builder().num(100).build()).build());
         assertEquals(22, results.getCount());
         assertEquals(22, results.size());
         assertEquals("1836", results.get(0).getId());
@@ -55,7 +55,7 @@ public class TestSearch extends AbstractBaseTest {
 
     @Test
     public void withPayloads() {
-        SearchResults<String, String> results = commands.search(INDEX, "pale", SearchOptions.builder().withPayloads(true).build());
+        SearchResults<String, String> results = sync.search(INDEX, "pale", SearchOptions.builder().withPayloads(true).build());
         assertEquals(256, results.getCount());
         Document<String, String> result1 = results.get(0);
         assertNotNull(result1.get(NAME));
@@ -65,7 +65,7 @@ public class TestSearch extends AbstractBaseTest {
 
     @Test
     public void returnField() {
-        SearchResults<String, String> results = commands.search(INDEX, "pale", SearchOptions.builder().returnField(NAME).returnField(STYLE).build());
+        SearchResults<String, String> results = sync.search(INDEX, "pale", SearchOptions.builder().returnField(NAME).returnField(STYLE).build());
         assertEquals(256, results.getCount());
         Document<String, String> result1 = results.get(0);
         assertNotNull(result1.get(NAME));
@@ -76,7 +76,7 @@ public class TestSearch extends AbstractBaseTest {
 
     @Test
     public void invalidReturnField() {
-        SearchResults<String, String> results = commands.search(INDEX, "pale", SearchOptions.builder().returnField(NAME).returnField(STYLE).returnField("").build());
+        SearchResults<String, String> results = sync.search(INDEX, "pale", SearchOptions.builder().returnField(NAME).returnField(STYLE).returnField("").build());
         assertEquals(256, results.getCount());
         Document<String, String> result1 = results.get(0);
         assertNotNull(result1.get(NAME));
@@ -86,7 +86,7 @@ public class TestSearch extends AbstractBaseTest {
 
     @Test
     public void inKeys() {
-        SearchResults<String, String> results = commands.search(INDEX, "*", SearchOptions.builder().inKeys(Collections.singletonList("1018")).inKey("2593").build());
+        SearchResults<String, String> results = sync.search(INDEX, "*", SearchOptions.builder().inKeys(Collections.singletonList("1018")).inKey("2593").build());
         assertEquals(2, results.getCount());
         Document<String, String> result1 = results.get(0);
         assertNotNull(result1.get(NAME));
@@ -96,7 +96,7 @@ public class TestSearch extends AbstractBaseTest {
 
     @Test
     public void inFields() {
-        SearchResults<String, String> results = commands.search(INDEX, "sculpin", SearchOptions.builder().inField(NAME).build());
+        SearchResults<String, String> results = sync.search(INDEX, "sculpin", SearchOptions.builder().inField(NAME).build());
         assertEquals(2, results.getCount());
         Document<String, String> result1 = results.get(0);
         assertNotNull(result1.get(NAME));
@@ -109,16 +109,16 @@ public class TestSearch extends AbstractBaseTest {
         String term = "pale";
         String query = "@style:" + term;
         TagOptions tagOptions = TagOptions.builder().open("<b>").close("</b>").build();
-        SearchResults<String, String> results = commands.search(INDEX, query, SearchOptions.builder().highlight(HighlightOptions.builder().build()).build());
+        SearchResults<String, String> results = sync.search(INDEX, query, SearchOptions.builder().highlight(HighlightOptions.builder().build()).build());
         for (Document<String, String> result : results) {
             assertTrue(highlighted(result, STYLE, tagOptions, term));
         }
-        results = commands.search(INDEX, query, SearchOptions.builder().highlight(HighlightOptions.builder().field(NAME).build()).build());
+        results = sync.search(INDEX, query, SearchOptions.builder().highlight(HighlightOptions.builder().field(NAME).build()).build());
         for (Document<String, String> result : results) {
             assertFalse(highlighted(result, STYLE, tagOptions, term));
         }
         tagOptions = TagOptions.builder().open("[start]").close("[end]").build();
-        results = commands.search(INDEX, query, SearchOptions.builder().highlight(HighlightOptions.builder().field(STYLE).tags(tagOptions).build()).build());
+        results = sync.search(INDEX, query, SearchOptions.builder().highlight(HighlightOptions.builder().field(STYLE).tags(tagOptions).build()).build());
         for (Document<String, String> result : results) {
             assertTrue(highlighted(result, STYLE, tagOptions, term));
         }
@@ -141,7 +141,7 @@ public class TestSearch extends AbstractBaseTest {
 
     @Test
     public void phonetic() {
-        SearchResults<String, String> results = commands.search(Beers.INDEX, "pail");
+        SearchResults<String, String> results = sync.search(Beers.INDEX, "pail");
         assertEquals(256, results.getCount());
     }
 

@@ -27,12 +27,12 @@ public class TestIndex extends AbstractBaseTest {
     @Test
     public void temporary() throws InterruptedException {
         String indexName = "temporaryIndex";
-        commands.create(indexName, Schema.builder().field(TextField.builder().name("field1").build()).build(), CreateOptions.builder().temporary(1L).build());
-        List<Object> info = commands.ftInfo(indexName);
+        sync.create(indexName, Schema.builder().field(TextField.builder().name("field1").build()).build(), CreateOptions.builder().temporary(1L).build());
+        List<Object> info = sync.ftInfo(indexName);
         assertEquals(indexName, info.get(1));
-        Thread.sleep(1001);
+        Thread.sleep(1501);
         try {
-            commands.ftInfo(indexName);
+            sync.ftInfo(indexName);
         } catch (RedisCommandExecutionException e) {
             assertEquals("Unknown Index name", e.getMessage());
             return;
@@ -42,11 +42,11 @@ public class TestIndex extends AbstractBaseTest {
 
     @Test
     public void drop() {
-        commands.drop(INDEX, DropOptions.builder().keepDocs(false).build());
+        sync.drop(INDEX, DropOptions.builder().keepDocs(false).build());
         Document<String, String> doc = Document.<String, String>builder().id("newDocId").score(1d).build();
         doc.put("field1", "value1");
         try {
-            commands.add(INDEX, doc, null);
+            sync.add(INDEX, doc, null);
             fail("Index not dropped");
         } catch (RedisCommandExecutionException e) {
             // ignored, expected behavior
@@ -55,18 +55,18 @@ public class TestIndex extends AbstractBaseTest {
 
     @Test
     public void alter() {
-        commands.alter(INDEX, "newField", FieldOptions.builder().type(FieldType.Tag).build());
+        sync.alter(INDEX, "newField", FieldOptions.builder().type(FieldType.Tag).build());
         Document<String, String> doc = Document.<String, String>builder().id("newDocId").score(1d).build();
         doc.put("newField", "value1");
-        commands.add(INDEX, doc, null);
-        SearchResults<String, String> results = commands.search(INDEX, "@newField:{value1}");
+        sync.add(INDEX, doc, null);
+        SearchResults<String, String> results = sync.search(INDEX, "@newField:{value1}");
         assertEquals(1, results.getCount());
         assertEquals(doc.get("newField"), results.get(0).get("newField"));
     }
 
     @Test
     public void info() {
-        Map<String, Object> indexInfo = toMap(commands.ftInfo(INDEX));
+        Map<String, Object> indexInfo = toMap(sync.ftInfo(INDEX));
         assertEquals(INDEX, indexInfo.get("index_name"));
     }
 

@@ -17,7 +17,7 @@ public class TestUtils extends AbstractBaseTest {
 
 	@Test
 	public void ftInfo() {
-		List<Object> infoList = commands.ftInfo(Beers.INDEX);
+		List<Object> infoList = sync.ftInfo(Beers.INDEX);
 		IndexInfo info = RediSearchUtils.getInfo(infoList);
 		assertEquals((Long) 2348L, info.getNumDocs());
 		List<Field> fields = info.getFields();

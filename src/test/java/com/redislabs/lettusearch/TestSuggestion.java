@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.redislabs.lettusearch.search.SearchResults;
 import com.redislabs.lettusearch.suggest.SuggetOptions;
 import com.redislabs.lettusearch.suggest.Suggestion;
 
@@ -15,22 +14,22 @@ public class TestSuggestion extends AbstractBaseTest {
 
     @Test
     public void get() {
-        List<Suggestion<String>> results = commands.sugget(SUGINDEX, "Ame", SuggetOptions.builder().max(1000L).withScores(true).build());
+        List<Suggestion<String>> results = sync.sugget(SUGINDEX, "Ame", SuggetOptions.builder().max(1000L).withScores(true).build());
         assertEquals(8, results.size());
         assertEquals("American Hero", results.get(0).getString());
     }
 
     @Test
     public void del() {
-        Boolean result = commands.sugdel(SUGINDEX, "American Hero");
+        Boolean result = sync.sugdel(SUGINDEX, "American Hero");
         assertTrue(result);
-        List<Suggestion<String>> results = commands.sugget(SUGINDEX, "Ame", SuggetOptions.builder().max(1000L).build());
+        List<Suggestion<String>> results = sync.sugget(SUGINDEX, "Ame", SuggetOptions.builder().max(1000L).build());
         assertEquals(7, results.size());
     }
 
     @Test
     public void len() {
-        long length = commands.suglen(SUGINDEX);
+        long length = sync.suglen(SUGINDEX);
         assertEquals(2245, length);
     }
 

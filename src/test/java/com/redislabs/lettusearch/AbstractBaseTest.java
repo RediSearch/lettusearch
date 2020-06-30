@@ -4,16 +4,14 @@ import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.suggest.Suggestion;
 import io.lettuce.core.RedisURI;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
 import java.util.List;
-
-import static com.redislabs.lettusearch.Beers.*;
 
 @Testcontainers
 public abstract class AbstractBaseTest {
@@ -22,23 +20,31 @@ public abstract class AbstractBaseTest {
 
     private RediSearchClient client;
     protected StatefulRediSearchConnection<String, String> connection;
-    protected List<Document<String, String>> beers;
-    protected RediSearchCommands<String, String> commands;
+    protected static List<Document<String, String>> beers;
+    protected RediSearchCommands<String, String> sync;
+    protected RediSearchAsyncCommands<String, String> async;
+    protected RediSearchReactiveCommands<String, String> reactive;
 
     @Container
-    private final GenericContainer redis = new GenericContainer("redislabs/redisearch:latest").withExposedPorts(6379);
+    private static final GenericContainer redis = new GenericContainer("redislabs/redisearch:latest").withExposedPorts(6379);
+
+    @BeforeAll
+    public static void load() throws IOException {
+        beers = Beers.load();
+    }
 
     @BeforeEach
-    public void setup() throws IOException {
-        beers = load();
+    public void setup() {
         client = RediSearchClient.create(RedisURI.create(redis.getHost(), redis.getFirstMappedPort()));
         connection = client.connect();
-        commands = connection.sync();
-        commands.flushall();
-        commands.create(INDEX, SCHEMA, null);
+        sync = connection.sync();
+        async = connection.async();
+        reactive = connection.reactive();
+        sync.flushall();
+        sync.create(Beers.INDEX, Beers.SCHEMA, null);
         for (Document<String, String> beer : beers) {
-            commands.add(INDEX, beer, null);
-            commands.sugadd(SUGINDEX, Suggestion.<String>builder().string(beer.get(NAME)).score(1d).build(), false);
+            sync.add(Beers.INDEX, beer, null);
+            sync.sugadd(SUGINDEX, Suggestion.<String>builder().string(beer.get(Beers.NAME)).score(1d).build(), false);
         }
     }
 
