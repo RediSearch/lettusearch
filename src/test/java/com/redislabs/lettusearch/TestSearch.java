@@ -45,7 +45,7 @@ public class TestSearch extends AbstractBaseTest {
     }
 
     @Test
-    public void searchNoContent() {
+    public void noContent() {
         SearchResults<String, String> results = commands.search(INDEX, "Hefeweizen", SearchOptions.builder().withScores(true).noContent(true).limit(Limit.builder().num(100).build()).build());
         assertEquals(22, results.getCount());
         assertEquals(22, results.size());
@@ -54,7 +54,7 @@ public class TestSearch extends AbstractBaseTest {
     }
 
     @Test
-    public void searchWithPayloads() {
+    public void withPayloads() {
         SearchResults<String, String> results = commands.search(INDEX, "pale", SearchOptions.builder().withPayloads(true).build());
         assertEquals(256, results.getCount());
         Document<String, String> result1 = results.get(0);
@@ -64,7 +64,7 @@ public class TestSearch extends AbstractBaseTest {
     }
 
     @Test
-    public void searchReturn() {
+    public void returnField() {
         SearchResults<String, String> results = commands.search(INDEX, "pale", SearchOptions.builder().returnField(NAME).returnField(STYLE).build());
         assertEquals(256, results.getCount());
         Document<String, String> result1 = results.get(0);
@@ -73,28 +73,9 @@ public class TestSearch extends AbstractBaseTest {
         assertNull(result1.get(ABV));
     }
 
-    @Test
-    public void searchInKeys() {
-        SearchResults<String, String> results = commands.search(INDEX, "*", SearchOptions.builder().inKeys(Collections.singletonList("1018")).inKey("2593").build());
-        assertEquals(2, results.getCount());
-        Document<String, String> result1 = results.get(0);
-        assertNotNull(result1.get(NAME));
-        assertNotNull(result1.get(STYLE));
-        assertEquals("0.07", result1.get(ABV));
-    }
 
     @Test
-    public void searchInFields() {
-        SearchResults<String, String> results = commands.search(INDEX, "sculpin", SearchOptions.builder().inField(NAME).build());
-        assertEquals(2, results.getCount());
-        Document<String, String> result1 = results.get(0);
-        assertNotNull(result1.get(NAME));
-        assertNotNull(result1.get(STYLE));
-        assertEquals("0.07", result1.get(ABV));
-    }
-
-    @Test
-    public void searchInvalidReturn() {
+    public void invalidReturnField() {
         SearchResults<String, String> results = commands.search(INDEX, "pale", SearchOptions.builder().returnField(NAME).returnField(STYLE).returnField("").build());
         assertEquals(256, results.getCount());
         Document<String, String> result1 = results.get(0);
@@ -104,7 +85,27 @@ public class TestSearch extends AbstractBaseTest {
     }
 
     @Test
-    public void searchHighlight() {
+    public void inKeys() {
+        SearchResults<String, String> results = commands.search(INDEX, "*", SearchOptions.builder().inKeys(Collections.singletonList("1018")).inKey("2593").build());
+        assertEquals(2, results.getCount());
+        Document<String, String> result1 = results.get(0);
+        assertNotNull(result1.get(NAME));
+        assertNotNull(result1.get(STYLE));
+        assertEquals("0.07", result1.get(ABV));
+    }
+
+    @Test
+    public void inFields() {
+        SearchResults<String, String> results = commands.search(INDEX, "sculpin", SearchOptions.builder().inField(NAME).build());
+        assertEquals(2, results.getCount());
+        Document<String, String> result1 = results.get(0);
+        assertNotNull(result1.get(NAME));
+        assertNotNull(result1.get(STYLE));
+        assertEquals("0.07", result1.get(ABV));
+    }
+
+    @Test
+    public void highlight() {
         String term = "pale";
         String query = "@style:" + term;
         TagOptions tagOptions = TagOptions.builder().open("<b>").close("</b>").build();
@@ -129,13 +130,19 @@ public class TestSearch extends AbstractBaseTest {
     }
 
     @Test
-    public void reactiveSearch() {
+    public void reactive() {
         SearchResults<String, String> results = connection.reactive().search(INDEX, "pale", SearchOptions.builder().limit(Limit.builder().num(100).offset(200).build()).build()).block();
         assertEquals(256, results.getCount());
         Document<String, String> result1 = results.get(0);
         assertNotNull(result1.get(NAME));
         assertNotNull(result1.get(STYLE));
         assertNotNull(result1.get(ABV));
+    }
+
+    @Test
+    public void phonetic() {
+        SearchResults<String, String> results = commands.search(Beers.INDEX, "pail");
+        assertEquals(256, results.getCount());
     }
 
 }
