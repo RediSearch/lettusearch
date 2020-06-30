@@ -2,6 +2,7 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'maven'
+    id 'jacoco'
     id 'org.springframework.boot' version '2.3.1.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'com.jfrog.bintray' version '1.8.5'
@@ -122,6 +123,15 @@ group = 'com.redislabs'
 description = 'Java client for RediSearch based on Lettuce'
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+check.dependsOn jacocoTestReport
 
 task printVersion {
     doLast {
