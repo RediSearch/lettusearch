@@ -26,7 +26,7 @@ public abstract class AbstractBaseTest {
     protected RediSearchReactiveCommands<String, String> reactive;
 
     @Container
-    private static final GenericContainer redis = new GenericContainer("redislabs/redisearch:latest").withExposedPorts(6379);
+    private static final GenericContainer redisearch = new GenericContainer("redislabs/redisearch:latest").withExposedPorts(6379);
 
     @BeforeAll
     public static void load() throws IOException {
@@ -35,7 +35,7 @@ public abstract class AbstractBaseTest {
 
     @BeforeEach
     public void setup() {
-        client = RediSearchClient.create(RedisURI.create(redis.getHost(), redis.getFirstMappedPort()));
+        client = RediSearchClient.create(RedisURI.create(redisearch.getHost(), redisearch.getFirstMappedPort()));
         connection = client.connect();
         sync = connection.sync();
         async = connection.async();

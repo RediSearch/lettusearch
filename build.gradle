@@ -6,9 +6,7 @@ plugins {
     id 'org.springframework.boot' version '2.3.1.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'com.jfrog.bintray' version '1.8.5'
-    id 'com.github.ben-manes.versions' version '0.28.0'
     id 'net.researchgate.release' version '2.8.1'
-    id 'com.github.breadmoirai.github-release' version '2.2.12'
 }
 
 repositories {
@@ -41,29 +39,6 @@ dependencies {
 
 test {
     useJUnitPlatform()
-}
-
-bintray {
-    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : ''
-    key = project.hasProperty('bintrayKey') ? project.property('bintrayKey') : ''
-    publications = ['mavenJava']
-    publish = true
-    pkg {
-        repo = 'maven'
-        name = 'lettusearch'
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/RediSearch/lettusearch.git'
-	    version {
-	        gpg {
-	            sign = true
-	        }
-	        mavenCentralSync {
-	            sync = true
-	            user = project.hasProperty('ossrhUsername') ? project.property('ossrhUsername') : ''
-	            password = project.hasProperty('ossrhPassword') ? project.property('ossrhPassword') : ''
-	        }
-	    }
-    }
 }
 
 task sourcesJar(type: Jar) {
@@ -131,20 +106,32 @@ jacocoTestReport {
     }
 }
 
-check.dependsOn jacocoTestReport
+release {
+    tagTemplate = 'v${version}'
+}
 
-task printVersion {
-    doLast {
-        println project.version
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayKey') ? project.property('bintrayKey') : System.getenv('BINTRAY_KEY')
+    publications = ['mavenJava']
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = 'lettusearch'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/RediSearch/lettusearch.git'
+        version {
+            gpg {
+                sign = true
+            }
+            mavenCentralSync {
+                sync = true
+                user = project.hasProperty('ossrhUsername') ? project.property('ossrhUsername') : System.getenv('OSSRH_USERNAME')
+                password = project.hasProperty('ossrhPassword') ? project.property('ossrhPassword') : System.getenv('OSSRH_PASSWORD')
+            }
+        }
     }
 }
 
-githubRelease {
-    token = project.hasProperty('githubToken') ? project.property('githubToken') : ''
-    owner "RediSearch"
-    repo "lettusearch"
-    body changelog()
-}
-
-afterReleaseBuild.dependsOn ":githubRelease"
+check.dependsOn jacocoTestReport
 afterReleaseBuild.dependsOn bintrayUpload
