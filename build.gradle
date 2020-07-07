@@ -13,9 +13,6 @@ group = 'com.redislabs'
 description = 'Java client for RediSearch based on Lettuce'
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
-def scmHost = 'github.com'
-def scmPath = 'RediSearch/lettusearch.git'
-def url = 'https://github.com/RediSearch/lettusearch'
 
 java {
     withJavadocJar()
@@ -75,8 +72,9 @@ publishing {
                 }
             }
             pom {
+                name = 'LettuSearch'
                 description = 'Java client for RediSearch based on Lettuce'
-                url = url
+                url = 'https://github.com/RediSearch/lettusearch'
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
@@ -90,9 +88,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git:git://' + scmHost + '/' + scmPath
-                    developerConnection = 'scm:git:git@' + scmHost + ':' + scmPath
-                    url = url
+                    connection = 'scm:git:git://github.com/RediSearch/lettusearch.git'
+                    developerConnection = 'scm:git:git@github.com:RediSearch/lettusearch.git'
+                    url = 'https://github.com/RediSearch/lettusearch'
                 }
             }
         }
@@ -116,17 +114,17 @@ bintray {
         repo = 'maven'
         name = project.name
         licenses = ['Apache-2.0']
-        vcsUrl =
-                version {
-                    gpg {
-                        sign = true
-                    }
-                    mavenCentralSync {
-                        sync = true
-                        user = project.hasProperty('ossrhUsername') ? project.property('ossrhUsername') : ''
-                        password = project.hasProperty('ossrhPassword') ? project.property('ossrhPassword') : ''
-                    }
-                }
+        vcsUrl = 'https://github.com/RediSearch/lettusearch.git'
+        version {
+            gpg {
+                sign = true
+            }
+            mavenCentralSync {
+                sync = true
+                user = project.hasProperty('ossrhUsername') ? project.property('ossrhUsername') : ''
+                password = project.hasProperty('ossrhPassword') ? project.property('ossrhPassword') : ''
+            }
+        }
     }
 }
 
