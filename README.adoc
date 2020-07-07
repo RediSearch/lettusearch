@@ -1,20 +1,8 @@
-// suppress inspection "SyntaxError" for whole file
 = LettuSearch
-:source-highlighter: coderay
-// Metadata
-:release-version: 1.4.0
-// Settings
-:idprefix:
-:idseparator: -
-ifndef::env-github[:icons: font]
-// URIs
 :project-repo: RediSearch/lettusearch
 :uri-repo: https://github.com/{project-repo}
-// GitHub customization
 ifdef::env-github[]
 :badges:
-:tag: master
-:!toc-title:
 :tip-caption: :bulb:
 :note-caption: :paperclip:
 :important-caption: :heavy_exclamation_mark:
@@ -67,9 +55,9 @@ Usage example:
 RediSearchClient client = RediSearchClient.create("redis://localhost"); //<1>
 StatefulRediSearchConnection<String, String> connection = client.connect(); //<2>
 RediSearchCommands<String, String> commands = connection.sync(); //<3>
-commands.create(INDEX, Schema.builder().field(TextField.builder().name(NAME).build()).build()); //<4>
-commands.add(INDEX, Document.builder().id(ID).score(1D).field(NAME, "La Chouffe").build()); //<5>
-SearchResults<String, String> results = commands.search(INDEX, "chou*"); //<6>
+commands.create("beers", Schema.builder().field(TextField.builder().name("name").build()).build()); //<4>
+commands.add("beers", Document.<String, String>builder().id("id").score(1D).field("name", "La Chouffe").build()); //<5>
+SearchResults<String, String> results = commands.search("beers", "chou*"); //<6>
 ----
 <1> Create a RediSearch client
 <2> Connect to RediSearch
@@ -84,5 +72,5 @@ LettuSearch implements RediSearch commands using the https://lettuce.io/core/5.0
 == Building
 [source,shell]
 ----
-$ gradle build
+❯ ./gradlew build
 ----

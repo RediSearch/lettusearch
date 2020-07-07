@@ -26,6 +26,7 @@ public abstract class AbstractBaseTest {
     protected RediSearchReactiveCommands<String, String> reactive;
 
     @Container
+    @SuppressWarnings("rawtypes")
     private static final GenericContainer redisearch = new GenericContainer("redislabs/redisearch:latest").withExposedPorts(6379);
 
     @BeforeAll

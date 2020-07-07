@@ -19,28 +19,28 @@ public class Document<K, V> extends LinkedHashMap<K, V> {
     private V sortKey;
     private V payload;
 
-    public static DocumentBuilder builder() {
-        return new DocumentBuilder();
+    public static <K, V> DocumentBuilder<K, V> builder() {
+        return new DocumentBuilder<>();
     }
 
     @Setter
     @Accessors(fluent = true)
-    public static class DocumentBuilder {
+    public static class DocumentBuilder<K, V> {
 
-        private String id;
+        private K id;
         private double score = 1;
-        private String payload;
-        private Map<String, String> fields = new HashMap<>();
+        private V payload;
+        private Map<K, V> fields = new HashMap<>();
 
-        public DocumentBuilder field(String name, String value) {
+        public DocumentBuilder<K, V> field(K name, V value) {
             fields.put(name, value);
             return this;
         }
 
-        public Document<String, String> build() {
+        public Document<K, V> build() {
             LettuceAssert.notNull(id, "Id is required.");
             LettuceAssert.notNull(fields, "Fields are required.");
-            Document<String, String> document = new Document<>();
+            Document<K, V> document = new Document<>();
             document.setId(id);
             document.setScore(score);
             document.setPayload(payload);
