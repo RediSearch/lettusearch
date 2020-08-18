@@ -329,7 +329,8 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         return createCommand(GET, new MapOutput<>(codec), args);
     }
 
-    public Command<K, V, List<Map<K, V>>> mget(K index, K... docIds) {
+    @SuppressWarnings("unchecked")
+	public Command<K, V, List<Map<K, V>>> mget(K index, K... docIds) {
         assertNotNull(index, "index");
         LettuceAssert.notEmpty(docIds, "docId " + MUST_NOT_BE_EMPTY);
         RediSearchCommandArgs<K, V> args = createArgs(index);

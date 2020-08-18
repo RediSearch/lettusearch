@@ -172,7 +172,8 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
         return dispatch(commandBuilder.get(index, docId));
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public RedisFuture<List<Map<K, V>>> ftMget(K index, K... docIds) {
         return dispatch(commandBuilder.mget(index, docIds));
     }

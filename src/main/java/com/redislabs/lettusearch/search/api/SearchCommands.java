@@ -28,6 +28,7 @@ public interface SearchCommands<K, V> {
 
 	Map<K, V> get(K index, K docId);
 
+	@SuppressWarnings("unchecked")
 	List<Map<K, V>> ftMget(K index, K... docIds);
 
 	SearchResults<K, V> search(K index, V query);

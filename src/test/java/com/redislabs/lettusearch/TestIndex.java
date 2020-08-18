@@ -46,7 +46,7 @@ public class TestIndex extends AbstractBaseTest {
         Document<String, String> doc = Document.<String, String>builder().id("newDocId").score(1d).build();
         doc.put("field1", "value1");
         try {
-            sync.add(INDEX, doc, null);
+            sync.add(INDEX, doc);
             fail("Index not dropped");
         } catch (RedisCommandExecutionException e) {
             // ignored, expected behavior
@@ -58,7 +58,7 @@ public class TestIndex extends AbstractBaseTest {
         sync.alter(INDEX, "newField", FieldOptions.builder().type(FieldType.Tag).build());
         Document<String, String> doc = Document.<String, String>builder().id("newDocId").score(1d).build();
         doc.put("newField", "value1");
-        sync.add(INDEX, doc, null);
+        sync.add(INDEX, doc);
         SearchResults<String, String> results = sync.search(INDEX, "@newField:{value1}");
         assertEquals(1, results.getCount());
         assertEquals(doc.get("newField"), results.get(0).get("newField"));

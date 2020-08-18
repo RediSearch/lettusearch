@@ -30,6 +30,7 @@ public interface SearchAsyncCommands<K, V> {
 
 	RedisFuture<Map<K, V>> get(K index, K docId);
 
+	@SuppressWarnings("unchecked")
 	RedisFuture<List<Map<K, V>>> ftMget(K index, K... docIds);
 
 	RedisFuture<SearchResults<K, V>> search(K index, V query);

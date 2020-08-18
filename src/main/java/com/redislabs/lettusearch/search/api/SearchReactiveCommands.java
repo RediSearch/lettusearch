@@ -30,6 +30,7 @@ public interface SearchReactiveCommands<K, V> {
 
 	Mono<Map<K, V>> get(K index, K docId);
 
+	@SuppressWarnings("unchecked")
 	Flux<Map<K, V>> ftMget(K index, K... docIds);
 
 	Mono<SearchResults<K, V>> search(K index, V query);

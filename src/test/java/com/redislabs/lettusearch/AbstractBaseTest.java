@@ -42,9 +42,9 @@ public abstract class AbstractBaseTest {
         async = connection.async();
         reactive = connection.reactive();
         sync.flushall();
-        sync.create(Beers.INDEX, Beers.SCHEMA, null);
+        sync.create(Beers.INDEX, Beers.SCHEMA);
         for (Document<String, String> beer : beers) {
-            sync.add(Beers.INDEX, beer, null);
+            sync.add(Beers.INDEX, beer);
             sync.sugadd(SUGINDEX, Suggestion.<String>builder().string(beer.get(Beers.NAME)).score(1d).build(), false);
         }
     }
