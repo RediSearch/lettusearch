@@ -15,15 +15,16 @@ import lombok.Singular;
 
 @Data
 @Builder
-public class Schema implements RediSearchArgument {
+public class Schema<K> implements RediSearchArgument {
 
 	static final String MUST_NOT_BE_EMPTY = "must not be empty";
 
 	@Singular
-	private List<Field> fields;
+	private List<Field<K>> fields;
 
+	@SuppressWarnings("rawtypes")
 	@Override
-	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
+	public void build(RediSearchCommandArgs args) {
 		LettuceAssert.isTrue(!fields.isEmpty(), "fields " + MUST_NOT_BE_EMPTY);
 		args.add(SCHEMA);
 		fields.forEach(field -> field.build(args));

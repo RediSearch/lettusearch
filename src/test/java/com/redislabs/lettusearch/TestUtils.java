@@ -18,15 +18,15 @@ public class TestUtils extends AbstractBaseTest {
 	@Test
 	public void ftInfo() {
 		List<Object> infoList = sync.ftInfo(Beers.INDEX);
-		IndexInfo info = RediSearchUtils.getInfo(infoList);
+		IndexInfo<String> info = RediSearchUtils.getInfo(infoList);
 		assertEquals((Long) 2348L, info.getNumDocs());
-		List<Field> fields = info.getFields();
-		TextField nameField = (TextField) fields.get(0);
+		List<Field<String>> fields = info.getFields();
+		TextField<String> nameField = (TextField<String>) fields.get(0);
 		assertEquals(Beers.NAME, nameField.getName());
 		assertEquals(false, nameField.isNoIndex());
 		assertEquals(false, nameField.isNoStem());
 		assertEquals(false, nameField.isSortable());
-		TagField styleField = (TagField) fields.get(1);
+		TagField<String> styleField = (TagField<String>) fields.get(1);
 		assertEquals(Beers.STYLE, styleField.getName());
 		assertEquals(true, styleField.isSortable());
 		assertEquals(",", styleField.getSeparator());

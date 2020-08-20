@@ -12,17 +12,18 @@ import lombok.Data;
 
 @Data
 @Builder
-public class SortBy implements RediSearchArgument {
+public class SortBy<K> implements RediSearchArgument {
 
 	public final static Direction DEFAULT_DIRECTION = Direction.Ascending;
 
-	private String field;
+	private K field;
 	@Default
 	private Direction direction = DEFAULT_DIRECTION;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
-		args.add(field);
+	public void build(RediSearchCommandArgs args) {
+		args.addKey(field);
 		args.add(direction == Direction.Ascending ? ASC : DESC);
 	}
 

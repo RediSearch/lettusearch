@@ -1,11 +1,14 @@
 package com.redislabs.lettusearch.index.api;
 
 import java.util.List;
+import java.util.Map;
 
 import com.redislabs.lettusearch.index.CreateOptions;
 import com.redislabs.lettusearch.index.DropOptions;
 import com.redislabs.lettusearch.index.Schema;
 import com.redislabs.lettusearch.index.field.FieldOptions;
+import com.redislabs.lettusearch.search.AddOptions;
+import com.redislabs.lettusearch.search.Document;
 
 /**
  * Synchronously-executed index admin commands for RediSearch.
@@ -17,9 +20,9 @@ import com.redislabs.lettusearch.index.field.FieldOptions;
  */
 public interface IndexCommands<K, V> {
 
-	String create(K index, Schema schema);
+	String create(K index, Schema<K> schema);
 
-	String create(K index, Schema schema, CreateOptions options);
+	String create(K index, Schema<K> schema, CreateOptions<K, V> options);
 
 	String drop(K index);
 
@@ -34,5 +37,18 @@ public interface IndexCommands<K, V> {
 	String aliasUpdate(K name, K index);
 
 	String aliasDel(K name);
+
+	String add(K index, Document<K, V> document);
+
+	String add(K index, Document<K, V> document, AddOptions options);
+
+	boolean del(K index, K docId);
+
+	boolean del(K index, K docId, boolean deleteDoc);
+
+	Map<K, V> get(K index, K docId);
+
+	@SuppressWarnings("unchecked")
+	List<Map<K, V>> ftMget(K index, K... docIds);
 
 }

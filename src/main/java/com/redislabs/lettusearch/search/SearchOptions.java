@@ -1,18 +1,5 @@
 package com.redislabs.lettusearch.search;
 
-import static com.redislabs.lettusearch.protocol.CommandKeyword.HIGHLIGHT;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.INKEYS;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.INFIELDS;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.LANGUAGE;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.NOCONTENT;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.NOSTOPWORDS;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.RETURN;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.SORTBY;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.VERBATIM;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.WITHPAYLOADS;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.WITHSCORES;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.WITHSORTKEYS;
-
 import java.util.List;
 
 import com.redislabs.lettusearch.RediSearchArgument;
@@ -22,77 +9,80 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
 
+import static com.redislabs.lettusearch.protocol.CommandKeyword.*;
+
 @Data
 @Builder
-public class SearchOptions implements RediSearchArgument {
+public class SearchOptions<K> implements RediSearchArgument {
 
-    private boolean noContent;
-    private boolean verbatim;
-    private boolean noStopWords;
-    private boolean withScores;
-    private boolean withPayloads;
-    private boolean withSortKeys;
-    @Singular
-    private List<String> inKeys;
-    @Singular
-    private List<String> inFields;
-    @Singular
-    private List<String> returnFields;
-    private HighlightOptions highlight;
-    private String language;
-    private SortBy sortBy;
-    private Limit limit;
+	private boolean noContent;
+	private boolean verbatim;
+	private boolean noStopWords;
+	private boolean withScores;
+	private boolean withPayloads;
+	private boolean withSortKeys;
+	@Singular
+	private List<K> inKeys;
+	@Singular
+	private List<K> inFields;
+	@Singular
+	private List<K> returnFields;
+	private HighlightOptions<K> highlight;
+	private Language language;
+	private SortBy<K> sortBy;
+	private Limit limit;
 
-    @Override
-    public <K,V> void build(RediSearchCommandArgs<K, V> args) {
-        if (noContent) {
-            args.add(NOCONTENT);
-        }
-        if (verbatim) {
-            args.add(VERBATIM);
-        }
-        if (noStopWords) {
-            args.add(NOSTOPWORDS);
-        }
-        if (withScores) {
-            args.add(WITHSCORES);
-        }
-        if (withPayloads) {
-            args.add(WITHPAYLOADS);
-        }
-        if (withSortKeys) {
-            args.add(WITHSORTKEYS);
-        }
-        if (!inKeys.isEmpty()) {
-            args.add(INKEYS);
-            args.add(inKeys.size());
-            inKeys.forEach(args::add);
-        }
-        if (!inFields.isEmpty()) {
-            args.add(INFIELDS);
-            args.add(inFields.size());
-            inFields.forEach(args::add);
-        }
-        if (!returnFields.isEmpty()) {
-            args.add(RETURN);
-            args.add(returnFields.size());
-            returnFields.forEach(args::add);
-        }
-        if (highlight != null) {
-            args.add(HIGHLIGHT);
-            highlight.build(args);
-        }
-        if (sortBy != null) {
-            args.add(SORTBY);
-            sortBy.build(args);
-        }
-        if (language != null) {
-            args.add(LANGUAGE);
-            args.add(language);
-        }
-        if (limit != null) {
-            limit.build(args);
-        }
-    }
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public void build(RediSearchCommandArgs args) {
+		if (noContent) {
+			args.add(NOCONTENT);
+		}
+		if (verbatim) {
+			args.add(VERBATIM);
+		}
+		if (noStopWords) {
+			args.add(NOSTOPWORDS);
+		}
+		if (withScores) {
+			args.add(WITHSCORES);
+		}
+		if (withPayloads) {
+			args.add(WITHPAYLOADS);
+		}
+		if (withSortKeys) {
+			args.add(WITHSORTKEYS);
+		}
+		if (!inKeys.isEmpty()) {
+			args.add(INKEYS);
+			args.add(inKeys.size());
+			inKeys.forEach(args::addKey);
+		}
+		if (!inFields.isEmpty()) {
+			args.add(INFIELDS);
+			args.add(inFields.size());
+			inFields.forEach(args::addKey);
+		}
+		if (!returnFields.isEmpty()) {
+			args.add(RETURN);
+			args.add(returnFields.size());
+			returnFields.forEach(args::addKey);
+		}
+		if (highlight != null) {
+			args.add(HIGHLIGHT);
+			highlight.build(args);
+		}
+		if (sortBy != null) {
+			args.add(SORTBY);
+			sortBy.build(args);
+		}
+		if (language != null) {
+			args.add(LANGUAGE);
+			args.add(language.name());
+		}
+		if (limit != null) {
+			limit.build(args);
+		}
+	}
 
 }

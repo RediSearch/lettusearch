@@ -6,15 +6,16 @@ import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
 import lombok.Builder;
 
-public class GeoField extends Field {
+public class GeoField<K> extends Field<K> {
 
 	@Builder
-	private GeoField(String name, boolean sortable, boolean noIndex) {
+	private GeoField(K name, boolean sortable, boolean noIndex) {
 		super(name, sortable, noIndex);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
-	protected <K, V> void buildField(RediSearchCommandArgs<K, V> args) {
+	protected void buildField(RediSearchCommandArgs args) {
 		args.add(GEO);
 	}
 }

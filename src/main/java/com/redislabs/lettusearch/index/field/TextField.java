@@ -11,14 +11,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-public @Getter @Setter class TextField extends Field {
+public @Getter @Setter class TextField<K> extends Field<K> {
 
 	private Double weight;
 	private boolean noStem;
 	private PhoneticMatcher matcher;
 
 	@Builder
-	private TextField(String name, boolean sortable, boolean noIndex, Double weight, boolean noStem,
+	private TextField(K name, boolean sortable, boolean noIndex, Double weight, boolean noStem,
 			PhoneticMatcher matcher) {
 		super(name, sortable, noIndex);
 		this.weight = weight;
@@ -26,8 +26,9 @@ public @Getter @Setter class TextField extends Field {
 		this.matcher = matcher;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
-	protected <K, V> void buildField(RediSearchCommandArgs<K, V> args) {
+	protected void buildField(RediSearchCommandArgs args) {
 		args.add(TEXT);
 		if (noStem) {
 			args.add(NOSTEM);

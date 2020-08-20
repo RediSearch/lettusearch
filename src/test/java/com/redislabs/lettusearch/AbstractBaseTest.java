@@ -27,7 +27,7 @@ public abstract class AbstractBaseTest {
 
     @Container
     @SuppressWarnings("rawtypes")
-    private static final GenericContainer redisearch = new GenericContainer("redislabs/redisearch:latest").withExposedPorts(6379);
+    private static final GenericContainer redisearch = new GenericContainer("redislabs/redisearch:1.99.3").withExposedPorts(6379);
 
     @BeforeAll
     public static void load() throws IOException {

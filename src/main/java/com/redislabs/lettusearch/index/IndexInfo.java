@@ -9,11 +9,11 @@ import lombok.Data;
 
 @Data
 @Builder
-public class IndexInfo {
-	private String indexName;
+public class IndexInfo<K> {
+	private K indexName;
 	private Long numDocs;
 	private List<Object> indexOptions;
-	private List<Field> fields;
+	private List<Field<K>> fields;
 	private String maxDocId;
 	private Long numTerms;
 	private Long numRecords;

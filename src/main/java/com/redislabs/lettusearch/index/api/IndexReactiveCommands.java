@@ -1,9 +1,13 @@
 package com.redislabs.lettusearch.index.api;
 
+import java.util.Map;
+
 import com.redislabs.lettusearch.index.CreateOptions;
 import com.redislabs.lettusearch.index.DropOptions;
 import com.redislabs.lettusearch.index.Schema;
 import com.redislabs.lettusearch.index.field.FieldOptions;
+import com.redislabs.lettusearch.search.AddOptions;
+import com.redislabs.lettusearch.search.Document;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -18,9 +22,9 @@ import reactor.core.publisher.Mono;
  */
 public interface IndexReactiveCommands<K, V> {
 
-	Mono<String> create(K index, Schema schema);
+	Mono<String> create(K index, Schema<K> schema);
 
-	Mono<String> create(K index, Schema schema, CreateOptions options);
+	Mono<String> create(K index, Schema<K> schema, CreateOptions<K, V> options);
 
 	Mono<String> drop(K index);
 
@@ -35,5 +39,18 @@ public interface IndexReactiveCommands<K, V> {
 	Mono<String> aliasUpdate(K name, K index);
 
 	Mono<String> aliasDel(K name);
+
+	Mono<String> add(K index, Document<K, V> document);
+
+	Mono<String> add(K index, Document<K, V> document, AddOptions options);
+
+	Mono<Boolean> del(K index, K docId);
+
+	Mono<Boolean> del(K index, K docId, boolean deleteDoc);
+
+	Mono<Map<K, V>> get(K index, K docId);
+
+	@SuppressWarnings("unchecked")
+	Flux<Map<K, V>> ftMget(K index, K... docIds);
 
 }

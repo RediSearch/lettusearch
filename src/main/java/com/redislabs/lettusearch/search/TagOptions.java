@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 @Builder
-public class TagOptions {
+public class TagOptions<K> {
 
-	private String open;
-	private String close;
+	private K open;
+	private K close;
 
 }

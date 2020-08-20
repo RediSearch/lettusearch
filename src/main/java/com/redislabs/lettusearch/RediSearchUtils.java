@@ -22,12 +22,12 @@ public class RediSearchUtils {
 	private final static Long ZERO = 0L;
 
 	@SuppressWarnings("unchecked")
-	public static IndexInfo getInfo(List<Object> infoList) {
+	public static <K> IndexInfo<K> getInfo(List<Object> infoList) {
 		Map<String, Object> map = new HashMap<>();
 		for (int i = 0; i < (infoList.size() / 2); i++) {
 			map.put((String) infoList.get(i * 2), infoList.get(i * 2 + 1));
 		}
-		return IndexInfo.builder().indexName(getString(map.get("index_name")))
+		return IndexInfo.<K>builder().indexName(getString(map.get("index_name")))
 				.indexOptions((List<Object>) map.get("index_options")).fields(fields(map.get("fields")))
 				.numDocs(getLong(map, "num_docs")).maxDocId(getString(map.get("max_doc_id")))
 				.numTerms(getLong(map, "num_terms")).numRecords(getLong(map, "num_records"))
@@ -45,10 +45,11 @@ public class RediSearchUtils {
 				.build();
 	}
 
-	private static String getString(Object object) {
+	@SuppressWarnings("unchecked")
+	private static <K> K getString(Object object) {
 		if (object != null) {
 			if (object instanceof String) {
-				return (String) object;
+				return (K) object;
 			}
 			if (ZERO.equals(object)) {
 				return null;
@@ -58,13 +59,13 @@ public class RediSearchUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static List<Field> fields(Object object) {
-		List<Field> fields = new ArrayList<>();
+	private static <K> List<Field<K>> fields(Object object) {
+		List<Field<K>> fields = new ArrayList<>();
 		for (Object infoObject : (List<Object>) object) {
 			List<Object> info = (List<Object>) infoObject;
-			String name = (String) info.get(0);
+			K name = (K) info.get(0);
 			CommandKeyword type = CommandKeyword.valueOf((String) info.get(2));
-			Field field = field(name, type, info);
+			Field<K> field = field(name, type, info);
 			for (Object attribute : info.subList(3, info.size())) {
 				if (NOINDEX.name().equals(attribute)) {
 					field.setNoIndex(true);
@@ -78,16 +79,16 @@ public class RediSearchUtils {
 		return fields;
 	}
 
-	private static Field field(String name, CommandKeyword type, List<Object> info) {
+	private static <K> Field<K> field(K name, CommandKeyword type, List<Object> info) {
 		switch (type) {
 		case GEO:
-			return GeoField.builder().name(name).build();
+			return GeoField.<K>builder().name(name).build();
 		case NUMERIC:
-			return NumericField.builder().name(name).build();
+			return NumericField.<K>builder().name(name).build();
 		case TAG:
-			return TagField.builder().name(name).separator((String) info.get(4)).build();
+			return TagField.<K>builder().name(name).separator((String) info.get(4)).build();
 		default:
-			return TextField.builder().name(name).weight(Double.parseDouble((String) info.get(4)))
+			return TextField.<K>builder().name(name).weight(Double.parseDouble((String) info.get(4)))
 					.noStem(NOSTEM.name().equals(info.get(info.size() - 1))).build();
 		}
 	}

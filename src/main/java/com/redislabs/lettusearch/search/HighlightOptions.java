@@ -18,23 +18,24 @@ import lombok.Singular;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class HighlightOptions implements RediSearchArgument {
+public class HighlightOptions<K> implements RediSearchArgument {
 
 	@Singular
-	private List<String> fields;
-	private TagOptions tags;
+	private List<K> fields;
+	private TagOptions<K> tags;
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
+	public void build(RediSearchCommandArgs args) {
 		if (fields.size() > 0) {
 			args.add(FIELDS);
 			args.add(fields.size());
-			fields.forEach(args::add);
+			fields.forEach(args::addKey);
 		}
 		if (tags != null) {
 			args.add(TAGS);
-			args.add(tags.getOpen());
-			args.add(tags.getClose());
+			args.addKey(tags.getOpen());
+			args.addKey(tags.getClose());
 		}
 	}
 

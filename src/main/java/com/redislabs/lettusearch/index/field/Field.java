@@ -11,25 +11,27 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter
+@Setter
 @AllArgsConstructor
-public abstract @Getter @Setter class Field implements RediSearchArgument {
+public abstract class Field<K> implements RediSearchArgument {
 
 	static final String MUST_NOT_BE_EMPTY = "must not be empty";
 	static final String MUST_NOT_BE_NULL = "must not be null";
 
-	private String name;
+	private K name;
 	private boolean sortable;
 	private boolean noIndex;
 
-	protected Field(String name) {
+	protected Field(K name) {
 		this.name = name;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
+	public void build(RediSearchCommandArgs args) {
 		LettuceAssert.notNull(name, "name " + MUST_NOT_BE_NULL);
-		LettuceAssert.notEmpty(name, "name " + MUST_NOT_BE_EMPTY);
-		args.add(name);
+		args.addKey(name);
 		buildField(args);
 		if (sortable) {
 			args.add(SORTABLE);
@@ -39,6 +41,7 @@ public abstract @Getter @Setter class Field implements RediSearchArgument {
 		}
 	}
 
-	protected abstract <K, V> void buildField(RediSearchCommandArgs<K, V> args);
+	@SuppressWarnings("rawtypes")
+	protected abstract void buildField(RediSearchCommandArgs args);
 
 }
