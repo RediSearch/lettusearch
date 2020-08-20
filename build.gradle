@@ -134,6 +134,7 @@ githubRelease {
     owner "RediSearch"
     repo "lettusearch"
     releaseAssets distZip, distTar
+    draft true
     body changelog()
 }
 
