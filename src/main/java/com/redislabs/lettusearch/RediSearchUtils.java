@@ -128,5 +128,10 @@ public class RediSearchUtils {
 		}
 		return null;
 	}
+	
+	public static String escapeTag(String value) {
+		return value.replaceAll("([^a-zA-Z0-9])", "\\\\$1");
+	}
+	
 
 }

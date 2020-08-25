@@ -7,9 +7,12 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.redislabs.lettusearch.index.IndexInfo;
+import com.redislabs.lettusearch.index.Schema;
 import com.redislabs.lettusearch.index.field.Field;
 import com.redislabs.lettusearch.index.field.TagField;
 import com.redislabs.lettusearch.index.field.TextField;
+import com.redislabs.lettusearch.search.Document;
+import com.redislabs.lettusearch.search.SearchResults;
 
 import io.lettuce.core.RedisURI;
 
@@ -39,4 +42,15 @@ public class TestUtils extends AbstractBaseTest {
 		RediSearchUtils.getInfo(indexInfo);
 	}
 
+	@Test
+	public void escapeTag() {
+		String index = "escapeTagTestIdx";
+		String idField = "id";
+		sync.create(index, Schema.<String>builder().field(TagField.<String>builder().name(idField).build()).build());
+		sync.add(index, Document.<String, String>builder().id("doc1")
+				.field(idField, "chris@blah.org,User1#test.org,usersdfl@example.com").build());
+		SearchResults<String, String> results = sync.search(index,
+				"@id:{" + RediSearchUtils.escapeTag("User1#test.org") + "}");
+		assertEquals(1, results.size());
+	}
 }
