@@ -37,7 +37,7 @@ Add LettuSearch to your application dependencies:
 [source,groovy]
 ----
 dependencies {
-    implementation 'com.redislabs:lettusearch:x.y.x'
+  implementation 'com.redislabs:lettusearch:x.y.x'
 }
 ----
 
@@ -45,9 +45,9 @@ dependencies {
 [source,xml]
 ----
 <dependency>
-    <groupId>com.redislabs</groupId>
-    <artifactId>lettusearch</artifactId>
-    <version>x.y.z</version>
+  <groupId>com.redislabs</groupId>
+  <artifactId>lettusearch</artifactId>
+  <version>x.y.z</version>
 </dependency>
 ----
 
@@ -80,20 +80,20 @@ RediSearchAsyncCommands<String, String> commands = connection.async(); // <3>
 commands.setAutoFlushCommands(false); // <4>
 List<RedisFuture<?>> futures = new ArrayList<>();
 for (Document<String, String> doc : docs) { // <5>
-	RedisFuture<?> future = commands.add("idx", doc); // <6>
-	futures.add(future);
+  RedisFuture<?> future = commands.add("idx", doc); // <6>
+  futures.add(future);
 }
 commands.flushCommands(); // <7>
 for (RedisFuture<?> future : futures) {
-	try {
-		future.get(1, TimeUnit.SECONDS); // <8>
-	} catch (InterruptedException e) {
-		log.debug("Command interrupted", e);
-	} catch (ExecutionException e) {
-		log.error("Could not execute command", e);
-	} catch (TimeoutException e) {
-		log.error("Command timed out", e);
-	}
+  try {
+    future.get(1, TimeUnit.SECONDS); // <8>
+  } catch (InterruptedException e) {
+    log.debug("Command interrupted", e);
+  } catch (ExecutionException e) {
+    log.error("Could not execute command", e);
+  } catch (TimeoutException e) {
+    log.error("Command timed out", e);
+  }
 }
 ----
 <1> Create a RediSearch client
@@ -115,8 +115,8 @@ config.setMaxTotal(8);
 GenericObjectPool<StatefulRediSearchConnection<String, String>> pool = ConnectionPoolSupport.createGenericObjectPool(client::connect, config); // <3>
 // The connection pool can now be passed to worker threads
 try (StatefulRediSearchConnection<String, String> connection = pool.borrowObject()) { // <4>
-    RediSearchCommands<String, String> commands = connection.sync(); // <5>
-    commands.search("idx", "*"); // <6>
+  RediSearchCommands<String, String> commands = connection.sync(); // <5>
+  commands.search("idx", "*"); // <6>
 }
 ----
 <1> Create a RediSearch client
