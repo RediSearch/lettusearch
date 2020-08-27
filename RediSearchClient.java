@@ -1,4 +1,4 @@
-package com.redislabs.lettusearch;
+package ru.vtb.payments.catalog.config.datasouce;
 
 import static io.lettuce.core.LettuceStrings.isEmpty;
 import static io.lettuce.core.LettuceStrings.isNotEmpty;
@@ -14,21 +14,10 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
 
+import com.redislabs.lettusearch.StatefulRediSearchConnection;
 import com.redislabs.lettusearch.impl.StatefulRediSearchConnectionImpl;
 
-import io.lettuce.core.AbstractRedisClient;
-import io.lettuce.core.ClientOptions;
-import io.lettuce.core.ConnectionBuilder;
-import io.lettuce.core.ConnectionFuture;
-import io.lettuce.core.ExceptionFactory;
-import io.lettuce.core.LettuceStrings;
-import io.lettuce.core.RedisChannelHandler;
-import io.lettuce.core.RedisChannelWriter;
-import io.lettuce.core.RedisCommandTimeoutException;
-import io.lettuce.core.RedisConnectionException;
-import io.lettuce.core.RedisURI;
-import io.lettuce.core.SslConnectionBuilder;
-import io.lettuce.core.StatefulRedisConnectionImpl;
+import io.lettuce.core.*;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.codec.StringCodec;
 import io.lettuce.core.internal.Futures;
@@ -40,6 +29,8 @@ import io.lettuce.core.protocol.CommandHandler;
 import io.lettuce.core.protocol.CommandType;
 import io.lettuce.core.protocol.DefaultEndpoint;
 import io.lettuce.core.protocol.Endpoint;
+import io.lettuce.core.pubsub.PubSubEndpoint;
+import io.lettuce.core.pubsub.StatefulRedisPubSubConnectionImpl;
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.sentinel.StatefulRedisSentinelConnectionImpl;
 import io.lettuce.core.sentinel.api.StatefulRedisSentinelConnection;
@@ -62,7 +53,7 @@ public class RediSearchClient extends AbstractRedisClient {
     }
 
     /**
-     * Creates a uri-less RedisClient. You can connect to different Redis servers but you must supply a {@link RedisURI} on
+     * Creates a uri-less RediSearchClient. You can connect to different Redis servers but you must supply a {@link RedisURI} on
      * connecting. Methods without having a {@link RedisURI} will fail with a {@link java.lang.IllegalStateException}.
      * Non-private constructor to make {@link RediSearchClient} proxyable.
      */
@@ -71,11 +62,11 @@ public class RediSearchClient extends AbstractRedisClient {
     }
 
     /**
-     * Creates a uri-less RedisClient with default {@link ClientResources}. You can connect to different Redis servers but you
+     * Creates a uri-less RediSearchClient with default {@link ClientResources}. You can connect to different Redis servers but you
      * must supply a {@link RedisURI} on connecting. Methods without having a {@link RedisURI} will fail with a
      * {@link java.lang.IllegalStateException}.
      *
-     * @return a new instance of {@link RediSearchClient}.
+     * @return a new instance of {@link RediSearchClient}
      */
     public static RediSearchClient create() {
         return new RediSearchClient(null, EMPTY_URI);
@@ -85,8 +76,8 @@ public class RediSearchClient extends AbstractRedisClient {
      * Create a new client that connects to the supplied {@link RedisURI uri} with default {@link ClientResources}. You can
      * connect to different Redis servers but you must supply a {@link RedisURI} on connecting.
      *
-     * @param redisURI the Redis URI, must not be {@code null}.
-     * @return a new instance of {@link RediSearchClient}.
+     * @param redisURI the Redis URI, must not be {@literal null}
+     * @return a new instance of {@link RediSearchClient}
      */
     public static RediSearchClient create(RedisURI redisURI) {
         assertNotNull(redisURI);
@@ -97,8 +88,8 @@ public class RediSearchClient extends AbstractRedisClient {
      * Create a new client that connects to the supplied uri with default {@link ClientResources}. You can connect to different
      * Redis servers but you must supply a {@link RedisURI} on connecting.
      *
-     * @param uri the Redis URI, must not be {@code null}.
-     * @return a new instance of {@link RediSearchClient}.
+     * @param uri the Redis URI, must not be {@literal null}
+     * @return a new instance of {@link RediSearchClient}
      */
     public static RediSearchClient create(String uri) {
         LettuceAssert.notEmpty(uri, "URI must not be empty");
@@ -106,12 +97,12 @@ public class RediSearchClient extends AbstractRedisClient {
     }
 
     /**
-     * Creates a uri-less RedisClient with shared {@link ClientResources}. You need to shut down the {@link ClientResources}
+     * Creates a uri-less RediSearchClient with shared {@link ClientResources}. You need to shut down the {@link ClientResources}
      * upon shutting down your application. You can connect to different Redis servers but you must supply a {@link RedisURI} on
      * connecting. Methods without having a {@link RedisURI} will fail with a {@link java.lang.IllegalStateException}.
      *
-     * @param clientResources the client resources, must not be {@code null}.
-     * @return a new instance of {@link RediSearchClient}.
+     * @param clientResources the client resources, must not be {@literal null}
+     * @return a new instance of {@link RediSearchClient}
      */
     public static RediSearchClient create(ClientResources clientResources) {
         assertNotNull(clientResources);
@@ -123,9 +114,10 @@ public class RediSearchClient extends AbstractRedisClient {
      * {@link ClientResources} upon shutting down your application. You can connect to different Redis servers but you must
      * supply a {@link RedisURI} on connecting.
      *
-     * @param clientResources the client resources, must not be {@code null}.
-     * @param uri the Redis URI, must not be {@code null}.
-     * @return a new instance of {@link RediSearchClient}.
+     * @param clientResources the client resources, must not be {@literal null}
+     * @param uri the Redis URI, must not be {@literal null}
+     *
+     * @return a new instance of {@link RediSearchClient}
      */
     public static RediSearchClient create(ClientResources clientResources, String uri) {
         assertNotNull(clientResources);
@@ -138,9 +130,9 @@ public class RediSearchClient extends AbstractRedisClient {
      * shut down the {@link ClientResources} upon shutting down your application.You can connect to different Redis servers but
      * you must supply a {@link RedisURI} on connecting.
      *
-     * @param clientResources the client resources, must not be {@code null}.
-     * @param redisURI the Redis URI, must not be {@code null}.
-     * @return a new instance of {@link RediSearchClient}.
+     * @param clientResources the client resources, must not be {@literal null}
+     * @param redisURI the Redis URI, must not be {@literal null}
+     * @return a new instance of {@link RediSearchClient}
      */
     public static RediSearchClient create(ClientResources clientResources, RedisURI redisURI) {
         assertNotNull(clientResources);
@@ -151,7 +143,7 @@ public class RediSearchClient extends AbstractRedisClient {
     /**
      * Open a new connection to a Redis server that treats keys and values as UTF-8 strings.
      *
-     * @return A new stateful Redis connection.
+     * @return A new stateful Redis connection
      */
     public StatefulRediSearchConnection<String, String> connect() {
         return connect(newStringStringCodec());
@@ -160,10 +152,10 @@ public class RediSearchClient extends AbstractRedisClient {
     /**
      * Open a new connection to a Redis server. Use the supplied {@link RedisCodec codec} to encode/decode keys and values.
      *
-     * @param codec Use this codec to encode/decode keys and values, must not be {@code null}.
-     * @param <K> Key type.
-     * @param <V> Value type.
-     * @return A new stateful Redis connection.
+     * @param codec Use this codec to encode/decode keys and values, must not be {@literal null}
+     * @param <K> Key type
+     * @param <V> Value type
+     * @return A new stateful Redis connection
      */
     public <K, V> StatefulRediSearchConnection<K, V> connect(RedisCodec<K, V> codec) {
 
@@ -175,8 +167,8 @@ public class RediSearchClient extends AbstractRedisClient {
     /**
      * Open a new connection to a Redis server using the supplied {@link RedisURI} that treats keys and values as UTF-8 strings.
      *
-     * @param redisURI the Redis server to connect to, must not be {@code null}.
-     * @return A new connection.
+     * @param redisURI the Redis server to connect to, must not be {@literal null}
+     * @return A new connection
      */
     public StatefulRediSearchConnection<String, String> connect(RedisURI redisURI) {
 
@@ -189,11 +181,11 @@ public class RediSearchClient extends AbstractRedisClient {
      * Open a new connection to a Redis server using the supplied {@link RedisURI} and the supplied {@link RedisCodec codec} to
      * encode/decode keys.
      *
-     * @param codec Use this codec to encode/decode keys and values, must not be {@code null}.
-     * @param redisURI the Redis server to connect to, must not be {@code null}.
-     * @param <K> Key type.
-     * @param <V> Value type.
-     * @return A new connection.
+     * @param codec Use this codec to encode/decode keys and values, must not be {@literal null}
+     * @param redisURI the Redis server to connect to, must not be {@literal null}
+     * @param <K> Key type
+     * @param <V> Value type
+     * @return A new connection
      */
     public <K, V> StatefulRediSearchConnection<K, V> connect(RedisCodec<K, V> codec, RedisURI redisURI) {
 
@@ -206,10 +198,10 @@ public class RediSearchClient extends AbstractRedisClient {
      * Open asynchronously a new connection to a Redis server using the supplied {@link RedisURI} and the supplied
      * {@link RedisCodec codec} to encode/decode keys.
      *
-     * @param codec Use this codec to encode/decode keys and values, must not be {@code null}.
-     * @param redisURI the Redis server to connect to, must not be {@code null}.
-     * @param <K> Key type.
-     * @param <V> Value type.
+     * @param codec Use this codec to encode/decode keys and values, must not be {@literal null}
+     * @param redisURI the Redis server to connect to, must not be {@literal null}
+     * @param <K> Key type
+     * @param <V> Value type
      * @return {@link ConnectionFuture} to indicate success or failure to connect.
      * @since 5.0
      */
@@ -221,7 +213,7 @@ public class RediSearchClient extends AbstractRedisClient {
     }
 
     private <K, V> ConnectionFuture<StatefulRediSearchConnection<K, V>> connectStandaloneAsync(RedisCodec<K, V> codec,
-            RedisURI redisURI, Duration timeout) {
+                                                                                          RedisURI redisURI, Duration timeout) {
 
         assertNotNull(codec);
         checkValidRedisURI(redisURI);
@@ -235,7 +227,7 @@ public class RediSearchClient extends AbstractRedisClient {
             writer = new CommandExpiryWriter(writer, clientOptions, clientResources);
         }
 
-        StatefulRediSearchConnectionImpl<K, V> connection = newStatefulRediSearchConnection(writer, codec, timeout);
+        StatefulRediSearchConnectionImpl<K, V> connection = newStatefulRedisConnection(writer, codec, timeout);
         ConnectionFuture<StatefulRediSearchConnection<K, V>> future = connectStatefulAsync(connection, codec, endpoint, redisURI,
                 () -> new CommandHandler(clientOptions, clientResources, endpoint));
 
@@ -251,7 +243,7 @@ public class RediSearchClient extends AbstractRedisClient {
 
     @SuppressWarnings("unchecked")
     private <K, V, S> ConnectionFuture<S> connectStatefulAsync(StatefulRediSearchConnectionImpl<K, V> connection,
-            RedisCodec<K, V> codec, Endpoint endpoint, RedisURI redisURI, Supplier<CommandHandler> commandHandlerSupplier) {
+                                                               RedisCodec<K, V> codec, Endpoint endpoint, RedisURI redisURI, Supplier<CommandHandler> commandHandlerSupplier) {
 
         ConnectionBuilder connectionBuilder = getConnectionBuilder(endpoint, redisURI, commandHandlerSupplier);
         connectionBuilder.connection(connection);
@@ -288,7 +280,7 @@ public class RediSearchClient extends AbstractRedisClient {
     }
 
     private <K, V> ConnectionBuilder getConnectionBuilder(Endpoint endpoint, RedisURI redisURI,
-            Supplier<CommandHandler> commandHandlerSupplier) {
+                                                          Supplier<CommandHandler> commandHandlerSupplier) {
 
         ConnectionBuilder connectionBuilder;
 
@@ -322,10 +314,11 @@ public class RediSearchClient extends AbstractRedisClient {
         return redisURI.getPassword() != null && redisURI.getPassword().length != 0;
     }
 
+
     /**
      * Open a connection to a Redis Sentinel that treats keys and values as UTF-8 strings.
      *
-     * @return A new stateful Redis Sentinel connection.
+     * @return A new stateful Redis Sentinel connection
      */
     public StatefulRedisSentinelConnection<String, String> connectSentinel() {
         return connectSentinel(newStringStringCodec());
@@ -335,10 +328,10 @@ public class RediSearchClient extends AbstractRedisClient {
      * Open a connection to a Redis Sentinel that treats keys and use the supplied {@link RedisCodec codec} to encode/decode
      * keys and values. The client {@link RedisURI} must contain one or more sentinels.
      *
-     * @param codec Use this codec to encode/decode keys and values, must not be {@code null}.
-     * @param <K> Key type.
-     * @param <V> Value type.
-     * @return A new stateful Redis Sentinel connection.
+     * @param codec Use this codec to encode/decode keys and values, must not be {@literal null}
+     * @param <K> Key type
+     * @param <V> Value type
+     * @return A new stateful Redis Sentinel connection
      */
     public <K, V> StatefulRedisSentinelConnection<K, V> connectSentinel(RedisCodec<K, V> codec) {
         checkForRedisURI();
@@ -349,8 +342,8 @@ public class RediSearchClient extends AbstractRedisClient {
      * Open a connection to a Redis Sentinel using the supplied {@link RedisURI} that treats keys and values as UTF-8 strings.
      * The client {@link RedisURI} must contain one or more sentinels.
      *
-     * @param redisURI the Redis server to connect to, must not be {@code null}.
-     * @return A new connection.
+     * @param redisURI the Redis server to connect to, must not be {@literal null}
+     * @return A new connection
      */
     public StatefulRedisSentinelConnection<String, String> connectSentinel(RedisURI redisURI) {
 
@@ -363,11 +356,11 @@ public class RediSearchClient extends AbstractRedisClient {
      * Open a connection to a Redis Sentinel using the supplied {@link RedisURI} and use the supplied {@link RedisCodec codec}
      * to encode/decode keys and values. The client {@link RedisURI} must contain one or more sentinels.
      *
-     * @param codec the Redis server to connect to, must not be {@code null}.
-     * @param redisURI the Redis server to connect to, must not be {@code null}.
-     * @param <K> Key type.
-     * @param <V> Value type.
-     * @return A new connection.
+     * @param codec the Redis server to connect to, must not be {@literal null}
+     * @param redisURI the Redis server to connect to, must not be {@literal null}
+     * @param <K> Key type
+     * @param <V> Value type
+     * @return A new connection
      */
     public <K, V> StatefulRedisSentinelConnection<K, V> connectSentinel(RedisCodec<K, V> codec, RedisURI redisURI) {
 
@@ -381,15 +374,15 @@ public class RediSearchClient extends AbstractRedisClient {
      * {@link RedisCodec codec} to encode/decode keys and values. The client {@link RedisURI} must contain one or more
      * sentinels.
      *
-     * @param codec the Redis server to connect to, must not be {@code null}.
-     * @param redisURI the Redis server to connect to, must not be {@code null}.
-     * @param <K> Key type.
-     * @param <V> Value type.
-     * @return A new connection.
+     * @param codec the Redis server to connect to, must not be {@literal null}
+     * @param redisURI the Redis server to connect to, must not be {@literal null}
+     * @param <K> Key type
+     * @param <V> Value type
+     * @return A new connection
      * @since 5.1
      */
     public <K, V> CompletableFuture<StatefulRedisSentinelConnection<K, V>> connectSentinelAsync(RedisCodec<K, V> codec,
-            RedisURI redisURI) {
+                                                                                                RedisURI redisURI) {
 
         assertNotNull(redisURI);
 
@@ -397,7 +390,7 @@ public class RediSearchClient extends AbstractRedisClient {
     }
 
     private <K, V> CompletableFuture<StatefulRedisSentinelConnection<K, V>> connectSentinelAsync(RedisCodec<K, V> codec,
-            RedisURI redisURI, Duration timeout) {
+                                                                                                 RedisURI redisURI, Duration timeout) {
 
         assertNotNull(codec);
         checkValidRedisURI(redisURI);
@@ -454,7 +447,7 @@ public class RediSearchClient extends AbstractRedisClient {
     }
 
     private <K, V> ConnectionFuture<StatefulRedisSentinelConnection<K, V>> doConnectSentinelAsync(RedisCodec<K, V> codec,
-            String clientName, RedisURI redisURI, Duration timeout) {
+                                                                                                  String clientName, RedisURI redisURI, Duration timeout) {
 
         DefaultEndpoint endpoint = new DefaultEndpoint(clientOptions, clientResources);
         RedisChannelWriter writer = endpoint;
@@ -508,7 +501,7 @@ public class RediSearchClient extends AbstractRedisClient {
     /**
      * Set the {@link ClientOptions} for the client.
      *
-     * @param clientOptions the new client options.
+     * @param clientOptions the new client options
      * @throws IllegalArgumentException if {@literal clientOptions} is null
      */
     @Override
@@ -519,7 +512,7 @@ public class RediSearchClient extends AbstractRedisClient {
     /**
      * Returns the {@link ClientResources} which are used with that client.
      *
-     * @return the {@link ClientResources} for this client.
+     * @return the {@link ClientResources} for this client
      */
     public ClientResources getResources() {
         return clientResources;
@@ -530,16 +523,34 @@ public class RediSearchClient extends AbstractRedisClient {
     // -------------------------------------------------------------------------
 
     /**
+     * Create a new instance of {@link StatefulRedisPubSubConnectionImpl} or a subclass.
+     * <p>
+     * Subclasses of {@link RediSearchClient} may override that method.
+     *
+     * @param endpoint the endpoint
+     * @param channelWriter the channel writer
+     * @param codec codec
+     * @param timeout default timeout
+     * @param <K> Key-Type
+     * @param <V> Value Type
+     * @return new instance of StatefulRedisPubSubConnectionImpl
+     */
+    protected <K, V> StatefulRedisPubSubConnectionImpl<K, V> newStatefulRedisPubSubConnection(PubSubEndpoint<K, V> endpoint,
+                                                                                              RedisChannelWriter channelWriter, RedisCodec<K, V> codec, Duration timeout) {
+        return new StatefulRedisPubSubConnectionImpl<>(endpoint, channelWriter, codec, timeout);
+    }
+
+    /**
      * Create a new instance of {@link StatefulRedisSentinelConnectionImpl} or a subclass.
      * <p>
      * Subclasses of {@link RediSearchClient} may override that method.
      *
-     * @param channelWriter the channel writer.
-     * @param codec codec.
-     * @param timeout default timeout.
-     * @param <K> Key-Type.
-     * @param <V> Value Type.
-     * @return new instance of StatefulRedisSentinelConnectionImpl.
+     * @param channelWriter the channel writer
+     * @param codec codec
+     * @param timeout default timeout
+     * @param <K> Key-Type
+     * @param <V> Value Type
+     * @return new instance of StatefulRedisSentinelConnectionImpl
      */
     protected <K, V> StatefulRedisSentinelConnectionImpl<K, V> newStatefulRedisSentinelConnection(
             RedisChannelWriter channelWriter, RedisCodec<K, V> codec, Duration timeout) {
@@ -547,19 +558,19 @@ public class RediSearchClient extends AbstractRedisClient {
     }
 
     /**
-     * Create a new instance of {@link StatefulRedisConnectionImpl} or a subclass.
+     * Create a new instance of {@link StatefulRediSearchConnectionImpl} or a subclass.
      * <p>
      * Subclasses of {@link RediSearchClient} may override that method.
      *
-     * @param channelWriter the channel writer.
-     * @param codec codec.
-     * @param timeout default timeout.
-     * @param <K> Key-Type.
-     * @param <V> Value Type.
-     * @return new instance of StatefulRedisConnectionImpl.
+     * @param channelWriter the channel writer
+     * @param codec codec
+     * @param timeout default timeout
+     * @param <K> Key-Type
+     * @param <V> Value Type
+     * @return new instance of StatefulRediSearchConnectionImpl
      */
-    protected <K, V> StatefulRediSearchConnectionImpl<K, V> newStatefulRediSearchConnection(RedisChannelWriter channelWriter,
-            RedisCodec<K, V> codec, Duration timeout) {
+    protected <K, V> StatefulRediSearchConnectionImpl<K, V> newStatefulRedisConnection(RedisChannelWriter channelWriter,
+                                                                                  RedisCodec<K, V> codec, Duration timeout) {
         return new StatefulRediSearchConnectionImpl<>(channelWriter, codec, timeout);
     }
 
@@ -569,7 +580,7 @@ public class RediSearchClient extends AbstractRedisClient {
      * <p>
      * Subclasses of {@link RediSearchClient} may override that method.
      *
-     * @param redisURI must not be {@code null}.
+     * @param redisURI must not be {@literal null}.
      * @return the resolved {@link SocketAddress}.
      * @see ClientResources#dnsResolver()
      * @see RedisURI#getSentinels()
@@ -719,8 +730,7 @@ public class RediSearchClient extends AbstractRedisClient {
 
     private void checkForRedisURI() {
         LettuceAssert.assertState(this.redisURI != EMPTY_URI,
-                "RedisURI is not available. Use RedisClient(Host), RedisClient(Host, Port) or RedisClient(RedisURI) to construct your client.");
+                "RedisURI is not available. Use RediSearchClient(Host), RediSearchClient(Host, Port) or RediSearchClient(RedisURI) to construct your client.");
         checkValidRedisURI(this.redisURI);
     }
-
 }
