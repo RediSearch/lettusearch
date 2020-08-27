@@ -3,6 +3,8 @@
 :uri-repo: https://github.com/{project-repo}
 ifdef::env-github[]
 :badges:
+:tag: master
+:!toc-title:
 :tip-caption: :bulb:
 :note-caption: :paperclip:
 :important-caption: :heavy_exclamation_mark:
@@ -49,28 +51,78 @@ dependencies {
 </dependency>
 ----
 
-Usage example:
+=== Basic Usage
+
 [source,java]
 ----
-RediSearchClient client = RediSearchClient.create("redis://localhost"); // <1>
+RediSearchClient client = RediSearchClient.create(RedisURI.create(host, port)); // <1>
 StatefulRediSearchConnection<String, String> connection = client.connect(); // <2>
 RediSearchCommands<String, String> commands = connection.sync(); // <3>
-commands.create(INDEX, Schema.<String>builder().field(TextField.<String>builder().name(NAME).build()).build()); // <4>
-commands.add(INDEX, Document.<String, String>builder().id(ID).score(1D).field(NAME, "La Chouffe").build()); // <5>
-SearchResults<String, String> results = commands.search(INDEX, "chou*"); // <6>
+commands.create("idx", Schema.<String>builder().field(TextField.<String>builder().name(NAME).build()).build()); // <4>
+commands.add("idx", Document.<String, String>builder().id(ID).score(1D).field(NAME, "La Chouffe").build()); // <5>
+SearchResults<String, String> results = commands.search("idx", "chou*"); // <6>
+results.forEach(System.out::println);
 ----
 <1> Create a RediSearch client
 <2> Connect to RediSearch
-<3> Use _sync_, _async_, or _reactive_ API
+<3> Use _sync_, _async_, or _reactive_ commands
 <4> Create an index
 <5> Add a document to the index
 <6> Search the index
 
-== Architecture
-LettuSearch implements RediSearch commands using the https://lettuce.io/core/5.0.1.RELEASE/reference/#_custom_commands[Command abstraction] provided by Lettuce.
+=== Pipelining
 
-== Building
-[source,shell]
+[source,java]
 ----
-❯ ./gradlew build
+RediSearchClient client = RediSearchClient.create(RedisURI.create(host, port)); // <1>
+StatefulRediSearchConnection<String, String> connection = client.connect(); // <2>
+RediSearchAsyncCommands<String, String> commands = connection.async(); // <3>
+commands.setAutoFlushCommands(false); // <4>
+List<RedisFuture<?>> futures = new ArrayList<>();
+for (Document<String, String> doc : docs) { // <5>
+	RedisFuture<?> future = commands.add("idx", doc); // <6>
+	futures.add(future);
+}
+commands.flushCommands(); // <7>
+for (RedisFuture<?> future : futures) {
+	try {
+		future.get(1, TimeUnit.SECONDS); // <8>
+	} catch (InterruptedException e) {
+		log.debug("Command interrupted", e);
+	} catch (ExecutionException e) {
+		log.error("Could not execute command", e);
+	} catch (TimeoutException e) {
+		log.error("Command timed out", e);
+	}
+}
 ----
+<1> Create a RediSearch client
+<2> Connect to RediSearch
+<3> Use async commands
+<4> Disable command auto-flush
+<5> Call commands to be executed in a pipeline
+<6> Add command execution future to the list  
+<7> Flush commands
+<8> Wait for response from each future
+
+=== Connection pooling
+
+[source,java]
+----
+RediSearchClient client = RediSearchClient.create(RedisURI.create(host, port)); // <1>
+GenericObjectPoolConfig<StatefulRediSearchConnection<String, String>> config = new GenericObjectPoolConfig<>(); // <2>
+config.setMaxTotal(8);
+GenericObjectPool<StatefulRediSearchConnection<String, String>> pool = ConnectionPoolSupport.createGenericObjectPool(client::connect, config); // <3>
+// The connection pool can now be passed to worker threads
+try (StatefulRediSearchConnection<String, String> connection = pool.borrowObject()) { // <4>
+    RediSearchCommands<String, String> commands = connection.sync(); // <5>
+    commands.search("idx", "*"); // <6>
+}
+----
+<1> Create a RediSearch client
+<2> Create a pool configuration
+<3> Create the connection pool
+<4> In worker threads, get connections in a try-with statement to automatically return them to the pool 
+<5> Use _sync_, _async_, or _reactive_ commands
+<6> Execute commands
+

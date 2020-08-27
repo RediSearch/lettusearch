@@ -1,8 +1,8 @@
 package com.redislabs.lettusearch;
 
-import com.redislabs.lettusearch.search.Document;
-import com.redislabs.lettusearch.suggest.Suggestion;
-import io.lettuce.core.RedisURI;
+import java.io.IOException;
+import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,8 +10,10 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.io.IOException;
-import java.util.List;
+import com.redislabs.lettusearch.search.Document;
+import com.redislabs.lettusearch.suggest.Suggestion;
+
+import io.lettuce.core.RedisURI;
 
 @Testcontainers
 public abstract class AbstractBaseTest {
@@ -25,9 +27,12 @@ public abstract class AbstractBaseTest {
     protected RediSearchAsyncCommands<String, String> async;
     protected RediSearchReactiveCommands<String, String> reactive;
 
+	protected String host;
+	protected int port;
+
     @Container
     @SuppressWarnings("rawtypes")
-    private static final GenericContainer redisearch = new GenericContainer("redislabs/redisearch:1.99.3").withExposedPorts(6379);
+    public static final GenericContainer REDISEARCH = new GenericContainer("redislabs/redisearch:1.99.3").withExposedPorts(6379);
 
     @BeforeAll
     public static void load() throws IOException {
@@ -36,7 +41,9 @@ public abstract class AbstractBaseTest {
 
     @BeforeEach
     public void setup() {
-        client = RediSearchClient.create(RedisURI.create(redisearch.getHost(), redisearch.getFirstMappedPort()));
+    	host = REDISEARCH.getHost();
+    	port = REDISEARCH.getFirstMappedPort();
+        client = RediSearchClient.create(RedisURI.create(host, port));
         connection = client.connect();
         sync = connection.sync();
         async = connection.async();
