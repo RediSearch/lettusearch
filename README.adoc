@@ -123,6 +123,6 @@ try (StatefulRediSearchConnection<String, String> connection = pool.borrowObject
 <2> Create a pool configuration
 <3> Create the connection pool
 <4> In worker threads, get connections in a try-with statement to automatically return them to the pool 
-<5> Use _sync_, _async_, or _reactive_ commands
+<5> Use _sync_ commands
 <6> Execute commands
 
