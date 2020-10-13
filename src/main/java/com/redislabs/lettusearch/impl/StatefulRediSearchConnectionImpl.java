@@ -293,7 +293,7 @@ public class StatefulRediSearchConnectionImpl<K, V> extends RedisChannelHandler<
 	}
 
 	/**
-	 * @param clientName
+	 * @param clientName name to assign to this connection
 	 * @deprecated since 6.0, use {@link RediSearchAsyncCommands#clientSetname(Object)}.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
