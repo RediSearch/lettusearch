@@ -4,10 +4,9 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.redislabs.lettusearch.suggest.SuggetOptions;
 import com.redislabs.lettusearch.suggest.Suggestion;
+import com.redislabs.lettusearch.suggest.SuggetOptions;
 
-import io.lettuce.core.LettuceStrings;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.output.CommandOutput;
 
@@ -33,20 +32,21 @@ public class SuggestOutput<K, V> extends CommandOutput<K, V, List<Suggestion<V>>
 				current = null;
 			}
 		} else {
-			if (current.getScore() == null && options.isWithScores()) {
+			if (current.getPayload() == null && options.isWithPayloads()) {
 				if (bytes != null) {
-					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
+					current.setPayload(codec.decodeValue(bytes));
 				}
-				if (!options.isWithPayloads()) {
-					current = null;
-				}
-			} else {
-				if (current.getPayload() == null && options.isWithPayloads()) {
-					if (bytes != null) {
-						current.setPayload(codec.decodeValue(bytes));
-					}
-					current = null;
-				}
+				current = null;
+			}
+		}
+	}
+
+	@Override
+	public void set(double number) {
+		if (current.getScore() == null && options.isWithScores()) {
+			current.setScore(number);
+			if (!options.isWithPayloads()) {
+				current = null;
 			}
 		}
 	}

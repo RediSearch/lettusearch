@@ -44,6 +44,7 @@ import com.redislabs.lettusearch.index.Schema;
 import com.redislabs.lettusearch.index.field.FieldOptions;
 import com.redislabs.lettusearch.output.AggregateOutput;
 import com.redislabs.lettusearch.output.AggregateWithCursorOutput;
+import com.redislabs.lettusearch.output.ExtendedNestedMultiOutput;
 import com.redislabs.lettusearch.output.MapListOutput;
 import com.redislabs.lettusearch.output.SearchNoContentOutput;
 import com.redislabs.lettusearch.output.SearchOutput;
@@ -64,7 +65,6 @@ import io.lettuce.core.output.BooleanOutput;
 import io.lettuce.core.output.CommandOutput;
 import io.lettuce.core.output.IntegerOutput;
 import io.lettuce.core.output.MapOutput;
-import io.lettuce.core.output.NestedMultiOutput;
 import io.lettuce.core.output.StatusOutput;
 import io.lettuce.core.protocol.BaseRedisCommandBuilder;
 import io.lettuce.core.protocol.Command;
@@ -146,7 +146,7 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 	public Command<K, V, List<Object>> info(K index) {
 		assertNotNull(index, "index");
 		RediSearchCommandArgs<K, V> args = createArgs(index);
-		return createCommand(INFO, new NestedMultiOutput<>(codec), args);
+		return createCommand(INFO, new ExtendedNestedMultiOutput<>(codec), args);
 	}
 
 	public Command<K, V, String> alter(K index, K field, FieldOptions options) {

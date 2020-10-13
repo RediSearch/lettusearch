@@ -11,7 +11,7 @@ import lombok.Data;
 @Builder
 public class IndexInfo<K> {
 	private K indexName;
-	private Long numDocs;
+	private Double numDocs;
 	private List<Object> indexOptions;
 	private List<Field<K>> fields;
 	private String maxDocId;

@@ -93,7 +93,7 @@ public class TestIndex extends AbstractBaseTest {
 			sync.hmset("beer:" + beer.get(Beers.ID), beer);
 		}
 		IndexInfo<String> info = RediSearchUtils.getInfo(sync.ftInfo(indexName));
-		Long numDocs = info.getNumDocs();
+		Double numDocs = info.getNumDocs();
 		assertEquals(beers.size(), numDocs);
 	}
 

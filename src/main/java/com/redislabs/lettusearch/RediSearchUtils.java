@@ -29,18 +29,18 @@ public class RediSearchUtils {
 		}
 		return IndexInfo.<K>builder().indexName(getString(map.get("index_name")))
 				.indexOptions((List<Object>) map.get("index_options")).fields(fields(map.get("fields")))
-				.numDocs(getLong(map, "num_docs")).maxDocId(getString(map.get("max_doc_id")))
+				.numDocs((Double) map.get("num_docs")).maxDocId(getString(map.get("max_doc_id")))
 				.numTerms(getLong(map, "num_terms")).numRecords(getLong(map, "num_records"))
-				.invertedSizeMb(getDouble(map, "inverted_sz_mb"))
+				.invertedSizeMb((Double) map.get("inverted_sz_mb"))
 				.totalInvertedIndexBlocks(getLong(map, "total_inverted_index_blocks"))
-				.offsetVectorsSizeMb(getDouble(map, "offset_vectors_sz_mb"))
-				.docTableSizeMb(getDouble(map, "doc_table_size_mb"))
-				.sortableValuesSizeMb(getDouble(map, "sortable_values_size_mb"))
-				.keyTableSizeMb(getDouble(map, "key_table_size_mb"))
-				.recordsPerDocAvg(getDouble(map, "records_per_doc_avg"))
-				.bytesPerRecordAvg(getDouble(map, "bytes_per_record_avg"))
-				.offsetsPerTermAvg(getDouble(map, "offsets_per_term_avg"))
-				.offsetBitsPerRecordAvg(getDouble(map, "offset_bits_per_record_avg"))
+				.offsetVectorsSizeMb((Double) map.get("offset_vectors_sz_mb"))
+				.docTableSizeMb((Double) map.get("doc_table_size_mb"))
+				.sortableValuesSizeMb((Double) map.get("sortable_values_size_mb"))
+				.keyTableSizeMb((Double) map.get("key_table_size_mb"))
+				.recordsPerDocAvg((Double) map.get("records_per_doc_avg"))
+				.bytesPerRecordAvg((Double) map.get("bytes_per_record_avg"))
+				.offsetsPerTermAvg((Double) map.get("offsets_per_term_avg"))
+				.offsetBitsPerRecordAvg((Double) map.get("offset_bits_per_record_avg"))
 				.gcStats((List<Object>) map.get("gc_stats")).cursorStats((List<Object>) map.get("cursor_stats"))
 				.build();
 	}
@@ -88,23 +88,9 @@ public class RediSearchUtils {
 		case TAG:
 			return TagField.<K>builder().name(name).separator((String) info.get(4)).build();
 		default:
-			return TextField.<K>builder().name(name).weight(Double.parseDouble((String) info.get(4)))
+			return TextField.<K>builder().name(name).weight((Double) info.get(4))
 					.noStem(NOSTEM.name().equals(info.get(info.size() - 1))).build();
 		}
-	}
-
-	private static Double getDouble(Map<String, Object> map, String key) {
-		if (map.containsKey(key)) {
-			String value = (String) map.get(key);
-			if (value != null && value.length() > 0) {
-				try {
-					return Double.parseDouble(value);
-				} catch (NumberFormatException e) {
-					// ignore
-				}
-			}
-		}
-		return null;
 	}
 
 	private static Long getLong(Map<String, Object> map, String key) {
@@ -128,10 +114,9 @@ public class RediSearchUtils {
 		}
 		return null;
 	}
-	
+
 	public static String escapeTag(String value) {
 		return value.replaceAll("([^a-zA-Z0-9])", "\\\\$1");
 	}
-	
 
 }

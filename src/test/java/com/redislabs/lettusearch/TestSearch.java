@@ -59,7 +59,7 @@ public class TestSearch extends AbstractBaseTest {
 		boolean deleted = sync.del(INDEX, "1836", true);
 		assertTrue(deleted);
 		Map<String, String> map = sync.get(INDEX, "1836");
-		assertNull(map);
+		assertTrue(map.isEmpty());
 	}
 
 	@Test
@@ -190,6 +190,12 @@ public class TestSearch extends AbstractBaseTest {
 	public void phonetic() {
 		SearchResults<String, String> results = sync.search(Beers.INDEX, "pail");
 		assertEquals(256, results.getCount());
+	}
+	
+	@Test
+	public void limit00() {
+		SearchResults<String, String> results = sync.search(Beers.INDEX, "*", SearchOptions.<String>builder().limit(Limit.builder().num(0).offset(0).build()).build());
+		assertEquals(2348, results.getCount());
 	}
 
 }

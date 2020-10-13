@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.suggest.Suggestion;
@@ -32,7 +33,7 @@ public abstract class AbstractBaseTest {
 
     @Container
     @SuppressWarnings("rawtypes")
-    public static final GenericContainer REDISEARCH = new GenericContainer("redislabs/redisearch:1.99.3").withExposedPorts(6379);
+    public static final GenericContainer REDISEARCH = new GenericContainer(DockerImageName.parse("redislabs/redisearch:latest")).withExposedPorts(6379);
 
     @BeforeAll
     public static void load() throws IOException {

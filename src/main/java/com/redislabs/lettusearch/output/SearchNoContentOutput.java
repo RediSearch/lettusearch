@@ -5,7 +5,6 @@ import java.nio.ByteBuffer;
 import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.SearchResults;
 
-import io.lettuce.core.LettuceStrings;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.output.CommandOutput;
 
@@ -31,11 +30,6 @@ public class SearchNoContentOutput<K, V> extends CommandOutput<K, V, SearchResul
 				current = null;
 			}
 		} else {
-			if (withScores) {
-				if (bytes != null) {
-					current.setScore(LettuceStrings.toDouble(decodeAscii(bytes)));
-				}
-			}
 			current = null;
 		}
 	}
@@ -43,6 +37,14 @@ public class SearchNoContentOutput<K, V> extends CommandOutput<K, V, SearchResul
 	@Override
 	public void set(long integer) {
 		output.setCount(integer);
+	}
+
+	@Override
+	public void set(double number) {
+		if (withScores) {
+			current.setScore(number);
+		}
+		current = null;
 	}
 
 }
