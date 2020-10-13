@@ -1,4 +1,4 @@
-package com.redislabs.lettusearch.output;
+package io.lettuce.core.output;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -9,8 +9,6 @@ import java.util.List;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.codec.StringCodec;
 import io.lettuce.core.internal.LettuceFactories;
-import io.lettuce.core.output.CommandOutput;
-import io.lettuce.core.output.OutputFactory;
 
 /**
  * {@link List} of command outputs, possibly deeply nested. Decodes simple

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.redislabs.lettusearch.output;
+package io.lettuce.core.output;
 
 import java.nio.ByteBuffer;
 import java.util.Collections;
@@ -23,10 +23,6 @@ import java.util.Map;
 
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.LettuceAssert;
-import io.lettuce.core.output.CommandOutput;
-import io.lettuce.core.output.ListSubscriber;
-import io.lettuce.core.output.OutputFactory;
-import io.lettuce.core.output.StreamingOutput;
 
 /**
  * {@link List} of {@link Map}s.
