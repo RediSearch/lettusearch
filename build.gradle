@@ -30,7 +30,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.14'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
     testImplementation 'org.slf4j:slf4j-simple:1.7.30'
-    testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.11.1'
+    testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.11.3'
     testImplementation 'io.projectreactor:reactor-test:3.3.7.RELEASE'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
