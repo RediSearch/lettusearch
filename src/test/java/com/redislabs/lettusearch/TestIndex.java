@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.redislabs.lettusearch.index.CreateOptions;
@@ -18,6 +19,7 @@ import com.redislabs.lettusearch.index.Schema;
 import com.redislabs.lettusearch.index.Structure;
 import com.redislabs.lettusearch.index.field.FieldOptions;
 import com.redislabs.lettusearch.index.field.FieldType;
+import com.redislabs.lettusearch.index.field.TagField;
 import com.redislabs.lettusearch.index.field.TextField;
 import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.SearchResults;
@@ -72,6 +74,20 @@ public class TestIndex extends AbstractBaseTest {
 	public void info() {
 		Map<String, Object> indexInfo = toMap(sync.ftInfo(INDEX));
 		assertEquals(INDEX, indexInfo.get("index_name"));
+	}
+
+	@Test
+	public void testCreateOptions() {
+		CreateOptions<String, String> options = CreateOptions.<String, String>builder().prefixes("release:")
+				.payloadField("xml").build();
+		Schema<String> schema = Schema.<String>builder()
+				.field(TextField.<String>builder().name("artist").sortable(true).build())
+				.field(TagField.<String>builder().name("id").sortable(true).build())
+				.field(TextField.<String>builder().name("title").sortable(true).build()).build();
+		sync.create("releases", schema, options);
+		IndexInfo<String> info = RediSearchUtils.getInfo(sync.ftInfo("releases"));
+		Assertions.assertEquals(schema.getFields().size(), info.getFields().size());
+		
 	}
 
 	private Map<String, Object> toMap(List<Object> indexInfo) {

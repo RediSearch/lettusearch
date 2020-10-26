@@ -85,7 +85,7 @@ public class CreateOptions<K, V> implements RediSearchArgument {
 		}
 		if (payloadField != null) {
 			args.add(PAYLOAD_FIELD);
-			args.addKey(PAYLOAD_FIELD);
+			args.addKey(payloadField);
 		}
 		if (maxTextFields) {
 			args.add(MAXTEXTFIELDS);
