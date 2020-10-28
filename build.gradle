@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    api 'io.lettuce:lettuce-core:6.0.0.RELEASE'
+    api 'io.lettuce:lettuce-core:6.0.1.RELEASE'
     compileOnly 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.14'
     testImplementation 'org.slf4j:slf4j-simple:1.7.30'
