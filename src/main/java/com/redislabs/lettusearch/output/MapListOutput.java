@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.lettuce.core.output;
+package com.redislabs.lettusearch.output;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,6 +24,9 @@ import java.util.Map;
 
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.LettuceAssert;
+import io.lettuce.core.output.CommandOutput;
+import io.lettuce.core.output.ListSubscriber;
+import io.lettuce.core.output.StreamingOutput;
 
 /**
  * {@link List} of {@link Map}s.
@@ -63,7 +67,7 @@ public class MapListOutput<K, V> extends CommandOutput<K, V, List<Map<K, V>>> im
 	public void multi(int count) {
 
 		if (!initialized) {
-			output = OutputFactory.newList(count);
+			output = count < 1 ? Collections.emptyList() : new ArrayList<>(Math.max(1, count));
 			initialized = true;
 		}
 	}

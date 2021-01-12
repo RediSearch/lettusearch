@@ -1,12 +1,12 @@
 plugins {
-    id 'java-library'
     id 'distribution'
+    id 'java-library'
     id 'java-library-distribution'
     id 'maven-publish'
     id 'jacoco'
     id 'com.jfrog.bintray' version '1.8.5'
     id 'net.researchgate.release' version '2.8.1'
-    id 'com.github.ben-manes.versions' version '0.33.0'
+    id 'com.github.ben-manes.versions' version '0.36.0'
     id 'com.github.breadmoirai.github-release' version '2.2.12'
 }
 
@@ -20,6 +20,13 @@ java {
     withSourcesJar()
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
 repositories {
     jcenter()
     mavenCentral()
@@ -27,20 +34,20 @@ repositories {
 }
 
 dependencies {
-    api 'io.lettuce:lettuce-core:6.0.1.RELEASE'
+    api 'io.lettuce:lettuce-core:6.0.2.RELEASE'
     compileOnly 'org.projectlombok:lombok:1.18.16'
-    annotationProcessor 'org.projectlombok:lombok:1.18.14'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
     testImplementation 'org.slf4j:slf4j-simple:1.7.30'
-    testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.11.3'
-    testImplementation 'io.projectreactor:reactor-test:3.4.0'
+    testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.12.1'
+    testImplementation 'io.projectreactor:reactor-test:3.4.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.0'
-    testImplementation 'org.testcontainers:testcontainers:1.15.0-rc2'
-    testImplementation 'org.testcontainers:junit-jupiter:1.15.0-rc2'
+    testImplementation 'org.testcontainers:testcontainers:1.15.1'
+    testImplementation 'org.testcontainers:junit-jupiter:1.15.1'
     testImplementation 'org.apache.commons:commons-pool2:2.9.0'
-    testCompileOnly 'org.projectlombok:lombok:1.18.14'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.14'
+    testCompileOnly 'org.projectlombok:lombok:1.18.16'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
 }
 
 test {
@@ -101,14 +108,6 @@ publishing {
     }
 }
 
-
-jacocoTestReport {
-    reports {
-        xml.enabled true
-        html.enabled false
-    }
-}
-
 bintray {
     user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : ''
     key = project.hasProperty('bintrayKey') ? project.property('bintrayKey') : ''
@@ -132,7 +131,6 @@ bintray {
     }
 }
 
-
 githubRelease {
     token = project.hasProperty('githubToken') ? project.property('githubToken') : ''
     owner "RediSearch"
@@ -140,6 +138,21 @@ githubRelease {
     releaseAssets distZip, distTar
     draft true
     body changelog()
+}
+
+def isNonStable = { String version ->
+  def nonStableKeyword = ['PREVIEW'].any { it -> version.toUpperCase().contains(it) }
+  def stableKeyword = ['RELEASE', 'FINAL', 'GA', 'JRE8'].any { it -> version.toUpperCase().contains(it) }
+  def regex = /^[0-9,.v-]+([.-]r)?$/
+  return nonStableKeyword || (!stableKeyword && !(version ==~ regex))
+}
+
+tasks.named("dependencyUpdates").configure {
+
+  rejectVersionIf {
+    isNonStable(it.candidate.version) && !isNonStable(it.currentVersion)
+  }
+
 }
 
 tasks.distZip.shouldRunAfter tasks.javadocJar

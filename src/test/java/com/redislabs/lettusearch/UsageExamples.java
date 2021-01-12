@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class UsageExamples extends AbstractBaseTest {
-	
+
 	@Test
 	public void basic() {
 		// tag::basic[]
@@ -42,8 +42,10 @@ public class UsageExamples extends AbstractBaseTest {
 
 	@Test
 	public void pipelining() {
-		List<Document<String, String>> docs = Arrays.asList(Document.<String, String>builder().id("doc1").field(NAME, "somevalue").build());
-		connection.sync().create("idx", Schema.<String>builder().field(TextField.<String>builder().name(NAME).build()).build());
+		List<Document<String, String>> docs = Arrays
+				.asList(Document.<String, String>builder().id("doc1").field(NAME, "somevalue").build());
+		connection.sync().create("idx",
+				Schema.<String>builder().field(TextField.<String>builder().name(NAME).build()).build());
 		// tag::pipelining[]
 		RediSearchClient client = RediSearchClient.create(RedisURI.create(host, port)); // <1>
 		StatefulRediSearchConnection<String, String> connection = client.connect(); // <2>
@@ -68,19 +70,21 @@ public class UsageExamples extends AbstractBaseTest {
 		}
 		// end::pipelining[]
 	}
-	
+
 	@Test
 	public void connectionPooling() throws Exception {
-		connection.sync().create("idx", Schema.<String>builder().field(TextField.<String>builder().name(NAME).build()).build()); // <4>
+		connection.sync().create("idx",
+				Schema.<String>builder().field(TextField.<String>builder().name(NAME).build()).build()); // <4>
 		// tag::connectionPooling[]
 		RediSearchClient client = RediSearchClient.create(RedisURI.create(host, port)); // <1>
 		GenericObjectPoolConfig<StatefulRediSearchConnection<String, String>> config = new GenericObjectPoolConfig<>(); // <2>
 		config.setMaxTotal(8);
-		GenericObjectPool<StatefulRediSearchConnection<String, String>> pool = ConnectionPoolSupport.createGenericObjectPool(client::connect, config); // <3>
+		GenericObjectPool<StatefulRediSearchConnection<String, String>> pool = ConnectionPoolSupport
+				.createGenericObjectPool(client::connect, config); // <3>
 		// The connection pool can now be passed to worker threads
 		try (StatefulRediSearchConnection<String, String> connection = pool.borrowObject()) { // <4>
-		    RediSearchCommands<String, String> commands = connection.sync(); // <5>
-		    commands.search("idx", "*"); // <6>
+			RediSearchCommands<String, String> commands = connection.sync(); // <5>
+			commands.search("idx", "*"); // <6>
 		}
 		// end::connectionPooling[]
 		pool.close();

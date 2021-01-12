@@ -191,10 +191,11 @@ public class TestSearch extends AbstractBaseTest {
 		SearchResults<String, String> results = sync.search(Beers.INDEX, "pail");
 		assertEquals(256, results.getCount());
 	}
-	
+
 	@Test
 	public void limit00() {
-		SearchResults<String, String> results = sync.search(Beers.INDEX, "*", SearchOptions.<String>builder().limit(Limit.builder().num(0).offset(0).build()).build());
+		SearchResults<String, String> results = sync.search(Beers.INDEX, "*",
+				SearchOptions.<String>builder().limit(Limit.builder().num(0).offset(0).build()).build());
 		assertEquals(2348, results.getCount());
 	}
 

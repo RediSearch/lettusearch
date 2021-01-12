@@ -12,13 +12,13 @@ import lombok.Data;
 @Builder
 public class DropOptions implements RediSearchArgument {
 
-    private boolean keepDocs;
+	private boolean keepDocs;
 
-    @Override
-    public <K, V> void build(RediSearchCommandArgs<K, V> args) {
-        if (keepDocs) {
-            args.add(KEEPDOCS);
-        }
-    }
+	@Override
+	public <K, V> void build(RediSearchCommandArgs<K, V> args) {
+		if (keepDocs) {
+			args.add(KEEPDOCS);
+		}
+	}
 
 }

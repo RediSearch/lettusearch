@@ -16,67 +16,75 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestAggregate extends AbstractBaseTest {
 
-    @Test
-    public void testLoad() {
-        AggregateResults<String, String> results = sync.aggregate(INDEX, "*", AggregateOptions.builder().load(NAME).load(STYLE).build());
-        Assertions.assertEquals(1, results.getCount());
-        assertEquals(beers.size(), results.size());
-        for (int index = 0; index < beers.size(); index++) {
-            assertEquals(beers.get(index).get(NAME).toLowerCase(), results.get(index).get(NAME).toLowerCase());
-            String style = beers.get(index).get(STYLE);
-            if (style != null) {
-                assertEquals(style.toLowerCase(), results.get(index).get(STYLE).toLowerCase());
-            }
-        }
-    }
+	@Test
+	public void testLoad() {
+		AggregateResults<String, String> results = sync.aggregate(INDEX, "*",
+				AggregateOptions.builder().load(NAME).load(STYLE).build());
+		Assertions.assertEquals(1, results.getCount());
+		assertEquals(beers.size(), results.size());
+		for (int index = 0; index < beers.size(); index++) {
+			assertEquals(beers.get(index).get(NAME).toLowerCase(), results.get(index).get(NAME).toLowerCase());
+			String style = beers.get(index).get(STYLE);
+			if (style != null) {
+				assertEquals(style.toLowerCase(), results.get(index).get(STYLE).toLowerCase());
+			}
+		}
+	}
 
-    @Test
-    public void args() {
-        AggregateResults<String, String> results = sync.aggregate(INDEX, "*", CommandKeyword.LOAD, 2, property(NAME), property(STYLE));
-        Assertions.assertEquals(1, results.getCount());
-        assertEquals(beers.size(), results.size());
-        for (int index = 0; index < beers.size(); index++) {
-            assertEquals(beers.get(index).get(NAME).toLowerCase(), results.get(index).get(NAME).toLowerCase());
-            String style = beers.get(index).get(STYLE);
-            if (style != null) {
-                assertEquals(style.toLowerCase(), results.get(index).get(STYLE).toLowerCase());
-            }
-        }
-    }
+	@Test
+	public void args() {
+		AggregateResults<String, String> results = sync.aggregate(INDEX, "*", CommandKeyword.LOAD, 2, property(NAME),
+				property(STYLE));
+		Assertions.assertEquals(1, results.getCount());
+		assertEquals(beers.size(), results.size());
+		for (int index = 0; index < beers.size(); index++) {
+			assertEquals(beers.get(index).get(NAME).toLowerCase(), results.get(index).get(NAME).toLowerCase());
+			String style = beers.get(index).get(STYLE);
+			if (style != null) {
+				assertEquals(style.toLowerCase(), results.get(index).get(STYLE).toLowerCase());
+			}
+		}
+	}
 
-    @Test
-    public void group() {
-        AggregateResults<String, String> results = sync.aggregate(INDEX, "*", AggregateOptions.builder().operation(Group.builder().property(STYLE).reducer(Avg.builder().property(ABV).as(ABV).build()).build()).operation(Sort.builder().property(SortProperty.builder().property(ABV).order(Order.Desc).build()).build()).operation(Limit.builder().num(20).offset(0).build()).build());
-        assertEquals(100, results.getCount());
-        List<Double> abvs = results.stream().map(r -> Double.parseDouble(r.get(ABV))).collect(Collectors.toList());
-        assertTrue(abvs.get(0) > abvs.get(abvs.size() - 1));
-        assertEquals(20, results.size());
-    }
+	@Test
+	public void group() {
+		AggregateResults<String, String> results = sync.aggregate(INDEX, "*", AggregateOptions.builder()
+				.operation(Group.builder().property(STYLE).reducer(Avg.builder().property(ABV).as(ABV).build()).build())
+				.operation(
+						Sort.builder().property(SortProperty.builder().property(ABV).order(Order.Desc).build()).build())
+				.operation(Limit.builder().num(20).offset(0).build()).build());
+		assertEquals(100, results.getCount());
+		List<Double> abvs = results.stream().map(r -> Double.parseDouble(r.get(ABV))).collect(Collectors.toList());
+		assertTrue(abvs.get(0) > abvs.get(abvs.size() - 1));
+		assertEquals(20, results.size());
+	}
 
-    @Test
-    public void cursor() {
-        AggregateWithCursorResults<String, String> results = sync.aggregate(INDEX, "*", Cursor.builder().build(), AggregateOptions.builder().load(ID).load(NAME).load(ABV).build());
-        assertEquals(1, results.getCount());
-        assertEquals(1000, results.size());
-        assertEquals("harpoon ipa (2010)", results.get(999).get("name").toLowerCase());
-        assertEquals("0.086", results.get(9).get("abv"));
-        results = sync.cursorRead(INDEX, results.getCursor());
-        assertEquals(1000, results.size());
-        String deleteStatus = sync.cursorDelete(INDEX, results.getCursor());
-        assertEquals("OK", deleteStatus);
-    }
+	@Test
+	public void cursor() {
+		AggregateWithCursorResults<String, String> results = sync.aggregate(INDEX, "*", Cursor.builder().build(),
+				AggregateOptions.builder().load(ID).load(NAME).load(ABV).build());
+		assertEquals(1, results.getCount());
+		assertEquals(1000, results.size());
+		assertEquals("harpoon ipa (2010)", results.get(999).get("name").toLowerCase());
+		assertEquals("0.086", results.get(9).get("abv"));
+		results = sync.cursorRead(INDEX, results.getCursor());
+		assertEquals(1000, results.size());
+		String deleteStatus = sync.cursorDelete(INDEX, results.getCursor());
+		assertEquals("OK", deleteStatus);
+	}
 
-    @Test
-    public void cursorArgs() {
-        AggregateWithCursorResults<String, String> results = sync.aggregate(INDEX, "*", Cursor.builder().build(), CommandKeyword.LOAD, 3, property(ID), property(NAME), property(ABV));
-        assertEquals(1, results.getCount());
-        assertEquals(1000, results.size());
-        assertEquals("harpoon ipa (2010)", results.get(999).get("name").toLowerCase());
-        assertEquals("0.086", results.get(9).get("abv"));
-        results = sync.cursorRead(INDEX, results.getCursor());
-        assertEquals(1000, results.size());
-        String deleteStatus = sync.cursorDelete(INDEX, results.getCursor());
-        assertEquals("OK", deleteStatus);
-    }
+	@Test
+	public void cursorArgs() {
+		AggregateWithCursorResults<String, String> results = sync.aggregate(INDEX, "*", Cursor.builder().build(),
+				CommandKeyword.LOAD, 3, property(ID), property(NAME), property(ABV));
+		assertEquals(1, results.getCount());
+		assertEquals(1000, results.size());
+		assertEquals("harpoon ipa (2010)", results.get(999).get("name").toLowerCase());
+		assertEquals("0.086", results.get(9).get("abv"));
+		results = sync.cursorRead(INDEX, results.getCursor());
+		assertEquals(1000, results.size());
+		String deleteStatus = sync.cursorDelete(INDEX, results.getCursor());
+		assertEquals("OK", deleteStatus);
+	}
 
 }

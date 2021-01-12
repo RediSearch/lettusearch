@@ -55,7 +55,8 @@ public class TestAlias extends AbstractBaseTest {
 			async.search(ALIAS, "*").get();
 			fail("Alias was not removed");
 		} catch (ExecutionException e) {
-			assertTrue(e.getCause().getMessage().contains("no such index") || e.getCause().getMessage().contains("Unknown Index name"));
+			assertTrue(e.getCause().getMessage().contains("no such index")
+					|| e.getCause().getMessage().contains("Unknown Index name"));
 		}
 	}
 

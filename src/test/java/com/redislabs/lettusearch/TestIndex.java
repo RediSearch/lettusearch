@@ -87,7 +87,7 @@ public class TestIndex extends AbstractBaseTest {
 		sync.create("releases", schema, options);
 		IndexInfo<String> info = RediSearchUtils.getInfo(sync.ftInfo("releases"));
 		Assertions.assertEquals(schema.getFields().size(), info.getFields().size());
-		
+
 	}
 
 	private Map<String, Object> toMap(List<Object> indexInfo) {

@@ -10,8 +10,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class AggregateResults<K, V> extends ArrayList<Map<K, V>> {
 
-    private static final long serialVersionUID = 2860244139719400188L;
+	private static final long serialVersionUID = 2860244139719400188L;
 
-    private long count;
+	private long count;
 
 }
