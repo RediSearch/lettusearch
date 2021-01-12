@@ -1,4 +1,6 @@
 plugins {
+    id 'org.springframework.boot' version '2.4.1'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'distribution'
     id 'java-library'
     id 'java-library-distribution'
@@ -33,21 +35,29 @@ repositories {
     mavenLocal()
 }
 
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
 dependencies {
     api 'io.lettuce:lettuce-core:6.0.2.RELEASE'
-    compileOnly 'org.projectlombok:lombok:1.18.16'
-    annotationProcessor 'org.projectlombok:lombok:1.18.16'
-    testImplementation 'org.slf4j:slf4j-simple:1.7.30'
-    testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.12.1'
-    testImplementation 'io.projectreactor:reactor-test:3.4.2'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.0'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.slf4j:slf4j-simple'
+    testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv'
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params'
     testImplementation 'org.testcontainers:testcontainers:1.15.1'
     testImplementation 'org.testcontainers:junit-jupiter:1.15.1'
-    testImplementation 'org.apache.commons:commons-pool2:2.9.0'
-    testCompileOnly 'org.projectlombok:lombok:1.18.16'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
+    testImplementation 'org.apache.commons:commons-pool2'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 test {
