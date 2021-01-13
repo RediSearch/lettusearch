@@ -69,7 +69,7 @@ public class TestSearch extends AbstractBaseTest {
 		assertEquals(22, results.getCount());
 		assertEquals(22, results.size());
 		assertEquals("1836", results.get(0).getId());
-		assertEquals(1.2, results.get(0).getScore(), 0.000001);
+		assertEquals(12, results.get(0).getScore(), 0.000001);
 	}
 
 	@Test
