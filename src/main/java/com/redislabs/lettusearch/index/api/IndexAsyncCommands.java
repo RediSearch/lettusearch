@@ -53,4 +53,6 @@ public interface IndexAsyncCommands<K, V> {
 	@SuppressWarnings("unchecked")
 	RedisFuture<List<Map<K, V>>> ftMget(K index, K... docIds);
 
+	RedisFuture<List<K>> list();
+
 }

@@ -208,4 +208,8 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
 		return createMono(() -> commandBuilder.aliasDel(name));
 	}
 
+	@Override
+	public Flux<K> list() {
+		return createDissolvingFlux(commandBuilder::list);
+	}
 }

@@ -2,11 +2,13 @@ package com.redislabs.lettusearch;
 
 import com.redislabs.lettusearch.search.SearchResults;
 import io.lettuce.core.RedisCommandExecutionException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-import static com.redislabs.lettusearch.Beers.INDEX;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -14,10 +16,15 @@ public class TestAlias extends AbstractBaseTest {
 
 	private final static String ALIAS = "alias123";
 
+	@BeforeEach
+	public void initializeIndex() throws IOException {
+		createBeerIndex();
+	}
+
 	@Test
-	public void syncAdd() {
-		sync.aliasAdd(ALIAS, INDEX);
-		SearchResults<String, String> results = sync.search(ALIAS, "*");
+	public void syncAdd() throws ExecutionException, InterruptedException {
+		async.aliasAdd(ALIAS, INDEX).get();
+		SearchResults<String, String> results = async.search(ALIAS, "*").get();
 		assertTrue(results.size() > 0);
 	}
 
@@ -36,7 +43,7 @@ public class TestAlias extends AbstractBaseTest {
 	}
 
 	@Test
-	public void syncDel() {
+	public void syncDel() throws ExecutionException, InterruptedException {
 		syncAdd();
 		sync.aliasDel(ALIAS);
 		try {
@@ -73,11 +80,11 @@ public class TestAlias extends AbstractBaseTest {
 	}
 
 	@Test
-	public void syncUpdate() {
+	public void syncUpdate() throws ExecutionException, InterruptedException {
 		syncAdd();
 		String newAlias = "alias456";
-		sync.aliasUpdate(newAlias, INDEX);
-		assertTrue(sync.search(newAlias, "*").size() > 0);
+		async.aliasUpdate(newAlias, INDEX).get();
+		assertTrue(async.search(newAlias, "*").get().size() > 0);
 	}
 
 	@Test
@@ -93,7 +100,8 @@ public class TestAlias extends AbstractBaseTest {
 		reactiveAdd();
 		String newAlias = "alias456";
 		reactive.aliasUpdate(newAlias, INDEX).block();
-		assertTrue(reactive.search(newAlias, "*").block().size() > 0);
+		SearchResults<String, String> results = reactive.search(newAlias, "*").block();
+		Assertions.assertFalse(results.isEmpty());
 	}
 
 }

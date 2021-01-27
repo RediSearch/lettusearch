@@ -2,7 +2,9 @@ package com.redislabs.lettusearch;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,18 +21,19 @@ import io.lettuce.core.RedisURI;
 public class TestUtils extends AbstractBaseTest {
 
 	@Test
-	public void ftInfo() {
-		List<Object> infoList = sync.ftInfo(Beers.INDEX);
+	public void ftInfo() throws IOException, ExecutionException, InterruptedException {
+		createBeerIndex();
+		List<Object> infoList = async.ftInfo(INDEX).get();
 		IndexInfo<String> info = RediSearchUtils.getInfo(infoList);
 		assertEquals(2348, info.getNumDocs());
 		List<Field<String>> fields = info.getFields();
 		TextField<String> nameField = (TextField<String>) fields.get(0);
-		assertEquals(Beers.NAME, nameField.getName());
+		assertEquals(NAME, nameField.getName());
 		assertEquals(false, nameField.isNoIndex());
 		assertEquals(false, nameField.isNoStem());
 		assertEquals(false, nameField.isSortable());
 		TagField<String> styleField = (TagField<String>) fields.get(1);
-		assertEquals(Beers.STYLE, styleField.getName());
+		assertEquals(STYLE, styleField.getName());
 		assertEquals(true, styleField.isSortable());
 		assertEquals(",", styleField.getSeparator());
 	}
@@ -43,14 +46,14 @@ public class TestUtils extends AbstractBaseTest {
 	}
 
 	@Test
-	public void escapeTag() {
+	public void escapeTag() throws ExecutionException, InterruptedException {
 		String index = "escapeTagTestIdx";
 		String idField = "id";
-		sync.create(index, Schema.<String>builder().field(TagField.<String>builder().name(idField).build()).build());
-		sync.add(index, Document.<String, String>builder().id("doc1")
-				.field(idField, "chris@blah.org,User1#test.org,usersdfl@example.com").build());
-		SearchResults<String, String> results = sync.search(index,
-				"@id:{" + RediSearchUtils.escapeTag("User1#test.org") + "}");
+		async.create(index, Schema.<String>builder().field(TagField.<String>builder().name(idField).build()).build()).get();
+		async.add(index, Document.<String, String>builder().id("doc1")
+				.field(idField, "chris@blah.org,User1#test.org,usersdfl@example.com").build()).get();
+		SearchResults<String, String> results = async.search(index,
+				"@id:{" + RediSearchUtils.escapeTag("User1#test.org") + "}").get();
 		assertEquals(1, results.size());
 	}
 }

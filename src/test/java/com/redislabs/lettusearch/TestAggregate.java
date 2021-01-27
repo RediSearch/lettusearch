@@ -3,18 +3,27 @@ package com.redislabs.lettusearch;
 import com.redislabs.lettusearch.aggregate.*;
 import com.redislabs.lettusearch.aggregate.reducer.Avg;
 import com.redislabs.lettusearch.protocol.CommandKeyword;
+import com.redislabs.lettusearch.search.Document;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.redislabs.lettusearch.Beers.*;
 import static com.redislabs.lettusearch.protocol.RediSearchCommandArgs.property;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestAggregate extends AbstractBaseTest {
+
+	private static List<Document<String, String>> beers;
+
+	@BeforeAll
+	public static void initializeIndex() throws IOException {
+		beers = createBeerIndex();
+	}
 
 	@Test
 	public void testLoad() {

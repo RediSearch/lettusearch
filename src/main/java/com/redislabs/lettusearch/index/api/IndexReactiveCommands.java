@@ -53,4 +53,6 @@ public interface IndexReactiveCommands<K, V> {
 	@SuppressWarnings("unchecked")
 	Flux<Map<K, V>> ftMget(K index, K... docIds);
 
+	Flux<K> list();
+
 }
