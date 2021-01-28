@@ -1,13 +1,5 @@
 package com.redislabs.lettusearch;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import org.junit.jupiter.api.Test;
-
 import com.redislabs.lettusearch.index.IndexInfo;
 import com.redislabs.lettusearch.index.Schema;
 import com.redislabs.lettusearch.index.field.Field;
@@ -15,8 +7,14 @@ import com.redislabs.lettusearch.index.field.TagField;
 import com.redislabs.lettusearch.index.field.TextField;
 import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.SearchResults;
-
 import io.lettuce.core.RedisURI;
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestUtils extends AbstractBaseTest {
 
@@ -49,7 +47,7 @@ public class TestUtils extends AbstractBaseTest {
 	public void escapeTag() throws ExecutionException, InterruptedException {
 		String index = "escapeTagTestIdx";
 		String idField = "id";
-		async.create(index, Schema.<String>builder().field(TagField.<String>builder().name(idField).build()).build()).get();
+		async.create(index, Schema.of(Field.tag(idField).build())).get();
 		async.add(index, Document.<String, String>builder().id("doc1")
 				.field(idField, "chris@blah.org,User1#test.org,usersdfl@example.com").build()).get();
 		SearchResults<String, String> results = async.search(index,

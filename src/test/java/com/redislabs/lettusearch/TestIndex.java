@@ -1,10 +1,9 @@
 package com.redislabs.lettusearch;
 
 import com.redislabs.lettusearch.index.*;
+import com.redislabs.lettusearch.index.field.Field;
 import com.redislabs.lettusearch.index.field.FieldOptions;
 import com.redislabs.lettusearch.index.field.FieldType;
-import com.redislabs.lettusearch.index.field.TagField;
-import com.redislabs.lettusearch.index.field.TextField;
 import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.SearchResults;
 import io.lettuce.core.RedisCommandExecutionException;
@@ -15,14 +14,14 @@ import java.io.IOException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestIndex extends AbstractBaseTest {
 
     @Test
     public void temporary() throws InterruptedException {
         String indexName = "temporaryIndex";
-        sync.create(indexName, Schema.<String>builder().field(TextField.<String>builder().name("field1").build()).build(), CreateOptions.<String, String>builder().temporary(1L).build());
+        sync.create(indexName, Schema.of(Field.text("field1").build()), CreateOptions.<String, String>builder().temporary(1L).build());
+
         List<Object> info = sync.ftInfo(indexName);
         assertEquals(indexName, info.get(1));
         Thread.sleep(1501);
@@ -45,7 +44,6 @@ public class TestIndex extends AbstractBaseTest {
     }
 
 
-
     @Test
     public void drop() throws IOException {
         createBeerIndex();
@@ -63,7 +61,7 @@ public class TestIndex extends AbstractBaseTest {
     @Test
     public void alter() throws IOException {
         createBeerIndex();
-        sync.alter(INDEX, "newField", FieldOptions.builder().type(FieldType.Tag).build());
+        sync.alter(INDEX, "newField", FieldOptions.builder().type(FieldType.TAG).build());
         Document<String, String> doc = Document.<String, String>builder().id("newDocId").score(1d).build();
         doc.put("newField", "value1");
         sync.add(INDEX, doc);
@@ -82,7 +80,7 @@ public class TestIndex extends AbstractBaseTest {
     @Test
     public void testCreateOptions() {
         CreateOptions<String, String> options = CreateOptions.<String, String>builder().prefixes("release:").payloadField("xml").build();
-        Schema<String> schema = Schema.<String>builder().field(TextField.<String>builder().name("artist").sortable(true).build()).field(TagField.<String>builder().name("id").sortable(true).build()).field(TextField.<String>builder().name("title").sortable(true).build()).build();
+        Schema<String> schema = Schema.of(Field.text("artist").sortable(true).build(), Field.tag("id").sortable(true).build(), Field.text("title").sortable(true).build());
         sync.create("releases", schema, options);
         IndexInfo<String> info = RediSearchUtils.getInfo(sync.ftInfo("releases"));
         Assertions.assertEquals(schema.getFields().size(), info.getFields().size());
@@ -117,7 +115,7 @@ public class TestIndex extends AbstractBaseTest {
         sync.flushall();
         List<String> indexNames = Arrays.asList("index1", "index2", "index3");
         for (String indexName : indexNames) {
-            sync.create(indexName, Schema.<String>builder().field(TextField.<String>builder().name("field1").sortable(true).build()).build());
+            sync.create(indexName, Schema.of(Field.text("field1").sortable(true).build()));
         }
         List<String> list = sync.list();
         assertEquals(new HashSet<>(indexNames), new HashSet<>(list));

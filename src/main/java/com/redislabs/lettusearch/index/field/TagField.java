@@ -1,31 +1,52 @@
 package com.redislabs.lettusearch.index.field;
 
+import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 import static com.redislabs.lettusearch.protocol.CommandKeyword.SEPARATOR;
 import static com.redislabs.lettusearch.protocol.CommandKeyword.TAG;
 
-import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
+@Getter
+@Setter
+public class TagField<K> extends Field<K> {
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+    private String separator;
 
-public @Getter @Setter class TagField<K> extends Field<K> {
+    public TagField(K name) {
+        super(FieldType.TAG, name);
+    }
 
-	private String separator;
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected void buildField(RediSearchCommandArgs args) {
+        args.add(TAG);
+        if (separator != null) {
+            args.add(SEPARATOR);
+            args.add(separator);
+        }
+    }
 
-	@Builder
-	private TagField(K name, boolean sortable, boolean noIndex, String separator) {
-		super(name, sortable, noIndex);
-		this.separator = separator;
-	}
+    public static <K> TagFieldBuilder<K> builder(K name) {
+        return new TagFieldBuilder<>(name);
+    }
 
-	@SuppressWarnings("rawtypes")
-	@Override
-	protected void buildField(RediSearchCommandArgs args) {
-		args.add(TAG);
-		if (separator != null) {
-			args.add(SEPARATOR);
-			args.add(separator);
-		}
-	}
+    @Setter
+    @Accessors(fluent = true)
+    public static class TagFieldBuilder<K> extends FieldBuilder<K, TagField<K>, TagFieldBuilder<K>> {
+
+        private String separator;
+
+        public TagFieldBuilder(K name) {
+            super(name);
+        }
+
+        @Override
+        protected TagField<K> newField(K name) {
+            TagField<K> field = new TagField<>(name);
+            field.setSeparator(separator);
+            return field;
+        }
+    }
 }

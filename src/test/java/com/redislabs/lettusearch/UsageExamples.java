@@ -1,7 +1,7 @@
 package com.redislabs.lettusearch;
 
 import com.redislabs.lettusearch.index.Schema;
-import com.redislabs.lettusearch.index.field.TextField;
+import com.redislabs.lettusearch.index.field.Field;
 import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.search.SearchResults;
 import io.lettuce.core.RedisFuture;
@@ -29,10 +29,9 @@ public class UsageExamples extends AbstractBaseTest {
         RediSearchClient client = RediSearchClient.create(RedisURI.create(host, port)); // <1>
         StatefulRediSearchConnection<String, String> connection = client.connect(); // <2>
         RediSearchCommands<String, String> commands = connection.sync(); // <3>
-        commands.create(index, Schema.<String>builder().field(TextField.<String>builder().name(NAME).build()).build()); // <4>
+        commands.create(index, Schema.of(Field.text(NAME).build())); // <4>
         commands.add(index, Document.<String, String>builder().id(ID).score(1D).field(NAME, "La Chouffe").build()); // <5>
         SearchResults<String, String> results = commands.search(index, "chou*"); // <6>
-        results.forEach(System.out::println);
         // end::basic[]
     }
 
@@ -42,7 +41,7 @@ public class UsageExamples extends AbstractBaseTest {
         Document<String, String> doc1 = Document.<String, String>builder().id("doc1").field(NAME, "somevalue").build();
         Document<String, String> doc2 = Document.<String, String>builder().id("doc2").field(NAME, "somevalue").build();
         List<Document<String, String>> docs = Arrays.asList(doc1, doc2);
-        connection.sync().create(index, Schema.<String>builder().field(TextField.<String>builder().name(NAME).build()).build());
+        connection.sync().create(index, Schema.of(Field.text(NAME).build()));
         // tag::pipelining[]
         RediSearchClient client = RediSearchClient.create(RedisURI.create(host, port)); // <1>
         StatefulRediSearchConnection<String, String> connection = client.connect(); // <2>
@@ -71,7 +70,7 @@ public class UsageExamples extends AbstractBaseTest {
     @Test
     public void connectionPooling() throws Exception {
         String index = "poolIdx";
-        connection.sync().create(index, Schema.<String>builder().field(TextField.<String>builder().name(NAME).build()).build()); // <4>
+        connection.sync().create(index, Schema.of(Field.text(NAME).build())); // <4>
         // tag::connectionPooling[]
         RediSearchClient client = RediSearchClient.create(RedisURI.create(host, port)); // <1>
         GenericObjectPoolConfig<StatefulRediSearchConnection<String, String>> config = new GenericObjectPoolConfig<>(); // <2>

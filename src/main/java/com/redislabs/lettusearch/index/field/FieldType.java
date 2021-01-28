@@ -1,15 +1,10 @@
 package com.redislabs.lettusearch.index.field;
 
-import static com.redislabs.lettusearch.protocol.CommandKeyword.GEO;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.NUMERIC;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.TAG;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.TEXT;
-
 import com.redislabs.lettusearch.protocol.CommandKeyword;
 
 public enum FieldType {
 
-	Text(TEXT), Numeric(NUMERIC), Geo(GEO), Tag(TAG);
+	TEXT(CommandKeyword.TEXT), NUMERIC(CommandKeyword.NUMERIC), GEO(CommandKeyword.GEO), TAG(CommandKeyword.TAG);
 
 	private final CommandKeyword keyword;
 

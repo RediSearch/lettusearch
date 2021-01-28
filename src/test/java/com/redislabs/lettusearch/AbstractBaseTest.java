@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import com.redislabs.lettusearch.index.Schema;
-import com.redislabs.lettusearch.index.field.NumericField;
+import com.redislabs.lettusearch.index.field.Field;
 import com.redislabs.lettusearch.index.field.PhoneticMatcher;
-import com.redislabs.lettusearch.index.field.TagField;
-import com.redislabs.lettusearch.index.field.TextField;
 import com.redislabs.lettusearch.search.Document;
 import com.redislabs.lettusearch.suggest.Suggestion;
 import io.lettuce.core.LettuceFutures;
@@ -34,7 +32,7 @@ public abstract class AbstractBaseTest {
     public final static String ID = "id";
     public final static String NAME = "name";
     public final static String STYLE = "style";
-    public final static Schema<String> SCHEMA = Schema.<String>builder().field(TextField.<String>builder().name(NAME).matcher(PhoneticMatcher.English).build()).field(TagField.<String>builder().name(STYLE).sortable(true).build()).field(NumericField.<String>builder().name(ABV).sortable(true).build()).build();
+    public final static Schema<String> SCHEMA = Schema.of(Field.text(NAME).matcher(PhoneticMatcher.English).build(), Field.tag(STYLE).sortable(true).build(), Field.numeric(ABV).sortable(true).build());
     public final static String INDEX = "beers";
 
     private static RediSearchClient client;
@@ -108,7 +106,7 @@ public abstract class AbstractBaseTest {
         async.setAutoFlushCommands(false);
         List<RedisFuture<?>> futures = new ArrayList<>();
         for (Document<String, String> beer : beers) {
-            futures.add(async.sugadd(SUGINDEX, Suggestion.<String>builder().string(beer.get(NAME)).score(1d).build(), false));
+            futures.add(async.sugadd(SUGINDEX, Suggestion.builder(beer.get(NAME)).score(1d).build(), false));
         }
         async.flushCommands();
         async.setAutoFlushCommands(true);

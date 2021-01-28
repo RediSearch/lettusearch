@@ -71,13 +71,13 @@ public class RediSearchUtils {
     private static <K> Field<K> field(K name, CommandKeyword type, List<Object> info) {
         switch (type) {
             case GEO:
-                return GeoField.<K>builder().name(name).build();
+                return GeoField.builder(name).build();
             case NUMERIC:
-                return NumericField.<K>builder().name(name).build();
+                return NumericField.builder(name).build();
             case TAG:
-                return TagField.<K>builder().name(name).separator((String) info.get(4)).build();
+                return TagField.builder(name).separator((String) info.get(4)).build();
             default:
-                return TextField.<K>builder().name(name).weight((Double) info.get(4)).noStem(NOSTEM.name().equals(info.get(info.size() - 1))).build();
+                return TextField.builder(name).weight((Double) info.get(4)).noStem(NOSTEM.name().equals(info.get(info.size() - 1))).build();
         }
     }
 

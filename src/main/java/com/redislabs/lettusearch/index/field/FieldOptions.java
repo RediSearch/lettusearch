@@ -19,7 +19,7 @@ import lombok.Data;
 public class FieldOptions implements RediSearchArgument {
 
 	@Default
-	private FieldType type = FieldType.Text;
+	private FieldType type = FieldType.TEXT;
 	private boolean sortable;
 	private boolean noIndex;
 	private Double weight;
