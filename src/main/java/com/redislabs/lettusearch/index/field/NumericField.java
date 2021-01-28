@@ -1,10 +1,8 @@
 package com.redislabs.lettusearch.index.field;
 
-import static com.redislabs.lettusearch.protocol.CommandKeyword.NUMERIC;
-
 import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
 
-import lombok.Builder;
+import static com.redislabs.lettusearch.protocol.CommandKeyword.NUMERIC;
 
 public class NumericField<K> extends Field<K> {
 

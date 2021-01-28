@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestUtils extends AbstractBaseTest {
 
@@ -27,12 +29,12 @@ public class TestUtils extends AbstractBaseTest {
 		List<Field<String>> fields = info.getFields();
 		TextField<String> nameField = (TextField<String>) fields.get(0);
 		assertEquals(NAME, nameField.getName());
-		assertEquals(false, nameField.isNoIndex());
-		assertEquals(false, nameField.isNoStem());
-		assertEquals(false, nameField.isSortable());
+		assertFalse(nameField.isNoIndex());
+		assertFalse(nameField.isNoStem());
+		assertFalse(nameField.isSortable());
 		TagField<String> styleField = (TagField<String>) fields.get(1);
 		assertEquals(STYLE, styleField.getName());
-		assertEquals(true, styleField.isSortable());
+		assertTrue(styleField.isSortable());
 		assertEquals(",", styleField.getSeparator());
 	}
 

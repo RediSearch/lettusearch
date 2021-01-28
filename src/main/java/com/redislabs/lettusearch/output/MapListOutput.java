@@ -36,60 +36,60 @@ import io.lettuce.core.output.StreamingOutput;
  */
 public class MapListOutput<K, V> extends CommandOutput<K, V, List<Map<K, V>>> implements StreamingOutput<Map<K, V>> {
 
-	private boolean initialized;
-	private Subscriber<Map<K, V>> subscriber;
+    private boolean initialized;
+    private Subscriber<Map<K, V>> subscriber;
 
-	private K key;
-	private Map<K, V> body;
+    private K key;
+    private Map<K, V> body;
 
-	public MapListOutput(RedisCodec<K, V> codec) {
-		super(codec, Collections.emptyList());
-		setSubscriber(ListSubscriber.instance());
-	}
+    public MapListOutput(RedisCodec<K, V> codec) {
+        super(codec, Collections.emptyList());
+        setSubscriber(ListSubscriber.instance());
+    }
 
-	@Override
-	public void set(ByteBuffer bytes) {
+    @Override
+    public void set(ByteBuffer bytes) {
 
-		if (key == null) {
-			key = bytes == null ? null : codec.decodeKey(bytes);
-			return;
-		}
+        if (key == null) {
+            key = bytes == null ? null : codec.decodeKey(bytes);
+            return;
+        }
 
-		if (body == null) {
-			body = new LinkedHashMap<>();
-		}
+        if (body == null) {
+            body = new LinkedHashMap<>();
+        }
 
-		body.put(key, bytes == null ? null : codec.decodeValue(bytes));
-		key = null;
-	}
+        body.put(key, bytes == null ? null : codec.decodeValue(bytes));
+        key = null;
+    }
 
-	@Override
-	public void multi(int count) {
+    @Override
+    public void multi(int count) {
 
-		if (!initialized) {
-			output = count < 1 ? Collections.emptyList() : new ArrayList<>(Math.max(1, count));
-			initialized = true;
-		}
-	}
+        if (!initialized) {
+            output = count > 0 ? new ArrayList<>(count) : Collections.emptyList();
+            initialized = true;
+        }
+    }
 
-	@Override
-	public void complete(int depth) {
+    @Override
+    public void complete(int depth) {
 
-		if (depth == 1) {
-			subscriber.onNext(output, body);
-			key = null;
-			body = null;
-		}
-	}
+        if (depth == 1) {
+            subscriber.onNext(output, body);
+            key = null;
+            body = null;
+        }
+    }
 
-	@Override
-	public void setSubscriber(Subscriber<Map<K, V>> subscriber) {
-		LettuceAssert.notNull(subscriber, "Subscriber must not be null");
-		this.subscriber = subscriber;
-	}
+    @Override
+    public void setSubscriber(Subscriber<Map<K, V>> subscriber) {
+        LettuceAssert.notNull(subscriber, "Subscriber must not be null");
+        this.subscriber = subscriber;
+    }
 
-	@Override
-	public Subscriber<Map<K, V>> getSubscriber() {
-		return subscriber;
-	}
+    @Override
+    public Subscriber<Map<K, V>> getSubscriber() {
+        return subscriber;
+    }
 }

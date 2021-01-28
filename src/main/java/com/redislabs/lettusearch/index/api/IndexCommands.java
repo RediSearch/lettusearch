@@ -1,15 +1,14 @@
 package com.redislabs.lettusearch.index.api;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.redislabs.lettusearch.index.CreateOptions;
 import com.redislabs.lettusearch.index.DropOptions;
 import com.redislabs.lettusearch.index.Schema;
 import com.redislabs.lettusearch.index.field.FieldOptions;
 import com.redislabs.lettusearch.search.AddOptions;
 import com.redislabs.lettusearch.search.Document;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Synchronously-executed index admin commands for RediSearch.
