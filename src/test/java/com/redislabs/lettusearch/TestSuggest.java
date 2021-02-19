@@ -15,6 +15,13 @@ public class TestSuggest extends AbstractBaseTest {
     @Test
     public void testSugget() throws IOException {
         createBeerSuggestions();
+        List<Suggestion<String>> results = sync.sugget(SUGINDEX, "Ame");
+        assertEquals(5, results.size());
+    }
+
+    @Test
+    public void testSuggetOptions() throws IOException {
+        createBeerSuggestions();
         List<Suggestion<String>> results = sync.sugget(SUGINDEX, "Ame", SuggetOptions.builder().max(1000L).build());
         assertEquals(8, results.size());
     }
