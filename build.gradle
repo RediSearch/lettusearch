@@ -141,6 +141,12 @@ bintray {
     }
 }
 
+release {
+    git {
+        requireBranch = ''
+    }
+}
+
 githubRelease {
     token = project.hasProperty('githubToken') ? project.property('githubToken') : ''
     owner "RediSearch"
