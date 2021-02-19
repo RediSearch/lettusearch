@@ -305,7 +305,14 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         if (options != null) {
             options.build(args);
         }
-        return createCommand(SUGGET, new SuggestOutput<>(codec, options), args);
+        return createCommand(SUGGET, suggestOutput(options), args);
+    }
+
+    private SuggestOutput<K, V> suggestOutput(SuggetOptions options) {
+        if (options == null) {
+            return new SuggestOutput<>(codec);
+        }
+        return new SuggestOutput<>(codec, options.isWithScores(), options.isWithPayloads());
     }
 
     public Command<K, V, Boolean> sugdel(K key, V string) {

@@ -1,54 +1,64 @@
 package com.redislabs.lettusearch.output;
 
+import com.redislabs.lettusearch.suggest.Suggestion;
+import io.lettuce.core.codec.RedisCodec;
+import io.lettuce.core.output.CommandOutput;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.redislabs.lettusearch.suggest.Suggestion;
-import com.redislabs.lettusearch.suggest.SuggetOptions;
-
-import io.lettuce.core.codec.RedisCodec;
-import io.lettuce.core.output.CommandOutput;
-
 public class SuggestOutput<K, V> extends CommandOutput<K, V, List<Suggestion<V>>> {
 
-	private Suggestion<V> current;
-	private final SuggetOptions options;
+    private final boolean withScores;
+    private final boolean withPayloads;
+    private Suggestion<V> current;
+    private boolean payloadSet = false;
+    private boolean scoreSet = false;
 
-	public SuggestOutput(RedisCodec<K, V> codec, SuggetOptions options) {
-		super(codec, new ArrayList<>());
-		this.options = options;
-	}
+    public SuggestOutput(RedisCodec<K, V> codec) {
+        this(codec, false, false);
+    }
 
-	@Override
-	public void set(ByteBuffer bytes) {
-		if (current == null) {
-			current = new Suggestion<>();
-			if (bytes != null) {
-				current.setString(codec.decodeValue(bytes));
-			}
-			output.add(current);
-			if (!options.isWithScores() && !options.isWithPayloads()) {
-				current = null;
-			}
-		} else {
-			if (current.getPayload() == null && options.isWithPayloads()) {
-				if (bytes != null) {
-					current.setPayload(codec.decodeValue(bytes));
-				}
-				current = null;
-			}
-		}
-	}
+    public SuggestOutput(RedisCodec<K, V> codec, boolean withScores, boolean withPayloads) {
+        super(codec, new ArrayList<>());
+        this.withScores = withScores;
+        this.withPayloads = withPayloads;
+    }
 
-	@Override
-	public void set(double number) {
-		if (current.getScore() == null && options.isWithScores()) {
-			current.setScore(number);
-			if (!options.isWithPayloads()) {
-				current = null;
-			}
-		}
-	}
+    @Override
+    public void set(ByteBuffer bytes) {
+        if (current == null) {
+            current = new Suggestion<>();
+            payloadSet = false;
+            scoreSet = false;
+            if (bytes != null) {
+                current.setString(codec.decodeValue(bytes));
+            }
+            output.add(current);
+            if (!withScores && !withPayloads) {
+                current = null;
+            }
+        } else {
+            if (withPayloads && !payloadSet) {
+                if (bytes != null) {
+                    current.setPayload(codec.decodeValue(bytes));
+                }
+                payloadSet = true;
+                current = null;
+            }
+        }
+    }
+
+    @Override
+    public void set(double number) {
+        if (withScores && !scoreSet) {
+            current.setScore(number);
+            scoreSet = true;
+            if (!withPayloads) {
+                current = null;
+            }
+        }
+    }
 
 }
