@@ -34,7 +34,7 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
 
     public Command<K, V, String> create(K index, CreateOptions<K, V> options, Field<K>... fields) {
         assertNotNull(index, "index");
-        LettuceAssert.isTrue(fields.length>0, "At least one field is required.");
+        LettuceAssert.isTrue(fields.length > 0, "At least one field is required.");
         RediSearchCommandArgs<K, V> args = createArgs(index);
         if (options != null) {
             options.build(args);
@@ -167,18 +167,26 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
     }
 
     public Command<K, V, List<Suggestion<V>>> sugget(K key, V prefix) {
-        return sugget(key, prefix, SuggetOptions.builder().build());
+        return sugget(key, prefix, null);
     }
 
     public Command<K, V, List<Suggestion<V>>> sugget(K key, V prefix, SuggetOptions options) {
         assertNotNull(key, "key");
         assertNotNull(prefix, "prefix");
-        assertNotNull(options, "options");
         RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec);
         args.addKey(key);
         args.addValue(prefix);
-        options.build(args);
-        return createCommand(SUGGET, new SuggestOutput<>(codec, options), args);
+        if (options != null) {
+            options.build(args);
+        }
+        return createCommand(SUGGET, suggestOutput(options), args);
+    }
+
+    private SuggestOutput<K, V> suggestOutput(SuggetOptions options) {
+        if (options == null) {
+            return new SuggestOutput<>(codec);
+        }
+        return new SuggestOutput<>(codec, options.isWithScores(), options.isWithPayloads());
     }
 
     public Command<K, V, Boolean> sugdel(K key, V string) {
