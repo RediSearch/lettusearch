@@ -1,6 +1,5 @@
 package com.redislabs.lettusearch;
 
-import com.redislabs.lettusearch.search.SearchResults;
 import io.lettuce.core.RedisCommandExecutionException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

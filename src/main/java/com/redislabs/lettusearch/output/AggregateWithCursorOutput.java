@@ -1,6 +1,6 @@
 package com.redislabs.lettusearch.output;
 
-import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
+import com.redislabs.lettusearch.AggregateWithCursorResults;
 
 import io.lettuce.core.codec.RedisCodec;
 

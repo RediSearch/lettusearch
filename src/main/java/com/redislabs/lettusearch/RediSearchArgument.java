@@ -1,6 +1,6 @@
 package com.redislabs.lettusearch;
 
-import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
+import com.redislabs.lettusearch.impl.protocol.RediSearchCommandArgs;
 
 public interface RediSearchArgument {
 

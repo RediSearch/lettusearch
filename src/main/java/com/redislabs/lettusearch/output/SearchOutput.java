@@ -4,8 +4,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.redislabs.lettusearch.search.Document;
-import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.Document;
+import com.redislabs.lettusearch.SearchResults;
 
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.output.CommandOutput;
@@ -13,13 +13,19 @@ import io.lettuce.core.output.MapOutput;
 
 public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>> {
 
-	private Document<K, V> current;
-	private MapOutput<K, V> nested;
-	private int mapCount = -1;
 	private final List<Integer> counts = new ArrayList<>();
 	private final boolean withScores;
 	private final boolean withSortKeys;
 	private final boolean withPayloads;
+	private MapOutput<K, V> nested;
+	private Document<K, V> current;
+	private int mapCount = -1;
+	private boolean payloadSet = false;
+	private boolean scoreSet = false;
+
+	public SearchOutput(RedisCodec<K, V> codec) {
+		this(codec, false, false, false);
+	}
 
 	public SearchOutput(RedisCodec<K, V> codec, boolean withScores, boolean withSortKeys, boolean withPayloads) {
 		super(codec, new SearchResults<>());
@@ -33,6 +39,8 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 	public void set(ByteBuffer bytes) {
 		if (current == null) {
 			current = new Document<>();
+			payloadSet = false;
+			scoreSet = false;
 			if (bytes != null) {
 				current.setId(codec.decodeKey(bytes));
 			}
@@ -43,10 +51,11 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 					current.setSortKey(codec.decodeValue(bytes));
 				}
 			} else {
-				if (withPayloads && current.getPayload() == null) {
+				if (withPayloads && !payloadSet) {
 					if (bytes != null) {
 						current.setPayload(codec.decodeValue(bytes));
 					}
+					payloadSet = true;
 				} else {
 					nested.set(bytes);
 				}
@@ -61,8 +70,9 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 
 	@Override
 	public void set(double number) {
-		if (withScores && current.getScore() == null) {
+		if (withScores && !scoreSet) {
 			current.setScore(number);
+			scoreSet = true;
 		}
 	}
 
@@ -74,6 +84,8 @@ public class SearchOutput<K, V> extends CommandOutput<K, V, SearchResults<K, V>>
 				current.putAll(nested.get());
 				nested = new MapOutput<>(codec);
 				current = null;
+				payloadSet = false;
+				scoreSet = false;
 			}
 		}
 	}

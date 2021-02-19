@@ -1,7 +1,5 @@
 package com.redislabs.lettusearch;
 
-import com.redislabs.lettusearch.suggest.Suggestion;
-import com.redislabs.lettusearch.suggest.SuggetOptions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -31,7 +29,7 @@ public class TestSuggestions extends AbstractBaseTest {
     public void testSuglen() throws IOException {
         createBeerSuggestions();
         long length = sync.suglen(SUGINDEX);
-        assertEquals(2245, length);
+        assertEquals(2305, length);
     }
 
     @Test

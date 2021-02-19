@@ -1,21 +1,13 @@
 package com.redislabs.lettusearch;
 
-import static com.redislabs.lettusearch.protocol.CommandKeyword.NOINDEX;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.NOSTEM;
-import static com.redislabs.lettusearch.protocol.CommandKeyword.SORTABLE;
+import com.redislabs.lettusearch.impl.protocol.CommandKeyword;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.redislabs.lettusearch.index.IndexInfo;
-import com.redislabs.lettusearch.index.field.Field;
-import com.redislabs.lettusearch.index.field.GeoField;
-import com.redislabs.lettusearch.index.field.NumericField;
-import com.redislabs.lettusearch.index.field.TagField;
-import com.redislabs.lettusearch.index.field.TextField;
-import com.redislabs.lettusearch.protocol.CommandKeyword;
+import static com.redislabs.lettusearch.impl.protocol.CommandKeyword.*;
 
 public class RediSearchUtils {
 
@@ -71,13 +63,13 @@ public class RediSearchUtils {
     private static <K> Field<K> field(K name, CommandKeyword type, List<Object> info) {
         switch (type) {
             case GEO:
-                return GeoField.builder(name).build();
+                return Field.Geo.builder(name).build();
             case NUMERIC:
-                return NumericField.builder(name).build();
+                return Field.Numeric.builder(name).build();
             case TAG:
-                return TagField.builder(name).separator((String) info.get(4)).build();
+                return Field.Tag.builder(name).separator((String) info.get(4)).build();
             default:
-                return TextField.builder(name).weight((Double) info.get(4)).noStem(NOSTEM.name().equals(info.get(info.size() - 1))).build();
+                return Field.Text.builder(name).weight((Double) info.get(4)).noStem(NOSTEM.name().equals(info.get(info.size() - 1))).build();
         }
     }
 

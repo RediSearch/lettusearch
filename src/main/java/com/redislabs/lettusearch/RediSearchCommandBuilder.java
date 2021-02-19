@@ -1,23 +1,9 @@
 package com.redislabs.lettusearch;
 
-import com.redislabs.lettusearch.aggregate.AggregateOptions;
-import com.redislabs.lettusearch.aggregate.AggregateResults;
-import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
-import com.redislabs.lettusearch.aggregate.Cursor;
-import com.redislabs.lettusearch.index.CreateOptions;
-import com.redislabs.lettusearch.index.DropOptions;
-import com.redislabs.lettusearch.index.Schema;
-import com.redislabs.lettusearch.index.field.FieldOptions;
+import com.redislabs.lettusearch.impl.protocol.CommandKeyword;
+import com.redislabs.lettusearch.impl.protocol.CommandType;
+import com.redislabs.lettusearch.impl.protocol.RediSearchCommandArgs;
 import com.redislabs.lettusearch.output.*;
-import com.redislabs.lettusearch.protocol.CommandKeyword;
-import com.redislabs.lettusearch.protocol.CommandType;
-import com.redislabs.lettusearch.protocol.RediSearchCommandArgs;
-import com.redislabs.lettusearch.search.AddOptions;
-import com.redislabs.lettusearch.search.Document;
-import com.redislabs.lettusearch.search.SearchOptions;
-import com.redislabs.lettusearch.search.SearchResults;
-import com.redislabs.lettusearch.suggest.Suggestion;
-import com.redislabs.lettusearch.suggest.SuggetOptions;
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.internal.LettuceAssert;
 import io.lettuce.core.output.*;
@@ -27,12 +13,9 @@ import io.lettuce.core.protocol.CommandArgs;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import static com.redislabs.lettusearch.protocol.CommandKeyword.*;
-import static com.redislabs.lettusearch.protocol.CommandType.ADD;
-import static com.redislabs.lettusearch.protocol.CommandType.DEL;
-import static com.redislabs.lettusearch.protocol.CommandType.*;
+import static com.redislabs.lettusearch.impl.protocol.CommandKeyword.*;
+import static com.redislabs.lettusearch.impl.protocol.CommandType.*;
 
 /**
  * Dedicated pub/sub command builder to build pub/sub commands.
@@ -40,7 +23,6 @@ import static com.redislabs.lettusearch.protocol.CommandType.*;
 public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V> {
 
     static final String MUST_NOT_BE_NULL = "must not be null";
-    static final String MUST_NOT_BE_EMPTY = "must not be empty";
 
     public RediSearchCommandBuilder(RedisCodec<K, V> codec) {
         super(codec);
@@ -50,60 +32,27 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         return new Command<>(type, output, args);
     }
 
-    public Command<K, V, String> add(K index, Document<K, V> document) {
-        return add(index, document, null);
-    }
-
-    public Command<K, V, String> add(K index, Document<K, V> document, AddOptions options) {
+    public Command<K, V, String> create(K index, CreateOptions<K, V> options, Field<K>... fields) {
         assertNotNull(index, "index");
-        assertNotNull(document, "document");
-        assertNotNull(document.getId(), "document id");
-        assertNotNull(document.getScore(), "document score");
-        LettuceAssert.isTrue(!document.isEmpty(), "document fields " + MUST_NOT_BE_EMPTY);
-        RediSearchCommandArgs<K, V> args = createArgs(index);
-        args.addKey(document.getId());
-        args.add(document.getScore());
-        if (options != null) {
-            options.build(args);
-        }
-        if (document.getPayload() != null) {
-            args.add(PAYLOAD);
-            args.addValue(document.getPayload());
-        }
-        args.add(CommandKeyword.FIELDS);
-        for (Entry<K, V> entry : document.entrySet()) {
-            args.addKey(entry.getKey());
-            args.addValue(entry.getValue());
-        }
-        return createCommand(ADD, new StatusOutput<>(codec), args);
-    }
-
-    public Command<K, V, String> create(K index, Schema<K> schema) {
-        return create(index, schema, null);
-    }
-
-    public Command<K, V, String> create(K index, Schema<K> schema, CreateOptions<K, V> options) {
-        assertNotNull(index, "index");
-        assertNotNull(schema, "schema");
+        LettuceAssert.isTrue(fields.length>0, "At least one field is required.");
         RediSearchCommandArgs<K, V> args = createArgs(index);
         if (options != null) {
             options.build(args);
         }
-        schema.build(args);
+        args.add(CommandKeyword.SCHEMA);
+        for (Field<K> field : fields) {
+            field.build(args);
+        }
         return createCommand(CREATE, new StatusOutput<>(codec), args);
     }
 
-    public Command<K, V, String> drop(K index) {
-        return drop(index, null);
-    }
-
-    public Command<K, V, String> drop(K index, DropOptions options) {
+    public Command<K, V, String> dropIndex(K index, boolean deleteDocs) {
         assertNotNull(index, "index");
         RediSearchCommandArgs<K, V> args = createArgs(index);
-        if (options != null) {
-            options.build(args);
+        if (deleteDocs) {
+            args.add(DD);
         }
-        return createCommand(DROP, new StatusOutput<>(codec), args);
+        return createCommand(DROPINDEX, new StatusOutput<>(codec), args);
     }
 
     public Command<K, V, List<Object>> info(K index) {
@@ -112,24 +61,18 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         return createCommand(INFO, new NestedMultiOutput<>(codec), args);
     }
 
-    public Command<K, V, String> alter(K index, K field, FieldOptions options) {
+    public Command<K, V, String> alter(K index, Field<K> field) {
         assertNotNull(index, "index");
+        assertNotNull(field, "field");
         RediSearchCommandArgs<K, V> args = createArgs(index);
         args.add(SCHEMA);
-        args.add(com.redislabs.lettusearch.protocol.CommandKeyword.ADD);
-        args.addKey(field);
-        if (options != null) {
-            options.build(args);
-        }
+        args.add(CommandKeyword.ADD);
+        field.build(args);
         return createCommand(ALTER, new StatusOutput<>(codec), args);
     }
 
     private RediSearchCommandArgs<K, V> createArgs(K index) {
         return new RediSearchCommandArgs<>(codec).addKey(index);
-    }
-
-    public Command<K, V, SearchResults<K, V>> search(K index, V query) {
-        return search(index, query, (SearchOptions<K>) null);
     }
 
     public Command<K, V, SearchResults<K, V>> search(K index, V query, SearchOptions<K> options) {
@@ -140,56 +83,17 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         if (options != null) {
             options.build(commandArgs);
         }
-        boolean withScores = false;
-        boolean withSortKeys = false;
-        boolean withPayloads = false;
-        boolean noContent = false;
-        if (options != null) {
-            withScores = options.isWithScores();
-            withSortKeys = options.isWithSortKeys();
-            withPayloads = options.isWithPayloads();
-            noContent = options.isNoContent();
-        }
-        return createCommand(SEARCH, getSearchOutput(codec, noContent, withScores, withSortKeys, withPayloads), commandArgs);
+        return createCommand(SEARCH, searchOutput(options), commandArgs);
     }
 
-    public Command<K, V, SearchResults<K, V>> search(K index, V query, Object... options) {
-        assertNotNull(index, "index");
-        assertNotNull(query, "query");
-        RediSearchCommandArgs<K, V> commandArgs = createArgs(index);
-        commandArgs.addValue(query);
-        boolean noContent = false;
-        boolean withScores = false;
-        boolean withSortKeys = false;
-        boolean withPayloads = false;
-        for (Object option : options) {
-            String optionString = String.valueOf(option);
-            if (WITHSCORES.name().equalsIgnoreCase(optionString)) {
-                withScores = true;
-            }
-            if (WITHSORTKEYS.name().equalsIgnoreCase(optionString)) {
-                withSortKeys = true;
-            }
-            if (WITHPAYLOADS.name().equalsIgnoreCase(optionString)) {
-                withPayloads = true;
-            }
-            if (NOCONTENT.name().equalsIgnoreCase(optionString)) {
-                noContent = true;
-            }
-            commandArgs.add(optionString);
+    private CommandOutput<K, V, SearchResults<K, V>> searchOutput(SearchOptions<K> options) {
+        if (options == null) {
+            return new SearchOutput<>(codec);
         }
-        return createCommand(SEARCH, getSearchOutput(codec, noContent, withScores, withSortKeys, withPayloads), commandArgs);
-    }
-
-    private CommandOutput<K, V, SearchResults<K, V>> getSearchOutput(RedisCodec<K, V> codec, boolean noContent, boolean withScores, boolean withSortKeys, boolean withPayloads) {
-        if (noContent) {
-            return new SearchNoContentOutput<>(codec, withScores);
+        if (options.isNoContent()) {
+            return new SearchNoContentOutput<>(codec, options.isWithScores());
         }
-        return new SearchOutput<>(codec, withScores, withSortKeys, withPayloads);
-    }
-
-    public Command<K, V, AggregateResults<K, V>> aggregate(K index, V query) {
-        return aggregate(index, query, (AggregateOptions) null);
+        return new SearchOutput<>(codec, options.isWithScores(), options.isWithSortKeys(), options.isWithPayloads());
     }
 
     public Command<K, V, AggregateResults<K, V>> aggregate(K index, V query, AggregateOptions options) {
@@ -199,17 +103,6 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         args.addValue(query);
         if (options != null) {
             options.build(args);
-        }
-        return createCommand(AGGREGATE, new AggregateOutput<>(codec, new AggregateResults<>()), args);
-    }
-
-    public Command<K, V, AggregateResults<K, V>> aggregate(K index, V query, Object... options) {
-        assertNotNull(index, "index");
-        assertNotNull(query, "query");
-        RediSearchCommandArgs<K, V> args = createArgs(index);
-        args.addValue(query);
-        for (Object option : options) {
-            args.add(String.valueOf(option));
         }
         return createCommand(AGGREGATE, new AggregateOutput<>(codec, new AggregateResults<>()), args);
     }
@@ -229,25 +122,6 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         return createCommand(AGGREGATE, new AggregateWithCursorOutput<>(codec), args);
     }
 
-    public Command<K, V, AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor, Object... options) {
-        assertNotNull(index, "index");
-        assertNotNull(query, "query");
-        RediSearchCommandArgs<K, V> args = createArgs(index);
-        args.addValue(query);
-        for (Object option : options) {
-            args.add(String.valueOf(option));
-        }
-        args.add(WITHCURSOR);
-        if (cursor != null) {
-            cursor.build(args);
-        }
-        return createCommand(AGGREGATE, new AggregateWithCursorOutput<>(codec), args);
-    }
-
-    public Command<K, V, AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor) {
-        return cursorRead(index, cursor, null);
-    }
-
     public Command<K, V, AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, Long count) {
         assertNotNull(index, "index");
         RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec);
@@ -264,7 +138,7 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
     public Command<K, V, String> cursorDelete(K index, long cursor) {
         assertNotNull(index, "index");
         RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec);
-        args.add(com.redislabs.lettusearch.protocol.CommandKeyword.DEL);
+        args.add(CommandKeyword.DEL);
         args.addKey(index);
         args.add(cursor);
         return createCommand(CURSOR, new StatusOutput<>(codec), args);
@@ -293,18 +167,17 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
     }
 
     public Command<K, V, List<Suggestion<V>>> sugget(K key, V prefix) {
-        return sugget(key, prefix, null);
+        return sugget(key, prefix, SuggetOptions.builder().build());
     }
 
     public Command<K, V, List<Suggestion<V>>> sugget(K key, V prefix, SuggetOptions options) {
         assertNotNull(key, "key");
         assertNotNull(prefix, "prefix");
+        assertNotNull(options, "options");
         RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec);
         args.addKey(key);
         args.addValue(prefix);
-        if (options != null) {
-            options.build(args);
-        }
+        options.build(args);
         return createCommand(SUGGET, new SuggestOutput<>(codec, options), args);
     }
 
@@ -329,32 +202,8 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         return createCommand(GET, new MapOutput<>(codec), args);
     }
 
-    @SuppressWarnings("unchecked")
-    public Command<K, V, List<Map<K, V>>> mget(K index, K... docIds) {
-        assertNotNull(index, "index");
-        LettuceAssert.notEmpty(docIds, "docId " + MUST_NOT_BE_EMPTY);
-        RediSearchCommandArgs<K, V> args = createArgs(index);
-        args.addKeys(docIds);
-        return createCommand(MGET, new MapListOutput<>(codec), args);
-    }
-
     private void assertNotNull(Object arg, String name) {
         LettuceAssert.notNull(arg, name + " " + MUST_NOT_BE_NULL);
-    }
-
-    public Command<K, V, Boolean> del(K index, K docId) {
-        return del(index, docId, false);
-    }
-
-    public Command<K, V, Boolean> del(K index, K docId, boolean deleteDoc) {
-        assertNotNull(index, "index");
-        assertNotNull(docId, "docId");
-        RediSearchCommandArgs<K, V> args = createArgs(index);
-        args.addKey(docId);
-        if (deleteDoc) {
-            args.add(DD);
-        }
-        return createCommand(DEL, new BooleanOutput<>(codec), args);
     }
 
     public Command<K, V, String> aliasAdd(K name, K index) {

@@ -1,29 +1,11 @@
 package com.redislabs.lettusearch.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import com.redislabs.lettusearch.RediSearchAsyncCommands;
-import com.redislabs.lettusearch.RediSearchCommandBuilder;
-import com.redislabs.lettusearch.StatefulRediSearchConnection;
-import com.redislabs.lettusearch.aggregate.AggregateOptions;
-import com.redislabs.lettusearch.aggregate.AggregateResults;
-import com.redislabs.lettusearch.aggregate.AggregateWithCursorResults;
-import com.redislabs.lettusearch.aggregate.Cursor;
-import com.redislabs.lettusearch.index.CreateOptions;
-import com.redislabs.lettusearch.index.DropOptions;
-import com.redislabs.lettusearch.index.Schema;
-import com.redislabs.lettusearch.index.field.FieldOptions;
-import com.redislabs.lettusearch.search.AddOptions;
-import com.redislabs.lettusearch.search.Document;
-import com.redislabs.lettusearch.search.SearchOptions;
-import com.redislabs.lettusearch.search.SearchResults;
-import com.redislabs.lettusearch.suggest.Suggestion;
-import com.redislabs.lettusearch.suggest.SuggetOptions;
-
+import com.redislabs.lettusearch.*;
 import io.lettuce.core.RedisAsyncCommandsImpl;
 import io.lettuce.core.RedisFuture;
 import io.lettuce.core.codec.RedisCodec;
+
+import java.util.List;
 
 public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K, V> implements RediSearchAsyncCommands<K, V> {
 
@@ -42,33 +24,23 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
     }
 
     @Override
-    public RedisFuture<String> add(K index, Document<K, V> document) {
-        return dispatch(commandBuilder.add(index, document));
+    public RedisFuture<String> create(K index, Field<K>... fields) {
+        return create(index, null, fields);
     }
 
     @Override
-    public RedisFuture<String> add(K index, Document<K, V> document, AddOptions options) {
-        return dispatch(commandBuilder.add(index, document, options));
+    public RedisFuture<String> create(K index, CreateOptions<K, V> options, Field<K>... fields) {
+        return dispatch(commandBuilder.create(index, options, fields));
     }
 
     @Override
-    public RedisFuture<String> create(K index, Schema<K> schema) {
-        return dispatch(commandBuilder.create(index, schema));
+    public RedisFuture<String> dropIndex(K index) {
+        return dropIndex(index, false);
     }
 
     @Override
-    public RedisFuture<String> create(K index, Schema<K> schema, CreateOptions<K, V> options) {
-        return dispatch(commandBuilder.create(index, schema, options));
-    }
-
-    @Override
-    public RedisFuture<String> drop(K index) {
-        return dispatch(commandBuilder.drop(index));
-    }
-
-    @Override
-    public RedisFuture<String> drop(K index, DropOptions options) {
-        return dispatch(commandBuilder.drop(index, options));
+    public RedisFuture<String> dropIndex(K index, boolean deleteDocs) {
+        return dispatch(commandBuilder.dropIndex(index, deleteDocs));
     }
 
     @Override
@@ -78,7 +50,7 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
 
     @Override
     public RedisFuture<SearchResults<K, V>> search(K index, V query) {
-        return dispatch(commandBuilder.search(index, query));
+        return dispatch(commandBuilder.search(index, query, null));
     }
 
     @Override
@@ -87,13 +59,8 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
     }
 
     @Override
-    public RedisFuture<SearchResults<K, V>> search(K index, V query, Object... options) {
-        return dispatch(commandBuilder.search(index, query, options));
-    }
-
-    @Override
     public RedisFuture<AggregateResults<K, V>> aggregate(K index, V query) {
-        return dispatch(commandBuilder.aggregate(index, query));
+        return dispatch(commandBuilder.aggregate(index, query, null));
     }
 
     @Override
@@ -102,13 +69,8 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
     }
 
     @Override
-    public RedisFuture<AggregateResults<K, V>> aggregate(K index, V query, Object... options) {
-        return dispatch(commandBuilder.aggregate(index, query, options));
-    }
-
-    @Override
     public RedisFuture<AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor) {
-        return dispatch(commandBuilder.aggregate(index, query, cursor));
+        return dispatch(commandBuilder.aggregate(index, query, cursor, null));
     }
 
     @Override
@@ -117,17 +79,12 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
     }
 
     @Override
-    public RedisFuture<AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor, Object... options) {
-        return dispatch(commandBuilder.aggregate(index, query, cursor, options));
-    }
-
-    @Override
     public RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor) {
-        return dispatch(commandBuilder.cursorRead(index, cursor));
+        return dispatch(commandBuilder.cursorRead(index, cursor, null));
     }
 
     @Override
-    public RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, Long count) {
+    public RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, long count) {
         return dispatch(commandBuilder.cursorRead(index, cursor, count));
     }
 
@@ -167,29 +124,8 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
     }
 
     @Override
-    public RedisFuture<Map<K, V>> get(K index, K docId) {
-        return dispatch(commandBuilder.get(index, docId));
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public RedisFuture<List<Map<K, V>>> ftMget(K index, K... docIds) {
-        return dispatch(commandBuilder.mget(index, docIds));
-    }
-
-    @Override
-    public RedisFuture<Boolean> del(K index, K docId) {
-        return dispatch(commandBuilder.del(index, docId));
-    }
-
-    @Override
-    public RedisFuture<Boolean> del(K index, K docId, boolean deleteDoc) {
-        return dispatch(commandBuilder.del(index, docId, deleteDoc));
-    }
-
-    @Override
-    public RedisFuture<String> alter(K index, K field, FieldOptions options) {
-        return dispatch(commandBuilder.alter(index, field, options));
+    public RedisFuture<String> alter(K index, Field<K> field) {
+        return dispatch(commandBuilder.alter(index, field));
     }
 
     @Override

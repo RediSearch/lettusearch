@@ -4,8 +4,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.redislabs.lettusearch.suggest.Suggestion;
-import com.redislabs.lettusearch.suggest.SuggetOptions;
+import com.redislabs.lettusearch.Suggestion;
+import com.redislabs.lettusearch.SuggetOptions;
 
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.output.CommandOutput;

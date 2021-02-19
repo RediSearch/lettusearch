@@ -2,8 +2,8 @@ package com.redislabs.lettusearch.output;
 
 import java.nio.ByteBuffer;
 
-import com.redislabs.lettusearch.search.Document;
-import com.redislabs.lettusearch.search.SearchResults;
+import com.redislabs.lettusearch.Document;
+import com.redislabs.lettusearch.SearchResults;
 
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.output.CommandOutput;

@@ -58,10 +58,13 @@ dependencies {
 RediSearchClient client = RediSearchClient.create(RedisURI.create(host, port)); // <1>
 StatefulRediSearchConnection<String, String> connection = client.connect(); // <2>
 RediSearchCommands<String, String> commands = connection.sync(); // <3>
-commands.create("idx", Schema.<String>builder().field(TextField.<String>builder().name(NAME).build()).build()); // <4>
-commands.add("idx", Document.<String, String>builder().id(ID).score(1D).field(NAME, "La Chouffe").build()); // <5>
-SearchResults<String, String> results = commands.search("idx", "chou*"); // <6>
-results.forEach(System.out::println);
+commands.create("beers", Field.text("name").build()); // <4>
+commands.hmset("beer:1", Map.of("name", "Chouffe")); // <5>
+SearchResults<String, String> results = commands.search("beers", "chou*"); // <6>
+System.out.println("Found " + results.getCount() + " documents matching query");
+for (Document<String, String> doc : results) {
+    System.out.println(doc);
+}
 ----
 <1> Create a RediSearch client
 <2> Connect to RediSearch
@@ -74,55 +77,50 @@ results.forEach(System.out::println);
 
 [source,java]
 ----
-RediSearchClient client = RediSearchClient.create(RedisURI.create(host, port)); // <1>
-StatefulRediSearchConnection<String, String> connection = client.connect(); // <2>
-RediSearchAsyncCommands<String, String> commands = connection.async(); // <3>
-commands.setAutoFlushCommands(false); // <4>
+RediSearchAsyncCommands<String, String> commands = connection.async(); // <1>
+commands.setAutoFlushCommands(false); // <2>
 List<RedisFuture<?>> futures = new ArrayList<>();
-for (Document<String, String> doc : docs) { // <5>
-    RedisFuture<?> future = commands.add("idx", doc); // <6>
-    futures.add(future);
+for (java.util.Map<String, String> doc : docs) {
+    RedisFuture<String> future = commands.hmset(doc.get("id"), doc);// <3>
+    futures.add(future); // <4>
 }
-commands.flushCommands(); // <7>
+commands.flushCommands(); // <5>
 for (RedisFuture<?> future : futures) {
     try {
-        future.get(1, TimeUnit.SECONDS); // <8>
+        future.get(1, TimeUnit.SECONDS); // <6>
     } catch (InterruptedException e) {
         log.debug("Command interrupted", e);
     } catch (ExecutionException e) {
-        log.error("Could not execute command", e);
+        log.error("Command execution returned an error", e);
     } catch (TimeoutException e) {
         log.error("Command timed out", e);
     }
 }
+commands.setAutoFlushCommands(true); // <7>
 ----
-<1> Create a RediSearch client
-<2> Connect to RediSearch
-<3> Use async commands
-<4> Disable command auto-flush
-<5> Call commands to be executed in a pipeline
-<6> Add command execution future to the list  
-<7> Flush commands
-<8> Wait for response from each future
+<1> Use async commands
+<2> Disable automatic flushing of commands
+<3> Call commands to be executed in the pipeline
+<4> Add command execution future to the list
+<5> Flush commands
+<6> Wait for response from each future
+<7> Disable automatic flushing of commands
 
 === Connection pooling
 
 [source,java]
 ----
-RediSearchClient client = RediSearchClient.create(RedisURI.create(host, port)); // <1>
-GenericObjectPoolConfig<StatefulRediSearchConnection<String, String>> config = new GenericObjectPoolConfig<>(); // <2>
+GenericObjectPoolConfig<StatefulRediSearchConnection<String, String>> config = new GenericObjectPoolConfig<>(); // <1>
 config.setMaxTotal(8);
-GenericObjectPool<StatefulRediSearchConnection<String, String>> pool = ConnectionPoolSupport.createGenericObjectPool(client::connect, config); // <3>
-// The connection pool can now be passed to worker threads
-try (StatefulRediSearchConnection<String, String> connection = pool.borrowObject()) { // <4>
-    RediSearchCommands<String, String> commands = connection.sync(); // <5>
-    commands.search("idx", "*"); // <6>
+// config.setX...
+GenericObjectPool<StatefulRediSearchConnection<String, String>> pool = ConnectionPoolSupport.createGenericObjectPool(client::connect, config); // <2>
+try (StatefulRediSearchConnection<String, String> connection = pool.borrowObject()) { // <3>
+    RediSearchAsyncCommands<String, String> commands = connection.async(); // <4>
+    // ...
 }
 ----
-<1> Create a RediSearch client
-<2> Create a pool configuration
-<3> Create the connection pool
-<4> In worker threads, get connections in a try-with statement to automatically return them to the pool 
-<5> Use _sync_ commands
-<6> Execute commands
+<1> Create a connection pool configuration
+<2> Create the connection pool
+<3> In worker threads, get connections in a try-with statement to automatically return them to the pool
+<4> Use _sync_ or _async_ commands
 

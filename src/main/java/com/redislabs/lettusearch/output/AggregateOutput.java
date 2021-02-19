@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.redislabs.lettusearch.aggregate.AggregateResults;
+import com.redislabs.lettusearch.AggregateResults;
 
 import io.lettuce.core.codec.RedisCodec;
 import io.lettuce.core.output.CommandOutput;
