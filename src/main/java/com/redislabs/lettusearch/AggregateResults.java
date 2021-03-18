@@ -3,15 +3,16 @@ package com.redislabs.lettusearch;
 import java.util.ArrayList;
 import java.util.Map;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+public class AggregateResults<K> extends ArrayList<Map<K, Object>> {
 
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class AggregateResults<K, V> extends ArrayList<Map<K, V>> {
+    private long count;
 
-	private static final long serialVersionUID = 2860244139719400188L;
+    public long getCount() {
+        return count;
+    }
 
-	private long count;
+    public void setCount(long count) {
+        this.count = count;
+    }
 
 }

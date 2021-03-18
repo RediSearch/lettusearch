@@ -96,7 +96,7 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         return new SearchOutput<>(codec, options.isWithScores(), options.isWithSortKeys(), options.isWithPayloads());
     }
 
-    public Command<K, V, AggregateResults<K, V>> aggregate(K index, V query, AggregateOptions options) {
+    public Command<K, V, AggregateResults<K>> aggregate(K index, V query, AggregateOptions options) {
         assertNotNull(index, "index");
         assertNotNull(query, "query");
         RediSearchCommandArgs<K, V> args = createArgs(index);
@@ -107,7 +107,7 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         return createCommand(AGGREGATE, new AggregateOutput<>(codec, new AggregateResults<>()), args);
     }
 
-    public Command<K, V, AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor, AggregateOptions options) {
+    public Command<K, V, AggregateWithCursorResults<K>> aggregate(K index, V query, Cursor cursor, AggregateOptions options) {
         assertNotNull(index, "index");
         assertNotNull(query, "query");
         RediSearchCommandArgs<K, V> args = createArgs(index);
@@ -122,7 +122,7 @@ public class RediSearchCommandBuilder<K, V> extends BaseRedisCommandBuilder<K, V
         return createCommand(AGGREGATE, new AggregateWithCursorOutput<>(codec), args);
     }
 
-    public Command<K, V, AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, Long count) {
+    public Command<K, V, AggregateWithCursorResults<K>> cursorRead(K index, long cursor, Long count) {
         assertNotNull(index, "index");
         RediSearchCommandArgs<K, V> args = new RediSearchCommandArgs<>(codec);
         args.add(READ);

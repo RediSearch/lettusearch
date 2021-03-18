@@ -59,32 +59,32 @@ public class RediSearchAsyncCommandsImpl<K, V> extends RedisAsyncCommandsImpl<K,
     }
 
     @Override
-    public RedisFuture<AggregateResults<K, V>> aggregate(K index, V query) {
+    public RedisFuture<AggregateResults<K>> aggregate(K index, V query) {
         return dispatch(commandBuilder.aggregate(index, query, null));
     }
 
     @Override
-    public RedisFuture<AggregateResults<K, V>> aggregate(K index, V query, AggregateOptions options) {
+    public RedisFuture<AggregateResults<K>> aggregate(K index, V query, AggregateOptions options) {
         return dispatch(commandBuilder.aggregate(index, query, options));
     }
 
     @Override
-    public RedisFuture<AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor) {
+    public RedisFuture<AggregateWithCursorResults<K>> aggregate(K index, V query, Cursor cursor) {
         return dispatch(commandBuilder.aggregate(index, query, cursor, null));
     }
 
     @Override
-    public RedisFuture<AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor, AggregateOptions options) {
+    public RedisFuture<AggregateWithCursorResults<K>> aggregate(K index, V query, Cursor cursor, AggregateOptions options) {
         return dispatch(commandBuilder.aggregate(index, query, cursor, options));
     }
 
     @Override
-    public RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor) {
+    public RedisFuture<AggregateWithCursorResults<K>> cursorRead(K index, long cursor) {
         return dispatch(commandBuilder.cursorRead(index, cursor, null));
     }
 
     @Override
-    public RedisFuture<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, long count) {
+    public RedisFuture<AggregateWithCursorResults<K>> cursorRead(K index, long cursor, long count) {
         return dispatch(commandBuilder.cursorRead(index, cursor, count));
     }
 

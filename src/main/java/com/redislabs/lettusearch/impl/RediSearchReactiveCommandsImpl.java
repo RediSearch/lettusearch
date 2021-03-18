@@ -58,32 +58,32 @@ public class RediSearchReactiveCommandsImpl<K, V> extends RedisReactiveCommandsI
     }
 
     @Override
-    public Mono<AggregateResults<K, V>> aggregate(K index, V query) {
+    public Mono<AggregateResults<K>> aggregate(K index, V query) {
         return createMono(() -> commandBuilder.aggregate(index, query, null));
     }
 
     @Override
-    public Mono<AggregateResults<K, V>> aggregate(K index, V query, AggregateOptions options) {
+    public Mono<AggregateResults<K>> aggregate(K index, V query, AggregateOptions options) {
         return createMono(() -> commandBuilder.aggregate(index, query, options));
     }
 
     @Override
-    public Mono<AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor) {
+    public Mono<AggregateWithCursorResults<K>> aggregate(K index, V query, Cursor cursor) {
         return createMono(() -> commandBuilder.aggregate(index, query, cursor, null));
     }
 
     @Override
-    public Mono<AggregateWithCursorResults<K, V>> aggregate(K index, V query, Cursor cursor, AggregateOptions options) {
+    public Mono<AggregateWithCursorResults<K>> aggregate(K index, V query, Cursor cursor, AggregateOptions options) {
         return createMono(() -> commandBuilder.aggregate(index, query, cursor, options));
     }
 
     @Override
-    public Mono<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor) {
+    public Mono<AggregateWithCursorResults<K>> cursorRead(K index, long cursor) {
         return createMono(() -> commandBuilder.cursorRead(index, cursor, null));
     }
 
     @Override
-    public Mono<AggregateWithCursorResults<K, V>> cursorRead(K index, long cursor, long count) {
+    public Mono<AggregateWithCursorResults<K>> cursorRead(K index, long cursor, long count) {
         return createMono(() -> commandBuilder.cursorRead(index, cursor, count));
     }
 
