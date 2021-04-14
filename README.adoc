@@ -27,6 +27,8 @@ endif::[]
 
 Java client for https://redisearch.io[RediSearch] based on https://lettuce.io[Lettuce]
 
+WARNING: LettuSearch has been merged into multi-module client https://github.com/redis-developer/mesclun[Mesclun]. Updates will now happen in Mesclun.
+
 Latest release: https://github.com/RediSearch/lettusearch/releases/latest
 
 == Getting Started
